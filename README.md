@@ -1,2 +1,0 @@
-# Pro.sebe.store
-WebShop
