@@ -1,0 +1,39 @@
+Product
+-
+id PK int
+name string
+description string
+
+Variant
+-
+id PK int
+productId FK >- Product.id
+quantity int
+
+VariantColor
+-
+id PK int
+variantId FK >- Variant.id
+colorId FK >- Color.id
+
+
+VariantSize
+-
+id PK int
+variantId FK >- Variant.id
+sizeId FK >- Size.id
+
+
+Color 
+-
+id PK int
+name string
+hexValue string
+
+Size 
+-
+id PK int
+name string
+
+Order
+-
