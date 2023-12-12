@@ -35,5 +35,35 @@ Size
 id PK int
 name string
 
-Order
--
+
+User 
+- 
+id pk 
+Name String 
+LastName String
+SecondName String 
+Password string
+Email String 
+AdressHome FK >- UserAdress.id
+AdressNova FK >- NovaPoshta.id
+Role FK >- Role.name
+Phone string
+
+
+Role 
+- 
+name PK string
+
+
+UserAdress
+- 
+id pk 
+City String 
+Adress string 
+
+NovaPoshta 
+- 
+id pk 
+Adress string 
+Vidilenya string 
+
