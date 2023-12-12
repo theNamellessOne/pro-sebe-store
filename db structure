@@ -72,3 +72,30 @@ Kategory
 id pk 
 Name
 KategoryId int FK >- Kategory.id
+
+
+
+AdminCheck
+- 
+id pk 
+SenderAdress String 
+OrderId FK >- Order.id
+
+
+
+Order 
+- 
+id pk 
+CheckPayment boolean
+Adress String
+
+OrderItem
+-
+id pk 
+Tovar FK >- Variant.id
+amount int 
+TotalCost int 
+OrderId FK >- Order.id
+
+
+
