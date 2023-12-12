@@ -67,3 +67,8 @@ id pk
 Adress string 
 Vidilenya string 
 
+Kategory
+- 
+id pk 
+Name
+KategoryId int FK >- Kategory.id
