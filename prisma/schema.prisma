@@ -1,0 +1,206 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  relationMode = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+
+  name        String
+  description String
+
+  price          Decimal
+  compareAtPrice Decimal
+
+  variants Variant[]
+}
+
+model Variant {
+  id Int @id @default(autoincrement())
+
+  reserved Int
+  quantity Int
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+
+  sizeVariants  VariantSize[]
+  colorVariants VariantColor[]
+  orderItems    OrderItem[]
+  mediaUrls     MediaUrl[]
+
+  @@index([productId])
+}
+
+model MediaUrl {
+  id  Int    @id @default(autoincrement())
+  url String
+
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId Int
+
+  @@index([variantId])
+}
+
+model Color {
+  id Int @id @default(autoincrement())
+
+  name     String
+  hexValue String
+
+  colorVariants VariantColor[]
+}
+
+model VariantColor {
+  id Int @id @default(autoincrement())
+
+  color   Color @relation(fields: [colorId], references: [id])
+  colorId Int
+
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId Int
+
+  @@index([colorId])
+  @@index([variantId])
+}
+
+model Size {
+  id           Int           @id @default(autoincrement())
+  name         String
+  sizeVariants VariantSize[]
+}
+
+model VariantSize {
+  id Int @id @default(autoincrement())
+
+  size   Size @relation(fields: [sizeId], references: [id])
+  sizeId Int
+
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId Int
+
+  @@index([sizeId])
+  @@index([variantId])
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // this one i  kinda problematic
+  // with prisma it is impossible to have proper onDelete and onUpdate actions generated automatically
+  // so we will have to manage that stuff ourselves in code
+  parent   Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentId Int?
+  children Category[] @relation("SubCategories")
+
+  @@index([parentId])
+}
+
+enum Role {
+  USER
+  PACKAGER
+  MODERATOR
+  OWNER
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  name       String
+  lastName   String
+  secondName String
+
+  email    String @unique
+  phone    String @unique
+  password String
+
+  role Role @default(USER)
+
+  reviews   Review[]
+  addresses AddressParts[]
+}
+
+enum ReviewStatus {
+  ON_MODERATION
+  APPROVED
+}
+
+model Review {
+  id Int @id @default(autoincrement())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  content String
+  status  ReviewStatus @default(ON_MODERATION)
+
+  @@index([userId])
+}
+
+model AddressParts {
+  id Int @id @default(autoincrement())
+
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int
+
+  postCode Int
+
+  city   String
+  region String
+  street String
+
+  flat     String
+  note     String
+  block    String?
+  building String
+
+  orders Order[]
+
+  @@index([userId])
+}
+
+enum OrderStatus {
+  CREATED
+  PACKED
+  DELIVERED
+}
+
+model Order {
+  id         Int     @id @default(autoincrement())
+  isPayedFor Boolean @default(false)
+
+  addressParts   AddressParts? @relation(fields: [addressPartsId], references: [id])
+  addressPartsId Int?
+
+  divisionNumber Int?
+  orderItems     OrderItem[]
+
+  status OrderStatus @default(CREATED)
+
+  @@index([addressPartsId])
+}
+
+model OrderItem {
+  id Int @id
+
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId Int
+
+  amount   Int
+  subTotal Decimal
+
+  order   Order @relation(fields: [orderId], references: [id])
+  orderId Int
+
+  @@index([orderId])
+  @@index([variantId])
+}

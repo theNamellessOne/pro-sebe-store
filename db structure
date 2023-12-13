@@ -74,15 +74,6 @@ Name
 KategoryId int FK >- Kategory.id
 
 
-
-AdminCheck
-- 
-id pk 
-SenderAdress String 
-OrderId FK >- Order.id
-
-
-
 Order 
 - 
 id pk 
