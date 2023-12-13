@@ -190,7 +190,7 @@ model Order {
 }
 
 model OrderItem {
-  id Int @id
+  id Int @id @default(autoincrement())
 
   variant   Variant @relation(fields: [variantId], references: [id])
   variantId Int
@@ -203,4 +203,10 @@ model OrderItem {
 
   @@index([orderId])
   @@index([variantId])
+}
+
+model Banner {
+  id            Int     @id @default(autoincrement())
+  imageUrl      String
+  shouldBeOnTop Boolean
 }
