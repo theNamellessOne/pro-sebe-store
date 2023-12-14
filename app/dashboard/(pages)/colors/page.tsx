@@ -1,9 +1,9 @@
 import React from "react";
 import { DashboardHeader } from "@/app/dashboard/components/dashboard-header";
-import prisma from "@/app/lib/prisma";
+import {fetchAllColors} from "@/service/color-service";
 
 export default async function Page() {
-  const colors = await prisma.color.findMany();
+  const colors = await fetchAllColors();
 
   return (
     <>

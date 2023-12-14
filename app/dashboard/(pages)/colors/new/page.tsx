@@ -1,7 +1,7 @@
 import { Input } from "@nextui-org/input";
 import { DashboardBackHeader } from "@/app/dashboard/components/dashboard-back-header";
 import { Button } from "@nextui-org/button";
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export default function Page() {
   async function createColor(formData: FormData) {
