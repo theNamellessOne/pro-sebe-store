@@ -21,7 +21,7 @@ const config: Config = {
               DEFAULT: "#000",
               foreground: "#fff",
             },
-            focus: "#BEF264",
+            focus: "#000",
           },
         },
       },

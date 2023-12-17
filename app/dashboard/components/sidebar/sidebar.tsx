@@ -8,6 +8,7 @@ import {
   Palette,
   Ruler,
   Tag,
+  User,
 } from "lucide-react";
 import React from "react";
 import { SidebarItem } from "@/app/dashboard/components/sidebar/sidebar-item";
@@ -49,12 +50,17 @@ export function Sidebar() {
       name: "Замовлення",
       href: "/dashboard/orders",
     },
+    {
+      icon: <User />,
+      name: "Користувачі",
+      href: "/dashboard/users",
+    },
   ];
 
   return (
     <aside
       className={
-        "flex flex-col fixed py-4 w-[250px] h-screen border-r border-r-0.5"
+        "flex flex-col fixed py-4 w-[250px] h-screen border-r border-r-0.5 overflow-y-scroll"
       }
     >
       <h2 className={"text-4xl pl-6 mb-4"}>/logan</h2>

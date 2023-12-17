@@ -8,7 +8,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
 model Product {
@@ -57,6 +58,8 @@ model Color {
   hexValue String
 
   colorVariants VariantColor[]
+
+  @@fulltext([name])
 }
 
 model VariantColor {
@@ -73,8 +76,14 @@ model VariantColor {
 }
 
 model Size {
-  id           Int           @id @default(autoincrement())
-  name         String
+  id Int @id @default(autoincrement())
+
+  chestSize Int
+  waistSize Int
+  thighSize Int
+
+  name String
+
   sizeVariants VariantSize[]
 }
 

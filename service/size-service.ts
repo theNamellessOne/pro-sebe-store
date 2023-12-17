@@ -1,29 +1,30 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { ColorCreate, colorSchema } from "@/schema/color-schema";
 import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter";
+
 import { FetchFunctionProps } from "@/hooks/use-list";
+import { SizeCreate, sizeSchema } from "@/schema/size-schema";
 
 const COLOR_PAGE_SIZE = 10;
 
-export async function fetchColorById(id: number) {
-  const color = await prisma.color.findUnique({ where: { id } });
+export async function fetchSizeById(id: number) {
+  const size = await prisma.size.findUnique({ where: { id } });
 
   return {
-    errMsg: color ? null : "Could not find color with specified Id",
-    value: color,
+    errMsg: size ? null : "Could not find size with specified Id",
+    value: size,
   };
 }
 
-export async function fetchColors({
+export async function fetchSizes({
   query,
   page,
   sortColumn,
   sortDirection,
 }: FetchFunctionProps) {
   async function countPages() {
-    const count = await prisma.color.count({
+    const count = await prisma.size.count({
       where: {
         name: {
           contains: query,
@@ -34,20 +35,20 @@ export async function fetchColors({
   }
 
   const pages = await countPages();
-  if (page < 0 || page > pages) {
+  if (page < 0 || pages === 0 || page > pages) {
     return {
       items: [],
       pages,
     };
   }
 
-  async function findColors() {
+  async function findSizes() {
     const sortDir = convertSortDescriptorToPrisma(sortDirection);
     const orderBy = {};
     // @ts-ignore
     orderBy[sortColumn] = sortDir;
 
-    return prisma.color.findMany({
+    return prisma.size.findMany({
       orderBy,
       take: COLOR_PAGE_SIZE,
       skip: (page - 1) * COLOR_PAGE_SIZE,
@@ -59,7 +60,7 @@ export async function fetchColors({
     });
   }
 
-  const items = await findColors();
+  const items = await findSizes();
 
   return {
     items,
@@ -67,12 +68,12 @@ export async function fetchColors({
   };
 }
 
-export async function saveColor(color: ColorCreate, id: number | undefined) {
-  return id ? updateColor(id, color) : createColor(color);
+export async function saveSize(size: SizeCreate, id: number | undefined) {
+  return id ? updateSize(id, size) : createSize(size);
 }
 
-async function createColor(color: ColorCreate) {
-  if (!colorSchema.safeParse(color)) {
+async function createSize(size: SizeCreate) {
+  if (!sizeSchema.safeParse(size)) {
     return {
       errMsg: "invalid data",
       value: null,
@@ -81,12 +82,12 @@ async function createColor(color: ColorCreate) {
 
   return {
     errMsg: null,
-    value: await prisma.color.create({ data: color }),
+    value: await prisma.size.create({ data: size }),
   };
 }
 
-async function updateColor(id: number, color: ColorCreate) {
-  if (!colorSchema.safeParse(color)) {
+async function updateSize(id: number, size: SizeCreate) {
+  if (!sizeSchema.safeParse(size)) {
     return {
       errMsg: "invalid data",
       value: null,
@@ -95,9 +96,9 @@ async function updateColor(id: number, color: ColorCreate) {
 
   return {
     errMsg: null,
-    value: await prisma.color.update({
+    value: await prisma.size.update({
       where: { id },
-      data: color,
+      data: size,
     }),
   };
 }
