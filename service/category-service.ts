@@ -21,40 +21,18 @@ export async function fetchCategoryById(id: number) {
 }
 
 export async function fetchCategoryTree() {
-  return prisma.category.findMany({
+  const root = await prisma.category.findMany({
     where: {
       parentId: 0,
     },
-    //да, это пиздец
-    include: {
-      parent: true,
-      children: {
-        include: {
-          children: {
-            include: {
-              children: {
-                include: {
-                  children: {
-                    include: {
-                      children: {
-                        include: {
-                          children: {
-                            include: {
-                              children: true,
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
   });
+
+  for (let i = 0; i < root.length; i++) {
+    //@ts-ignore
+    root[i]["children"] = await findChildren(root[i].id);
+  }
+
+  return root;
 }
 
 export async function fetchPossibleParents(id: number | undefined) {
@@ -63,6 +41,49 @@ export async function fetchPossibleParents(id: number | undefined) {
   }
 
   return prisma.category.findMany();
+}
+
+async function findChildren(id: number) {
+  const category = await prisma.category.findUnique({
+    where: { id },
+    include: { children: true },
+  });
+
+  const children: any[] = [];
+
+  for (const child of category?.children ?? []) {
+    //@ts-ignore
+    child["children"] = await findChildren(child.id);
+    children.push(child);
+  }
+
+  return children;
+}
+
+export async function deleteCategory(id: number) {
+  const children = await findChildren(id);
+  const category = await prisma.category.findUnique({ where: { id } });
+
+  for (let i = 0; i < children.length; i++) {
+    await updateCategory(children[i].id, {
+      name: children[i].name,
+      parentId: category?.parentId,
+    });
+  }
+
+  console.log(category);
+
+  return prisma.category.delete({ where: { id } });
+}
+
+export async function deleteCategoryTree(id: number) {
+  const children = await findChildren(id);
+
+  for (let i = 0; i < children.length; i++) {
+    await deleteCategoryTree(children[i].id);
+  }
+
+  return prisma.category.delete({ where: { id } });
 }
 
 export async function fetchCategories({

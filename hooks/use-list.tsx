@@ -3,6 +3,7 @@ import { useSortDescriptor } from "@/hooks/use-sort-descriptor";
 import { usePaginator } from "@/hooks/use-paginator";
 import { useAsyncList } from "@react-stately/data";
 import { SortDirection } from "@react-types/shared";
+import { SortDescriptor } from "@nextui-org/react";
 
 export type FetchFunctionProps = {
   query: string;
@@ -28,17 +29,19 @@ export function useList(
     return { items };
   };
 
+  const sort = (sortDescriptor: SortDescriptor) => {
+    setLoading(true);
+    handleSort(sortDescriptor);
+  };
+
   return [
     loading,
     useAsyncList({
-      async load() {
-        return fetch();
-      },
-      async sort({ sortDescriptor }) {
-        handleSort(sortDescriptor);
+      async load({ sortDescriptor }) {
         return fetch();
       },
     }),
+    sort,
     paginator,
   ] as const;
 }

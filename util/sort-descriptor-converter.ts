@@ -13,7 +13,3 @@ export function convertSortDescriptorToPrisma(
 
   return sortDescriptor;
 }
-
-export function convertSortDescriptorFromPrisma(sortDescriptor: string) {
-  return sortDescriptor === "desc" ? "descending" : "ascending";
-}

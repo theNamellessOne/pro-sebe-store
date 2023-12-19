@@ -26,7 +26,11 @@ export function SizeTable({
 }) {
   const router = useRouter();
   const renderCell = useSizeTableCell();
-  const [loading, list, paginator] = useSizeList(query, page, sortDescriptor);
+  const [loading, list, sort, paginator] = useSizeList(
+    query,
+    page,
+    sortDescriptor,
+  );
 
   const columns = [
     { name: "Id", uid: "id" },
@@ -40,7 +44,7 @@ export function SizeTable({
     <Table
       onRowAction={(key) => router.push(`sizes/edit/${key}`)}
       sortDescriptor={sortDescriptor}
-      onSortChange={list.sort}
+      onSortChange={sort}
       topContent={<DashboardSearch />}
       bottomContent={paginator}
       classNames={{

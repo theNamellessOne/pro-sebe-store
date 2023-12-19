@@ -26,7 +26,11 @@ export function ColorTable({
 }) {
   const router = useRouter();
   const renderCell = useColorTableCell();
-  const [loading, list, paginator] = useColorList(query, page, sortDescriptor);
+  const [loading, list, sort, paginator] = useColorList(
+    query,
+    page,
+    sortDescriptor,
+  );
 
   const columns = [
     { name: "Id", uid: "id" },
@@ -38,7 +42,7 @@ export function ColorTable({
     <Table
       onRowAction={(key) => router.push(`colors/edit/${key}`)}
       sortDescriptor={sortDescriptor}
-      onSortChange={list.sort}
+      onSortChange={sort}
       topContent={<DashboardSearch />}
       bottomContent={paginator}
       classNames={{

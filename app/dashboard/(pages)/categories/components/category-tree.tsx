@@ -7,7 +7,7 @@ export async function CategoryTree() {
 
   return (
     <>
-      <DashboardHeader title={"Tree View"} />
+      <DashboardHeader title={"Tree View"} showButton={false}/>
       {categories.map((item) => {
         return <CategoryTreeItem key={item.id} value={item} />;
       })}

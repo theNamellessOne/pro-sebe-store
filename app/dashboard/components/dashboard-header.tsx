@@ -13,14 +13,14 @@ type DashboardHeaderProps = {
 
 export function DashboardHeader({
   title,
-  showButton = false,
+  showButton = true,
 }: DashboardHeaderProps) {
   const pathname = usePathname();
 
   return (
     <header className={"flex justify-between items-center"}>
       <h3 className={"text-3xl font-semibold"}>{title}</h3>
-      {showButton ?? (
+      {showButton && (
         <Link href={pathname + "/new"}>
           <Button
             color={"primary"}
