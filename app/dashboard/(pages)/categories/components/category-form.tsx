@@ -23,12 +23,21 @@ export function CategoryForm({ id, value }: CategoryFormProps) {
 
   useEffect(() => {
     fetchPossibleParents(id).then((r) => {
-      r.push({
-        id: 0,
-        name: "",
-        parentId: 0,
-      });
-      setPossibleParents(r);
+      const possibleParents: [
+        {
+          id: number;
+          name: string;
+          parentId: number | null;
+        },
+      ] = [
+        {
+          id: 0,
+          name: "No Parent",
+          parentId: 0,
+        },
+      ];
+
+      setPossibleParents(possibleParents.concat(r));
     });
   }, []);
 

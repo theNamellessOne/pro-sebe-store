@@ -26,7 +26,7 @@ export function SizeTable({
 }) {
   const router = useRouter();
   const renderCell = useSizeTableCell();
-  const [loading, list, sort, paginator] = useSizeList(
+  const { loading, list, sort, paginator } = useSizeList(
     query,
     page,
     sortDescriptor,

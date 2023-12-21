@@ -1,16 +1,15 @@
 import { fetchCategoryTree } from "@/service/category-service";
 import { CategoryTreeItem } from "@/app/dashboard/(pages)/categories/components/category-tree-item";
-import { DashboardHeader } from "@/app/dashboard/components/dashboard-header";
 
 export async function CategoryTree() {
   const categories = await fetchCategoryTree();
 
   return (
-    <>
-      <DashboardHeader title={"Tree View"} showButton={false}/>
+    <div className={"shadow-small rounded-large p-4 my-2"}>
       {categories.map((item) => {
+        //@ts-ignore
         return <CategoryTreeItem key={item.id} value={item} />;
       })}
-    </>
+    </div>
   );
 }

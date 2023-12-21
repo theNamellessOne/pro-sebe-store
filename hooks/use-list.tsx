@@ -34,14 +34,15 @@ export function useList(
     handleSort(sortDescriptor);
   };
 
-  return [
+  return {
     loading,
-    useAsyncList({
+    setLoading,
+    list: useAsyncList({
       async load({ sortDescriptor }) {
         return fetch();
       },
     }),
     sort,
     paginator,
-  ] as const;
+  };
 }

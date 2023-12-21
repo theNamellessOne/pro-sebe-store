@@ -17,6 +17,10 @@ export async function fetchSizeById(id: number) {
   };
 }
 
+export async function fetchAllSizes() {
+  return prisma.size.findMany();
+}
+
 export async function fetchSizes({
   query,
   page,

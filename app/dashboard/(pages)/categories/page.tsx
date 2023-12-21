@@ -1,8 +1,6 @@
 import { DashboardHeader } from "@/app/dashboard/components/dashboard-header";
-import React, { Suspense } from "react";
-import { Loader } from "lucide-react";
-import { CategoryTable } from "@/app/dashboard/(pages)/categories/components/category-table";
-import { CategoryTree } from "@/app/dashboard/(pages)/categories/components/category-tree";
+import React from "react";
+import { CategoryView } from "@/app/dashboard/(pages)/categories/components/category-view";
 
 export default async function Page({
   searchParams,
@@ -25,20 +23,12 @@ export default async function Page({
   return (
     <div className={"relative flex flex-col gap-4 h-full w-full p-4 px-[20px]"}>
       <DashboardHeader title={"Категорії"} />
-      <Suspense
-        key={
-          query + currentPage + sortDescriptor.direction + sortDescriptor.column
-        }
-        fallback={<Loader />}
-      >
-        <CategoryTable
-          query={query}
-          page={currentPage}
-          sortDescriptor={sortDescriptor}
-        />
-      </Suspense>
 
-      <CategoryTree />
+      <CategoryView
+        query={query}
+        page={currentPage}
+        sortDescriptor={sortDescriptor}
+      />
     </div>
   );
 }

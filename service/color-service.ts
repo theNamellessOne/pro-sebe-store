@@ -16,6 +16,10 @@ export async function fetchColorById(id: number) {
   };
 }
 
+export async function fetchAllColors() {
+  return prisma.color.findMany();
+}
+
 export async function fetchColors({
   query,
   page,

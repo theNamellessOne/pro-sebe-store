@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
+
 import "./globals.css";
-import React from "react";
+
+import type { Metadata } from "next";
 
 const font = Raleway({ subsets: ["latin"] });
 
@@ -16,8 +17,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={"h-full"}>
-      <body className={`h-full w-full ${font.className}`}>{children}</body>
+    <html lang="en">
+      <body
+        className={`dark bg-zinc-900 text-white h-full w-full ${font.className}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

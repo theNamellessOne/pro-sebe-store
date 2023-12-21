@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import { nextui } from "@nextui-org/react";
+import colors from "tailwindcss/colors";
 
 const config: Config = {
   content: [
@@ -20,6 +21,15 @@ const config: Config = {
             primary: {
               DEFAULT: "#000",
               foreground: "#fff",
+            },
+            focus: "#000",
+          },
+        },
+        dark: {
+          colors: {
+            primary: {
+              DEFAULT: colors.amber[500],
+              foreground: colors.zinc[950],
             },
             focus: "#000",
           },

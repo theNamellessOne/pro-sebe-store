@@ -17,7 +17,11 @@ import { useCategoryList } from "@/app/dashboard/(pages)/categories/hooks/use-ca
 import { useState } from "react";
 import { Button } from "@nextui-org/button";
 import { AnimatePresence, motion } from "framer-motion";
-import { deleteCategory, deleteCategoryTree } from "@/service/category-service";
+import {
+  clearCategories,
+  deleteCategory,
+  deleteCategoryTree,
+} from "@/service/category-service";
 
 export function CategoryTable({
   query,
@@ -30,12 +34,11 @@ export function CategoryTable({
 }) {
   const router = useRouter();
   const renderCell = useCategoryTableCell();
-  const [loading, list, sort, paginator] = useCategoryList(
+  const { loading, setLoading, list, sort, paginator } = useCategoryList(
     query,
     page,
     sortDescriptor,
   );
-
   const [selected, setSelected] = useState(new Set([]));
 
   const columns = [
@@ -47,25 +50,34 @@ export function CategoryTable({
   const categoryTableActions = [
     {
       name: "delete tree",
-      action: () => {
-        selected.forEach(async (item) => {
-          await deleteCategoryTree(parseInt(item));
-        });
-        setSelected(new Set([]));
-        list.reload();
+      action: async () => {
+        await deleteAction(deleteCategoryTree);
       },
     },
     {
       name: "delete",
-      action: () => {
-        selected.forEach(async (item) => {
-          await deleteCategory(parseInt(item));
-        });
-        setSelected(new Set([]));
-        list.reload();
+      action: async () => {
+        await deleteAction(deleteCategory);
       },
     },
   ];
+
+  const deleteAction = async (func: (id: number) => Promise<any>) => {
+    setLoading(true);
+    setSelected(new Set([]));
+
+    //@ts-ignore
+    if (selected === "all") {
+      await clearCategories();
+    } else {
+      //@ts-ignore
+      for (const item of selected) {
+        await func(parseInt(item));
+      }
+    }
+
+    list.reload();
+  };
 
   return (
     <div className={"my-2 flex flex-col gap-3 relative"}>
@@ -114,7 +126,7 @@ export function CategoryTable({
               exit={{ opacity: 0 }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className={`flex gap-3 bg-white absolute ${
+              className={`flex gap-3 bg-zinc-900 absolute ${
                 paginator ? "bottom-14" : "bottom-2"
               } right-1/2 translate-x-1/2 w-fit shadow-small rounded-xl p-2`}
             >

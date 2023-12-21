@@ -20,6 +20,10 @@ export async function fetchCategoryById(id: number) {
   };
 }
 
+export async function fetchAllCategories() {
+  return prisma.category.findMany();
+}
+
 export async function fetchCategoryTree() {
   const root = await prisma.category.findMany({
     where: {
@@ -71,8 +75,6 @@ export async function deleteCategory(id: number) {
     });
   }
 
-  console.log(category);
-
   return prisma.category.delete({ where: { id } });
 }
 
@@ -84,6 +86,18 @@ export async function deleteCategoryTree(id: number) {
   }
 
   return prisma.category.delete({ where: { id } });
+}
+
+export async function clearCategories() {
+  const root = await prisma.category.findMany({
+    where: {
+      parentId: 0,
+    },
+  });
+
+  for (let i = 0; i < root.length; i++) {
+    await deleteCategoryTree(root[i].id);
+  }
 }
 
 export async function fetchCategories({

@@ -19,7 +19,7 @@ export function DashboardHeader({
 
   return (
     <header className={"flex justify-between items-center"}>
-      <h3 className={"text-3xl font-semibold"}>{title}</h3>
+      <h3 className={"text-2xl font-semibold"}>{title}</h3>
       {showButton && (
         <Link href={pathname + "/new"}>
           <Button

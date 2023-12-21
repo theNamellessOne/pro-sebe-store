@@ -18,15 +18,15 @@ export function SidebarItem({ icon, name, href }: SidebarItemProps) {
     <Link href={href}>
       <div
         className={`flex items-center transition-colors ${
-          isActive && "bg-zinc-200 font-bold"
-        } hover:bg-zinc-200 py-3 pl-6 pr-4 font-semibold relative`}
+          isActive && "bg-zinc-800 font-semibold"
+        } hover:bg-zinc-800 py-4 pl-6 pr-4 relative`}
       >
         {icon}
-        <p className={"text-lg ml-3"}>{name}</p>
+        <p className={"text-lg ml-4"}>{name}</p>
 
         {isActive && (
           <span
-            className={"absolute right-0 top-0 h-full w-[2px] bg-zinc-600"}
+            className={"absolute right-0 top-0 h-full w-[2px] bg-primary"}
           ></span>
         )}
       </div>

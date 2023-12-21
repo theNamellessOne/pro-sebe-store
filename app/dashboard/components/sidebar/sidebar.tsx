@@ -60,10 +60,10 @@ export function Sidebar() {
   return (
     <aside
       className={
-        "flex flex-col fixed py-4 w-[250px] h-screen border-r border-r-0.5 overflow-y-scroll"
+        "flex flex-col h-full overflow-y-auto fixed py-6 w-[250px] border-r border-r-zinc-700 border-r-0.5"
       }
     >
-      <h2 className={"text-4xl pl-6 mb-4"}>/logan</h2>
+      <h2 className={"text-4xl pl-6 mb-6"}>/logan</h2>
       {items.map((item, idx) => {
         return <SidebarItem key={idx} {...item} />;
       })}
