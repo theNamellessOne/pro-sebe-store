@@ -112,13 +112,15 @@ model VariantSize {
 model Category {
   id   Int    @id @default(autoincrement())
   name String
+  path String
 
   // this one is kinda problematic
   // with prisma it is impossible to have proper onDelete and onUpdate actions generated automatically
   // so we will have to manage that stuff ourselves in code
-  parent           Category?         @relation("SubCategories", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  parentId         Int?
-  children         Category[]        @relation("SubCategories")
+  parent   Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentId Int?
+  children Category[] @relation("SubCategories")
+
   productCategores ProductCategory[]
 
   @@index([parentId])

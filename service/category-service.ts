@@ -169,10 +169,34 @@ async function createCategory(category: CategoryCreate) {
     };
   }
 
+  const path = await reconstructPath(category.parentId);
+
   return {
     errMsg: null,
-    value: await prisma.category.create({ data: category }),
+    value: await prisma.category.create({
+      data: {
+        ...category,
+        path: path.join(";"),
+      },
+    }),
   };
+}
+
+async function reconstructPath(parentId: number | null | undefined) {
+  let path: string[] = [];
+
+  if (!parentId) return path;
+
+  const category = await prisma.category.findUnique({
+    where: { id: parentId },
+  });
+
+  if (parentId === 0 || !category) return path;
+
+  path.push(category.id.toString());
+  path = path.concat(await reconstructPath(category.parentId));
+
+  return path;
 }
 
 async function updateCategory(id: number, category: CategoryCreate) {
@@ -183,11 +207,16 @@ async function updateCategory(id: number, category: CategoryCreate) {
     };
   }
 
+  const path = await reconstructPath(category.parentId);
+
   return {
     errMsg: null,
     value: await prisma.category.update({
       where: { id },
-      data: category,
+      data: {
+        ...category,
+        path: path.join(";"),
+      },
     }),
   };
 }

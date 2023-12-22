@@ -2,6 +2,7 @@
 
 import { ProductCreate, productSchema } from "@/schema/product-schema";
 import prisma from "@/lib/prisma";
+import { fetchCategoryById } from "@/service/category-service";
 
 export async function saveProduct(
   product: ProductCreate,
@@ -19,25 +20,11 @@ async function createProduct(product: ProductCreate) {
   }
 
   const item = await prisma.product.create({
-    data: { ...product, variants: undefined },
+    data: { ...product, variants: undefined, productCategories: undefined },
   });
 
-  const variants = [];
-  for (const variant of product.variants) {
-    await prisma.variant.create({
-      data: {
-        quantity: 0,
-        reserved: 0,
-        productId: item.id,
-        colorVariants: {
-          create: { colorId: variant.colorId },
-        },
-        sizeVariants: {
-          create: { sizeId: variant.sizeId },
-        },
-      },
-    });
-  }
+  await createProductVariants(product, item.id);
+  await createProductCategories(product, item.id);
 
   return {
     errMsg: null,
@@ -49,4 +36,48 @@ async function createProduct(product: ProductCreate) {
       },
     }),
   };
+}
+
+async function createProductCategories(
+  product: ProductCreate,
+  productId: number,
+) {
+  const allCategories: any[] = [];
+
+  for (const category of product.productCategories) {
+    const value = (await fetchCategoryById(category.id)).value;
+    if (value) allCategories.push(value);
+  }
+
+  const categorySet = new Set(allCategories);
+
+  for (const category of Array.from(categorySet)) {
+    await prisma.productCategory.create({
+      data: {
+        productId,
+        categoryId: category.id,
+      },
+    });
+  }
+}
+
+async function createProductVariants(
+  product: ProductCreate,
+  productId: number,
+) {
+  for (const variant of product.variants) {
+    await prisma.variant.create({
+      data: {
+        quantity: 0,
+        reserved: 0,
+        productId: productId,
+        colorVariants: {
+          create: { colorId: variant.colorId },
+        },
+        sizeVariants: {
+          create: { sizeId: variant.sizeId },
+        },
+      },
+    });
+  }
 }

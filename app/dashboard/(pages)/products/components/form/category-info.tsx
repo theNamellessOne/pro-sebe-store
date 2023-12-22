@@ -36,6 +36,16 @@ export function CategoryInfo() {
         label="Категорії"
         disabled={isSubmitting}
         selectionMode={"multiple"}
+        onSelectionChange={(selection) => {
+          const arr = Array.from(selection);
+          const categoryArr: { id: number }[] = [];
+
+          for (const item of arr) {
+            categoryArr.push({ id: parseInt(item.toString()) });
+          }
+
+          form.setValue("productCategories", categoryArr);
+        }}
       >
         {categories?.map((category: any) => (
           <SelectItem key={category.id} value={category.id}>

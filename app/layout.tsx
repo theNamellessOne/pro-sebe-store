@@ -17,12 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={`dark bg-zinc-900 text-white h-full w-full ${font.className}`}
-      >
-        {children}
-      </body>
+    <html
+      lang="en"
+      className={`dark bg-zinc-900 text-white h-full w-full ${font.className}`}
+    >
+      <body>{children}</body>
     </html>
   );
 }

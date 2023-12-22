@@ -21,7 +21,7 @@ type CategoryFormProps = {
 export function CategoryForm({ id, value }: CategoryFormProps) {
   const [possibleParents, setPossibleParents] = useState<any[]>([]);
 
-  useEffect(() => {
+  function fetchParents() {
     fetchPossibleParents(id).then((r) => {
       const possibleParents: [
         {
@@ -39,6 +39,10 @@ export function CategoryForm({ id, value }: CategoryFormProps) {
 
       setPossibleParents(possibleParents.concat(r));
     });
+  }
+
+  useEffect(() => {
+    fetchParents();
   }, []);
 
   const form = useForm<CategoryCreate>({
@@ -58,6 +62,8 @@ export function CategoryForm({ id, value }: CategoryFormProps) {
     } else {
       toast.success("Категорію Збережено");
     }
+
+    fetchParents();
   };
 
   return (

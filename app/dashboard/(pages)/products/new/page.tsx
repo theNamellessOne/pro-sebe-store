@@ -13,6 +13,7 @@ export default function Page() {
           compareAtPrice: 0.0,
           status: "DRAFT",
           variants: [],
+          categories: [],
         }}
       />
     </div>

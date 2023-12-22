@@ -12,6 +12,7 @@ export const productSchema = z.object({
   compareAtPrice: z.coerce.number().min(0.0),
   status: z.enum(["DRAFT", "ACTIVE", "ARCHIVED"]),
   variants: z.array(variantSchema),
+  productCategories: z.array(z.object({ id: z.coerce.number() })),
 });
 
 export type ProductCreate = z.infer<typeof productSchema>;
