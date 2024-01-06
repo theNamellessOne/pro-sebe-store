@@ -1,6 +1,7 @@
 import { SortDescriptor } from "@nextui-org/react";
 import { useList } from "@/hooks/use-list";
-import { fetchSizes } from "@/service/size-service";
+import { Size } from "@prisma/client";
+import { SizeService } from "@/app/dashboard/(pages)/sizes/service/size-service";
 
 export function useSizeList(
   query: string,
@@ -14,5 +15,5 @@ export function useSizeList(
     sortDirection: sortDescriptor?.direction ?? "ascending",
   };
 
-  return useList(props, fetchSizes);
+  return useList<Size>(props, SizeService.instance.fetch);
 }

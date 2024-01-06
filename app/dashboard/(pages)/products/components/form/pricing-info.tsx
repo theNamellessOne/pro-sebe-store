@@ -3,12 +3,12 @@
 import { Input } from "@nextui-org/input";
 import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import { ProductCreate } from "@/schema/product-schema";
+import { ProductSave } from "@/app/dashboard/(pages)/products/schema/product-schema";
 import { Tooltip } from "@nextui-org/react";
 import { HelpCircle } from "lucide-react";
 
 export function PricingInfo() {
-  const form = useFormContext<ProductCreate>();
+  const form = useFormContext<ProductSave>();
   const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
 
@@ -25,7 +25,7 @@ export function PricingInfo() {
         label={"Цiна"}
         disabled={isSubmitting}
         isInvalid={!!errors.price}
-        defaultValue={form.getValues().price.toString()}
+        defaultValue={form.getValues().price?.toString()}
         errorMessage={errors.price?.message}
         startContent={
           <p className={"-mb-0.5 flex-shrink-0 text-default-400"}>$</p>
@@ -39,9 +39,9 @@ export function PricingInfo() {
         type={"number"}
         step={0.01}
         label={"Цiна для порiвняннь"}
-        disabled={isSubmitting}
+        isDisabled={isSubmitting}
         isInvalid={!!errors.compareAtPrice}
-        defaultValue={form.getValues().compareAtPrice.toString()}
+        defaultValue={form.getValues().compareAtPrice?.toString()}
         errorMessage={errors.compareAtPrice?.message}
         startContent={
           <p className={"-mb-0.5 flex-shrink-0 text-default-400"}>$</p>

@@ -1,7 +1,9 @@
 "use client";
 
-import { SizeCreate, sizeSchema } from "@/schema/size-schema";
-import { saveSize } from "@/service/size-service";
+import {
+  SizeSave,
+  sizeSchema,
+} from "@/app/dashboard/(pages)/sizes/schema/size-schema";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,14 +12,10 @@ import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 
 import { toast, Toaster } from "react-hot-toast";
+import { SizeService } from "@/app/dashboard/(pages)/sizes/service/size-service";
 
-type SizeFormProps = {
-  id?: number;
-  value: SizeCreate;
-};
-
-export function SizeForm({ id, value }: SizeFormProps) {
-  const form = useForm<SizeCreate>({
+export function SizeForm({ value }: { value?: SizeSave }) {
+  const form = useForm<SizeSave>({
     mode: "onBlur",
     resolver: zodResolver(sizeSchema),
     defaultValues: value,
@@ -26,8 +24,9 @@ export function SizeForm({ id, value }: SizeFormProps) {
   const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
 
-  const handleSubmit = async (formData: SizeCreate) => {
-    const { errMsg } = await saveSize(formData, id);
+  const handleSubmit = async (formData: SizeSave) => {
+    formData.id = value?.id;
+    const { errMsg } = await SizeService.instance.save(formData);
 
     if (errMsg) {
       toast.error("Щось пішло не так");
@@ -49,7 +48,8 @@ export function SizeForm({ id, value }: SizeFormProps) {
           label={"Назва"}
           disabled={isSubmitting}
           isInvalid={!!errors.name}
-          defaultValue={value.name}
+          defaultValue={value?.name}
+          placeholder={"3XL"}
           errorMessage={errors.name?.message}
         />
         <Input
@@ -58,7 +58,8 @@ export function SizeForm({ id, value }: SizeFormProps) {
           label={"Обхват Грудей"}
           disabled={isSubmitting}
           isInvalid={!!errors.chestSize}
-          defaultValue={value.chestSize.toString()}
+          defaultValue={value?.chestSize.toString()}
+          placeholder={"159"}
           errorMessage={errors.chestSize?.message}
         />
         <Input
@@ -67,7 +68,8 @@ export function SizeForm({ id, value }: SizeFormProps) {
           label={"Обхват Талії"}
           disabled={isSubmitting}
           isInvalid={!!errors.waistSize}
-          defaultValue={value.waistSize.toString()}
+          defaultValue={value?.waistSize.toString()}
+          placeholder={"159"}
           errorMessage={errors.waistSize?.message}
         />
         <Input
@@ -76,7 +78,8 @@ export function SizeForm({ id, value }: SizeFormProps) {
           label={"Обхват Бедер"}
           disabled={isSubmitting}
           isInvalid={!!errors.thighSize}
-          defaultValue={value.thighSize.toString()}
+          defaultValue={value?.thighSize.toString()}
+          placeholder={"159"}
           errorMessage={errors.thighSize?.message}
         />
       </div>

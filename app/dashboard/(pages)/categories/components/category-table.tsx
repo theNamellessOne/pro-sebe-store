@@ -11,27 +11,17 @@ import {
 import Loading from "@/app/dashboard/loading";
 import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
 import { useRouter } from "next/navigation";
-import { SortDescriptor } from "@nextui-org/react";
 import { useCategoryTableCell } from "@/app/dashboard/(pages)/categories/hooks/use-category-table-cell";
 import { useCategoryList } from "@/app/dashboard/(pages)/categories/hooks/use-category-list";
-import { useState } from "react";
-import { Button } from "@nextui-org/button";
-import { AnimatePresence, motion } from "framer-motion";
-import {
-  clearCategories,
-  deleteCategory,
-  deleteCategoryTree,
-} from "@/service/category-service";
+import { Key, useState } from "react";
+import { CategoryService } from "@/app/dashboard/(pages)/categories/service/category-service";
+import { TableProps } from "@/app/dashboard/types/table-props";
+import { Selection } from "@nextui-org/react";
+import { TableActions } from "@/app/dashboard/components/table-actions";
 
-export function CategoryTable({
-  query,
-  page,
-  sortDescriptor,
-}: {
-  query: string;
-  page: number;
-  sortDescriptor: SortDescriptor;
-}) {
+const service = CategoryService.instance;
+
+export function CategoryTable({ query, page, sortDescriptor }: TableProps) {
   const router = useRouter();
   const renderCell = useCategoryTableCell();
   const { loading, setLoading, list, sort, paginator } = useCategoryList(
@@ -39,7 +29,7 @@ export function CategoryTable({
     page,
     sortDescriptor,
   );
-  const [selected, setSelected] = useState(new Set([]));
+  const [selected, setSelected] = useState<Selection>(new Set([]));
 
   const columns = [
     { name: "Id", uid: "id" },
@@ -47,35 +37,33 @@ export function CategoryTable({
     { name: "Батьківська Категорія", uid: "parentId" },
   ];
 
-  const categoryTableActions = [
+  const tableActions = [
     {
       name: "delete tree",
       action: async () => {
-        await deleteAction(deleteCategoryTree);
+        await deleteAction(service.deleteTree);
       },
     },
     {
       name: "delete",
       action: async () => {
-        await deleteAction(deleteCategory);
+        await deleteAction(service.delete);
       },
     },
   ];
 
-  const deleteAction = async (func: (id: number) => Promise<any>) => {
+  const deleteAction = async (func: (id: number) => Promise<void>) => {
     setLoading(true);
-    setSelected(new Set([]));
 
-    //@ts-ignore
     if (selected === "all") {
-      await clearCategories();
+      await service.deleteMany(query);
     } else {
-      //@ts-ignore
-      for (const item of selected) {
-        await func(parseInt(item));
+      for (const item of Array.from(selected)) {
+        await func(parseInt(item.toString()));
       }
     }
 
+    setSelected(new Set([]));
     list.reload();
   };
 
@@ -87,7 +75,6 @@ export function CategoryTable({
         onSortChange={sort}
         selectionMode="multiple"
         selectedKeys={selected}
-        //@ts-ignore
         onSelectionChange={setSelected}
         topContent={<DashboardSearch />}
         bottomContent={paginator}
@@ -118,35 +105,13 @@ export function CategoryTable({
           )}
         </TableBody>
       </Table>
-      <AnimatePresence>
-        {
-          //@ts-ignore
-          (selected?.size > 0 || selected === "all") && (
-            <motion.div
-              exit={{ opacity: 0 }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className={`flex gap-3 bg-zinc-900 absolute ${
-                paginator ? "bottom-14" : "bottom-2"
-              } right-1/2 translate-x-1/2 w-fit shadow-small rounded-xl p-2`}
-            >
-              {categoryTableActions.map((item, idx) => {
-                return (
-                  <Button
-                    key={item.name + idx}
-                    variant={"flat"}
-                    size={"sm"}
-                    className={"text-sm"}
-                    onClick={item.action}
-                  >
-                    {item.name}
-                  </Button>
-                );
-              })}
-            </motion.div>
-          )
+      <TableActions
+        hasSelected={
+          (selected as Set<Key>).size > 0 || (selected as string) === "all"
         }
-      </AnimatePresence>
+        hasPaginator={!!paginator}
+        actions={tableActions}
+      />
     </div>
   );
 }

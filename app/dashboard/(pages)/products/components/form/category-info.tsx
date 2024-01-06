@@ -2,22 +2,30 @@
 
 import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import { ProductCreate } from "@/schema/product-schema";
+import { ProductSave } from "@/app/dashboard/(pages)/products/schema/product-schema";
 import { useEffect, useState } from "react";
-import { fetchAllCategories } from "@/service/category-service";
 import Loading from "@/app/dashboard/loading";
 import { Select, SelectItem } from "@nextui-org/react";
+import { CategoryService } from "@/app/dashboard/(pages)/categories/service/category-service";
+import { Category } from "@prisma/client";
+
+const service = CategoryService.instance;
 
 export function CategoryInfo() {
-  const form = useFormContext<ProductCreate>();
+  const form = useFormContext<ProductSave>();
   const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
 
   const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState<any>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState(
+    form
+      .getValues("productCategories")
+      ?.map((category) => category.id.toString()),
+  );
 
   useEffect(() => {
-    fetchAllCategories().then((res) => {
+    service.fetchAll().then((res) => {
       setCategories(res);
       setLoading(false);
     });
@@ -34,8 +42,9 @@ export function CategoryInfo() {
 
       <Select
         label="Категорії"
-        disabled={isSubmitting}
+        isDisabled={isSubmitting}
         selectionMode={"multiple"}
+        defaultSelectedKeys={selectedCategories}
         onSelectionChange={(selection) => {
           const arr = Array.from(selection);
           const categoryArr: { id: number }[] = [];

@@ -2,24 +2,14 @@ import { DashboardHeader } from "@/app/dashboard/components/dashboard-header";
 import { ColorTable } from "@/app/dashboard/(pages)/colors/components/color-table";
 import { Suspense } from "react";
 import { Loader } from "lucide-react";
+import { readSearchParams, SearchParams } from "@/util/read-search-params";
 
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: {
-    query?: string;
-    page?: string;
-    sortDescriptor?: string;
-  };
+  searchParams?: SearchParams;
 }) {
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
-  const sortDescriptor = searchParams?.sortDescriptor
-    ? JSON.parse(searchParams?.sortDescriptor)
-    : {
-        column: "id",
-        direction: "ascending",
-      };
+  const { query, currentPage, sortDescriptor } = readSearchParams(searchParams);
 
   return (
     <>

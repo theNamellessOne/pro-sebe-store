@@ -13,17 +13,9 @@ import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
 import { useColorTableCell } from "@/app/dashboard/(pages)/colors/hooks/use-color-table-cell";
 import { useColorList } from "@/app/dashboard/(pages)/colors/hooks/use-color-list";
 import { useRouter } from "next/navigation";
-import { SortDescriptor } from "@nextui-org/react";
+import { TableProps } from "@/app/dashboard/types/table-props";
 
-export function ColorTable({
-  query,
-  page,
-  sortDescriptor,
-}: {
-  query: string;
-  page: number;
-  sortDescriptor: SortDescriptor;
-}) {
+export function ColorTable({ query, page, sortDescriptor }: TableProps) {
   const router = useRouter();
   const renderCell = useColorTableCell();
   const { loading, list, sort, paginator } = useColorList(

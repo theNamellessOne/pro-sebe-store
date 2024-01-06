@@ -2,30 +2,47 @@
 
 import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import { ProductCreate } from "@/schema/product-schema";
+import {
+  PRODUCT_STATUSES,
+  ProductSave,
+} from "@/app/dashboard/(pages)/products/schema/product-schema";
 import { Select, SelectItem } from "@nextui-org/react";
+import { Input } from "@nextui-org/input";
 
-export function InternalInfo() {
-  const form = useFormContext<ProductCreate>();
+export function InternalInfo({ isEditing = false }: { isEditing?: boolean }) {
+  const form = useFormContext<ProductSave>();
   const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
 
-  const values = ["DRAFT", "ACTIVE", "ARCHIVE"];
+  const registerArticleInput = () => {
+    if (!isEditing) {
+      return { ...form.register("article") };
+    }
+  };
 
   return (
     <div className={"flex flex-col gap-4 p-4 shadow-small rounded-large"}>
       <SectionTitle title={"Внутрiшня Iнформацiя"} />
 
+      <Input
+        {...registerArticleInput()}
+        label={"Артикул"}
+        isDisabled={isSubmitting || isEditing}
+        isInvalid={!!errors.article}
+        defaultValue={form.getValues().article}
+        errorMessage={errors.article?.message}
+      />
+
       <Select
         label="Статус"
         defaultSelectedKeys={new Set([form.getValues().status])}
-        disabled={isSubmitting}
+        isDisabled={isSubmitting}
         isInvalid={!!errors.status}
         errorMessage={errors.status?.message}
       >
-        {values.map((value) => (
-          <SelectItem key={value} value={value}>
-            {value}
+        {PRODUCT_STATUSES.map((status) => (
+          <SelectItem key={status} value={status}>
+            {status}
           </SelectItem>
         ))}
       </Select>

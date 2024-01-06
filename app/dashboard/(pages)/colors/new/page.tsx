@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <div className={"p-4 px-[20px]"}>
       <DashboardBackHeader title={"Додати Колір"} />
-      <ColorForm value={{ name: "", hexValue: "#000000" }} />
+      <ColorForm />
     </div>
   );
 }

@@ -3,10 +3,10 @@
 import { Input, Textarea } from "@nextui-org/input";
 import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import { ProductCreate } from "@/schema/product-schema";
+import { ProductSave } from "@/app/dashboard/(pages)/products/schema/product-schema";
 
 export function GeneralInfo() {
-  const form = useFormContext<ProductCreate>();
+  const form = useFormContext<ProductSave>();
   const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
 
@@ -17,7 +17,7 @@ export function GeneralInfo() {
       <Input
         {...form.register("name")}
         label={"Назва"}
-        disabled={isSubmitting}
+        isDisabled={isSubmitting}
         isInvalid={!!errors.name}
         defaultValue={form.getValues().name}
         errorMessage={errors.name?.message}
@@ -25,7 +25,7 @@ export function GeneralInfo() {
       <Textarea
         {...form.register("description")}
         label={"Опис"}
-        disabled={isSubmitting}
+        isDisabled={isSubmitting}
         isInvalid={!!errors.description}
         defaultValue={form.getValues().description}
         errorMessage={errors.description?.message}

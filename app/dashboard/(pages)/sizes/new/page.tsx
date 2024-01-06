@@ -5,9 +5,7 @@ export default function Page() {
   return (
     <div className={"p-4 px-[20px]"}>
       <DashboardBackHeader title={"Додати Розмір"} />
-      <SizeForm
-        value={{ name: "", chestSize: 0, waistSize: 0, thighSize: 0 }}
-      />
+      <SizeForm />
     </div>
   );
 }

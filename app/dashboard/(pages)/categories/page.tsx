@@ -1,24 +1,14 @@
 import { DashboardHeader } from "@/app/dashboard/components/dashboard-header";
 import React from "react";
 import { CategoryView } from "@/app/dashboard/(pages)/categories/components/category-view";
+import { readSearchParams, SearchParams } from "@/util/read-search-params";
 
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: {
-    query?: string;
-    page?: string;
-    sortDescriptor?: string;
-  };
+  searchParams?: SearchParams;
 }) {
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
-  const sortDescriptor = searchParams?.sortDescriptor
-    ? JSON.parse(searchParams?.sortDescriptor)
-    : {
-        column: "id",
-        direction: "ascending",
-      };
+  const { query, currentPage, sortDescriptor } = readSearchParams(searchParams);
 
   return (
     <div className={"relative flex flex-col gap-4 h-full w-full p-4 px-[20px]"}>

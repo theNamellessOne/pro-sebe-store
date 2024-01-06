@@ -12,9 +12,11 @@ export type FetchFunctionProps = {
   sortDirection: SortDirection;
 };
 
-export function useList(
+export function useList<T>(
   props: FetchFunctionProps,
-  fetchFunction: (props: FetchFunctionProps) => Promise<any>,
+  fetchFunction: (
+    props: FetchFunctionProps,
+  ) => Promise<{ items: Iterable<T>; pages: number }>,
 ) {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -23,9 +25,12 @@ export function useList(
 
   const fetch = async () => {
     setLoading(true);
+
     const { items, pages } = await fetchFunction(props);
+
     setTotal(pages);
     setLoading(false);
+
     return { items };
   };
 
@@ -38,7 +43,7 @@ export function useList(
     loading,
     setLoading,
     list: useAsyncList({
-      async load({ sortDescriptor }) {
+      async load() {
         return fetch();
       },
     }),

@@ -1,19 +1,16 @@
 import { DashboardBackHeader } from "@/app/dashboard/components/dashboard-back-header";
-import { ColorForm } from "@/app/dashboard/(pages)/colors/components/color-form";
-import { fetchColorById } from "@/service/color-service";
+import { ProductService } from "@/app/dashboard/(pages)/products/service/product-service";
+import { ProductForm } from "@/app/dashboard/(pages)/products/components/form/product-form";
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const { errMsg, value } = await fetchColorById(+params.id);
+  const { errMsg, value } = await ProductService.instance.fetchById(params.id);
 
   return (
     <div className={"p-4 px-[20px]"}>
-      <DashboardBackHeader title={"Редагувати Колір"} />
-
+      <DashboardBackHeader title={"Редагувати Товар"} />
       {value && (
-        <ColorForm
-          id={+params.id}
-          value={{ name: value.name, hexValue: value.hexValue }}
-        />
+        //@ts-ignore
+        <ProductForm value={value} isEditing={true} />
       )}
     </div>
   );

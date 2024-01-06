@@ -12,6 +12,8 @@ generator client {
   previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
+// PRODUCT INFO
+
 enum ProductStatus {
   DRAFT
   ACTIVE
@@ -19,7 +21,7 @@ enum ProductStatus {
 }
 
 model Product {
-  id Int @id @default(autoincrement())
+  article String @id
 
   status ProductStatus
 
@@ -33,21 +35,31 @@ model Product {
   productCategories ProductCategory[]
 }
 
+// PRODUCT VARIANTS INFO
+
 model Variant {
   id Int @id @default(autoincrement())
+
+  name String
 
   reserved Int
   quantity Int
 
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int
+  product        Product @relation(fields: [productArticle], references: [article])
+  productArticle String
 
-  sizeVariants  VariantSize[]
-  colorVariants VariantColor[]
-  orderItems    OrderItem[]
-  mediaUrls     MediaUrl[]
+  color   Color @relation(fields: [colorId], references: [id])
+  colorId Int
 
-  @@index([productId])
+  size   Size @relation(fields: [sizeId], references: [id])
+  sizeId Int
+
+  orderItems OrderItem[]
+  mediaUrls  MediaUrl[]
+
+  @@index([productArticle])
+  @@index([colorId])
+  @@index([sizeId])
 }
 
 model MediaUrl {
@@ -65,23 +77,9 @@ model Color {
 
   name     String
   hexValue String
-
-  colorVariants VariantColor[]
+  variant  Variant[]
 
   @@fulltext([name])
-}
-
-model VariantColor {
-  id Int @id @default(autoincrement())
-
-  color   Color @relation(fields: [colorId], references: [id])
-  colorId Int
-
-  variant   Variant @relation(fields: [variantId], references: [id])
-  variantId Int
-
-  @@index([colorId])
-  @@index([variantId])
 }
 
 model Size {
@@ -91,23 +89,11 @@ model Size {
   waistSize Int
   thighSize Int
 
-  name String
-
-  sizeVariants VariantSize[]
+  name    String
+  variant Variant[]
 }
 
-model VariantSize {
-  id Int @id @default(autoincrement())
-
-  size   Size @relation(fields: [sizeId], references: [id])
-  sizeId Int
-
-  variant   Variant @relation(fields: [variantId], references: [id])
-  variantId Int
-
-  @@index([sizeId])
-  @@index([variantId])
-}
+// CATEGORY INFO
 
 model Category {
   id   Int    @id @default(autoincrement())
@@ -129,15 +115,17 @@ model Category {
 model ProductCategory {
   id Int @id @default(autoincrement())
 
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int
+  product        Product @relation(fields: [productArticle], references: [article])
+  productArticle String
 
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId Int
 
-  @@index([productId])
+  @@index([productArticle])
   @@index([categoryId])
 }
+
+// USER INFO
 
 enum Role {
   USER
@@ -146,22 +134,65 @@ enum Role {
   OWNER
 }
 
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid())
 
-  name       String
-  lastName   String
-  secondName String
+  image    String?
+  accounts Account[]
+  sessions Session[]
 
-  email    String @unique
-  phone    String @unique
-  password String
+  name String?
+
+  email         String?   @unique
+  emailVerified DateTime?
+  phone         String?   @unique
+  password      String?
 
   role Role @default(USER)
 
   reviews   Review[]
   addresses AddressParts[]
 }
+
+// REVIEW INFO
 
 enum ReviewStatus {
   ON_MODERATION
@@ -171,8 +202,8 @@ enum ReviewStatus {
 model Review {
   id Int @id @default(autoincrement())
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
   content String
   status  ReviewStatus @default(ON_MODERATION)
@@ -180,11 +211,13 @@ model Review {
   @@index([userId])
 }
 
+// ORDER INFO
+
 model AddressParts {
   id Int @id @default(autoincrement())
 
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int
+  user   User?  @relation(fields: [userId], references: [id])
+  userId String
 
   postCode Int
 
@@ -239,8 +272,11 @@ model OrderItem {
   @@index([variantId])
 }
 
+// BANNER INFO
+
 model Banner {
   id            Int     @id @default(autoincrement())
+  name          String
   imageUrl      String
   shouldBeOnTop Boolean
 }

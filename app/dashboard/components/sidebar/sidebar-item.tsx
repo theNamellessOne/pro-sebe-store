@@ -18,7 +18,7 @@ export function SidebarItem({ icon, name, href }: SidebarItemProps) {
     <Link href={href}>
       <div
         className={`flex items-center transition-colors ${
-          isActive && "bg-zinc-800 font-semibold"
+          isActive && "bg-zinc-800 font-semibold text-primary"
         } hover:bg-zinc-800 py-4 pl-6 pr-4 relative`}
       >
         {icon}

@@ -1,6 +1,7 @@
 import { SortDescriptor } from "@nextui-org/react";
 import { useList } from "@/hooks/use-list";
-import { fetchCategories } from "@/service/category-service";
+import { CategoryService } from "@/app/dashboard/(pages)/categories/service/category-service";
+import { Category } from "@prisma/client";
 
 export function useCategoryList(
   query: string,
@@ -14,5 +15,5 @@ export function useCategoryList(
     sortDirection: sortDescriptor?.direction ?? "ascending",
   };
 
-  return useList(props, fetchCategories);
+  return useList<Category>(props, CategoryService.instance.fetch);
 }

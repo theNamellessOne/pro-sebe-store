@@ -1,15 +1,9 @@
 import { Key, useCallback } from "react";
+import { Category } from "@prisma/client";
 
 export function useCategoryTableCell() {
   return useCallback(
-    (
-      category: {
-        id: number;
-        name: string;
-        parent: any;
-      },
-      columnKey: Key,
-    ) => {
+    (category: { parent: Category | undefined } & Category, columnKey: Key) => {
       switch (columnKey) {
         case "id":
           return category.id;

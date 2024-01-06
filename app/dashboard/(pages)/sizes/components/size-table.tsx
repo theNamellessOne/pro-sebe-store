@@ -11,19 +11,11 @@ import {
 import Loading from "@/app/dashboard/loading";
 import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
 import { useRouter } from "next/navigation";
-import { SortDescriptor } from "@nextui-org/react";
 import { useSizeTableCell } from "@/app/dashboard/(pages)/sizes/hooks/use-size-table-cell";
 import { useSizeList } from "@/app/dashboard/(pages)/sizes/hooks/use-size-list";
+import { TableProps } from "@/app/dashboard/types/table-props";
 
-export function SizeTable({
-  query,
-  page,
-  sortDescriptor,
-}: {
-  query: string;
-  page: number;
-  sortDescriptor: SortDescriptor;
-}) {
+export function SizeTable({ query, page, sortDescriptor }: TableProps) {
   const router = useRouter();
   const renderCell = useSizeTableCell();
   const { loading, list, sort, paginator } = useSizeList(

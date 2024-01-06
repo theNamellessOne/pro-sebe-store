@@ -1,6 +1,9 @@
 "use client";
 
-import { ProductCreate, productSchema } from "@/schema/product-schema";
+import {
+  ProductSave,
+  productSchema,
+} from "@/app/dashboard/(pages)/products/schema/product-schema";
 
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,17 +18,21 @@ import { OptionInfo } from "@/app/dashboard/(pages)/products/components/form/opt
 import { VariantInfo } from "@/app/dashboard/(pages)/products/components/form/variant-info";
 import { useState } from "react";
 import Loading from "@/app/dashboard/loading";
-import { saveProduct } from "@/service/product-service";
+import { ProductService } from "@/app/dashboard/(pages)/products/service/product-service";
 
-type ProductFormProps = {
-  id?: number;
-  value: ProductCreate;
-};
-
-export function ProductForm({ id, value }: ProductFormProps) {
+export function ProductForm({
+  value,
+  isEditing = false,
+}: {
+  value?: ProductSave;
+  isEditing?: boolean;
+}) {
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<ProductCreate>({
+  if (!value) value = {} as ProductSave;
+  if (!value?.status) value.status = "DRAFT";
+
+  const form = useForm<ProductSave>({
     mode: "onBlur",
     resolver: zodResolver(productSchema),
     defaultValues: value,
@@ -33,9 +40,9 @@ export function ProductForm({ id, value }: ProductFormProps) {
   const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
 
-  const handleSubmit = async (formData: ProductCreate) => {
-    const { errMsg, value } = await saveProduct(formData, undefined);
-    console.log(value);
+  const handleSubmit = async (formData: ProductSave) => {
+    // @ts-ignore
+    const { errMsg } = await ProductService.instance.save(formData);
 
     if (errMsg) {
       toast.error("Щось пішло не так");
@@ -56,7 +63,7 @@ export function ProductForm({ id, value }: ProductFormProps) {
             <VariantInfo />
           </div>
           <div className={"flex flex-col gap-4 lg:w-[280px] xl:w-[340px]"}>
-            <InternalInfo />
+            <InternalInfo isEditing={isEditing} />
             <CategoryInfo />
             <OptionInfo />
           </div>

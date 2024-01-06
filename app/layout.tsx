@@ -3,6 +3,7 @@ import { Raleway } from "next/font/google";
 import "./globals.css";
 
 import type { Metadata } from "next";
+import { AuthProvider } from "@/providers/auth-provider";
 
 const font = Raleway({ subsets: ["latin"] });
 
@@ -21,7 +22,9 @@ export default function RootLayout({
       lang="en"
       className={`dark bg-zinc-900 text-white h-full w-full ${font.className}`}
     >
-      <body>{children}</body>
+      <AuthProvider>
+        <body>{children}</body>
+      </AuthProvider>
     </html>
   );
 }

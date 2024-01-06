@@ -2,35 +2,75 @@
 
 import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import { ProductCreate } from "@/schema/product-schema";
+import { ProductSave } from "@/app/dashboard/(pages)/products/schema/product-schema";
 import { useEffect, useState } from "react";
 import Loading from "@/app/dashboard/loading";
-import { Select, SelectItem } from "@nextui-org/react";
-import { fetchAllSizes } from "@/service/size-service";
-import { fetchAllColors } from "@/service/color-service";
+import { Select, Selection, SelectItem } from "@nextui-org/react";
 import { Chip } from "@nextui-org/chip";
 import { productEventChannel } from "@/app/dashboard/(pages)/products/events/product-event-channel";
+import { Color, Size } from "@prisma/client";
+import { SizeService } from "@/app/dashboard/(pages)/sizes/service/size-service";
+import { ColorService } from "@/app/dashboard/(pages)/colors/service/color-service";
 
 export function OptionInfo() {
-  const form = useFormContext<ProductCreate>();
+  const form = useFormContext<ProductSave>();
   const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
   const [loading, setLoading] = useState(true);
 
-  const [sizes, setSizes] = useState<any>([]);
-  const [colors, setColors] = useState<any>([]);
-  const [selectedSizes, setSelectedSizes] = useState<any>([]);
-  const [selectedColors, setSelectedColors] = useState<any>([]);
+  const [sizes, setSizes] = useState<Size[]>([]);
+  const [colors, setColors] = useState<Color[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<Size[]>([]);
+  const [selectedSizesKeys, setSelectedSizesKeys] = useState<Selection>(
+    new Set([]),
+  );
+  const [selectedColors, setSelectedColors] = useState<Color[]>([]);
+  const [selectedColorsKeys, setSelectedColorsKeys] = useState<Selection>(
+    new Set([]),
+  );
 
   useEffect(() => {
     const fetch = async () => {
-      setSizes(await fetchAllSizes());
-      setColors(await fetchAllColors());
-
-      return false;
+      return {
+        sizes: await SizeService.instance.fetchAll(),
+        colors: await ColorService.instance.fetchAll(),
+      };
     };
 
-    fetch().then(setLoading);
+    fetch().then((options) => {
+      setSizes(options.sizes);
+      setColors(options.colors);
+
+      const sizesValue: Size[] = [];
+      const colorsValue: Color[] = [];
+      const variants = form.getValues("variants");
+
+      if (!variants) {
+        setLoading(false);
+        return;
+      }
+
+      for (const variant of variants) {
+        for (const size of options.sizes) {
+          if (variant.sizeId === size.id) sizesValue.push(size);
+        }
+        for (const color of options.colors) {
+          if (variant.colorId === color.id) colorsValue.push(color);
+        }
+      }
+
+      setSelectedSizes(sizesValue);
+      setSelectedColors(colorsValue);
+
+      setSelectedSizesKeys(
+        new Set(sizesValue.map((size) => size.id.toString())),
+      );
+      setSelectedColorsKeys(
+        new Set(colorsValue.map((color) => color.id.toString())),
+      );
+
+      setLoading(false);
+    });
   }, []);
 
   return (
@@ -43,13 +83,14 @@ export function OptionInfo() {
       {loading && <Loading />}
 
       <Select
-        isMultiline
         label="Кольори"
-        disabled={isSubmitting}
+        isDisabled={isSubmitting}
         selectionMode={"multiple"}
+        selectedKeys={selectedColorsKeys}
         onSelectionChange={(selection) => {
+          setSelectedColorsKeys(selection);
           const selectionArray = Array.from(selection);
-          const selected = [];
+          const selected: Color[] = [];
 
           for (const color of colors) {
             for (let selectionKey of selectionArray) {
@@ -60,10 +101,10 @@ export function OptionInfo() {
           }
 
           setSelectedColors(selected);
-          productEventChannel.emit("onOptionsChanged", [
-            selected,
-            selectedSizes,
-          ]);
+          productEventChannel.emit("onOptionsChanged", {
+            colors: selected,
+            sizes: selectedSizes,
+          });
         }}
         renderValue={(items) => {
           return (
@@ -101,11 +142,13 @@ export function OptionInfo() {
 
       <Select
         label="Розмiри"
-        disabled={isSubmitting}
+        isDisabled={isSubmitting}
         selectionMode={"multiple"}
+        selectedKeys={selectedSizesKeys}
         onSelectionChange={(selection) => {
+          setSelectedSizesKeys(selection);
           const selectionArray = Array.from(selection);
-          const selected = [];
+          const selected: Size[] = [];
 
           for (const size of sizes) {
             for (let selectionKey of selectionArray) {
@@ -116,10 +159,10 @@ export function OptionInfo() {
           }
 
           setSelectedSizes(selected);
-          productEventChannel.emit("onOptionsChanged", [
-            selectedColors,
-            selected,
-          ]);
+          productEventChannel.emit("onOptionsChanged", {
+            colors: selectedColors,
+            sizes: selected,
+          });
         }}
       >
         {sizes?.map((category: any) => (

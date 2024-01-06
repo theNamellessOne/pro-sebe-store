@@ -1,6 +1,7 @@
-import { fetchColors } from "@/service/color-service";
+import { ColorService } from "@/app/dashboard/(pages)/colors/service/color-service";
 import { SortDescriptor } from "@nextui-org/react";
 import { useList } from "@/hooks/use-list";
+import { Color } from "@prisma/client";
 
 export function useColorList(
   query: string,
@@ -14,5 +15,5 @@ export function useColorList(
     sortDirection: sortDescriptor?.direction ?? "ascending",
   };
 
-  return useList(props, fetchColors);
+  return useList<Color>(props, ColorService.instance.fetch);
 }

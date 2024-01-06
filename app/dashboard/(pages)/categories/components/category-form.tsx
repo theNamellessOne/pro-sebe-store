@@ -1,7 +1,9 @@
 "use client";
 
-import { CategoryCreate, categorySchema } from "@/schema/category-schema";
-import { fetchPossibleParents, saveCategory } from "@/service/category-service";
+import {
+  CategorySave,
+  categorySchema,
+} from "@/app/dashboard/(pages)/categories/schema/category-schema";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,32 +14,26 @@ import { Button } from "@nextui-org/button";
 import { toast, Toaster } from "react-hot-toast";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import { CategoryService } from "@/app/dashboard/(pages)/categories/service/category-service";
+import { Category } from "@prisma/client";
 
-type CategoryFormProps = {
-  id?: number;
-  value: CategoryCreate;
-};
+const service = CategoryService.instance;
 
-export function CategoryForm({ id, value }: CategoryFormProps) {
-  const [possibleParents, setPossibleParents] = useState<any[]>([]);
+export function CategoryForm({ value }: { value?: Category }) {
+  const [possibleParents, setPossibleParents] = useState<Category[]>([]);
 
   function fetchParents() {
-    fetchPossibleParents(id).then((r) => {
-      const possibleParents: [
-        {
-          id: number;
-          name: string;
-          parentId: number | null;
-        },
-      ] = [
+    service.fetchPossibleParents(value?.id).then((res) => {
+      const possibleParents: Category[] = [
         {
           id: 0,
           name: "No Parent",
+          path: "",
           parentId: 0,
         },
       ];
 
-      setPossibleParents(possibleParents.concat(r));
+      setPossibleParents(possibleParents.concat(res));
     });
   }
 
@@ -45,7 +41,7 @@ export function CategoryForm({ id, value }: CategoryFormProps) {
     fetchParents();
   }, []);
 
-  const form = useForm<CategoryCreate>({
+  const form = useForm<CategorySave>({
     mode: "onBlur",
     resolver: zodResolver(categorySchema),
     defaultValues: value,
@@ -54,8 +50,9 @@ export function CategoryForm({ id, value }: CategoryFormProps) {
   const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
 
-  const handleSubmit = async (formData: CategoryCreate) => {
-    const { errMsg } = await saveCategory(formData, id);
+  const handleSubmit = async (formData: CategorySave) => {
+    formData.id = value?.id;
+    const { errMsg } = await service.save(formData);
 
     if (errMsg) {
       toast.error("Щось пішло не так");
@@ -79,7 +76,8 @@ export function CategoryForm({ id, value }: CategoryFormProps) {
           label={"Назва"}
           disabled={isSubmitting}
           isInvalid={!!errors.name}
-          defaultValue={value.name}
+          defaultValue={value?.name}
+          placeholder={"Шкарпетки"}
           errorMessage={errors.name?.message}
         />
         <Select
