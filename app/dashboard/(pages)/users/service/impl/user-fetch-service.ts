@@ -26,7 +26,9 @@ const UserSelectDto = {
   role: true,
 };
 
-export async function _fetchUserById(id: string) {
+export async function _fetchUserById(id: string | undefined) {
+  if (!id) return { errMsg: "Id id undefined", value: null };
+
   const user = await prisma.user.findUnique({
     where: { id },
     select: UserSelectDto,

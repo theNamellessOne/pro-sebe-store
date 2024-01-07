@@ -22,10 +22,10 @@ export function VariantInfo() {
     for (const color of payload.colors) {
       for (const size of payload.sizes) {
         combinations.push({
-          name: color.name + " / " + size.name,
+          name: `${color.name} / ${size.name}`,
           sizeId: size.id,
           colorId: color.id,
-          quantity: Math.random() * 100,
+          quantity: 0,
         });
       }
     }
@@ -40,6 +40,7 @@ export function VariantInfo() {
     }
 
     form.setValue("variants", combinations);
+    form.trigger();
     setVariants(combinations);
   }
 

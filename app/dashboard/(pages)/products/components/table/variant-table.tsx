@@ -9,19 +9,23 @@ import {
   TableRow,
 } from "@nextui-org/table";
 import Loading from "@/app/dashboard/loading";
-import { userVariantTableCell } from "@/app/dashboard/(pages)/products/hooks/use-variant-table-cell";
+import { useVariantTableCell } from "@/app/dashboard/(pages)/products/hooks/use-variant-table-cell";
 import { VariantSave } from "@/app/dashboard/(pages)/products/schema/variant-schema";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
 import { Key, useState } from "react";
 import { Selection, useDisclosure } from "@nextui-org/react";
-import { TableActions } from "@/app/dashboard/components/table-actions";
 import { AddQuantityModal } from "@/app/dashboard/(pages)/products/components/modals/add-quantity-modal";
+import { useFormContext } from "react-hook-form";
+import { ProductSave } from "../../schema/product-schema";
+import { contentFieldToContent } from "uploadthing/client";
 
 type VariantTableProps = {
   variants: VariantSave[];
 };
 
 export function VariantTable({ variants }: VariantTableProps) {
+  const form = useFormContext<ProductSave>();
+
   const [selected, setSelected] = useState<"all" | Set<VariantSave>>(
     new Set([]),
   );
@@ -30,26 +34,6 @@ export function VariantTable({ variants }: VariantTableProps) {
     onOpen: onAddQuantityOpen,
     onOpenChange: onAddQuantityChange,
   } = useDisclosure();
-
-  const renderCell = userVariantTableCell();
-  const columns = [
-    { name: "Назва", uid: "name" },
-    { name: "Reserved", uid: "reserved" },
-    { name: "Quantity", uid: "quantity" },
-  ];
-
-  const tableActions = [
-    {
-      name: "Встановити к-сть",
-      action: async () => {
-        console.log("suka");
-      },
-    },
-    {
-      name: "Додати к-сть",
-      action: onAddQuantityOpen,
-    },
-  ];
 
   const fromVariantsToKeys = () => {
     const variants = selected as Set<VariantSave>;
@@ -70,22 +54,16 @@ export function VariantTable({ variants }: VariantTableProps) {
     return variants.find((variant) => variant.name === name);
   };
 
+  const renderCell = useVariantTableCell();
+  const columns = [
+    { name: "Назва", uid: "name" },
+    { name: "Reserved", uid: "reserved" },
+    { name: "Quantity", uid: "quantity" },
+  ];
+
   return (
     <div className={"my-2 flex flex-col gap-3 relative"}>
-      <AddQuantityModal
-        isOpen={isAddQuantityOpen}
-        onOpenChange={onAddQuantityChange}
-      />
       <Table
-        selectionMode="multiple"
-        selectedKeys={
-          typeof selected === "string" ? selected : fromVariantsToKeys()
-        }
-        onSelectionChange={(selection) => {
-          if ((selection as string) === "all") setSelected("all");
-          //@ts-ignore
-          else setSelected(fromKeysToVariants(selection));
-        }}
         topContent={<SectionTitle title={"Таблиця Варiантiв"} />}
         classNames={{
           th: "bg-transparent text-primary",
@@ -104,23 +82,15 @@ export function VariantTable({ variants }: VariantTableProps) {
           emptyContent={"No rows to display."}
           items={variants}
         >
-          {(item: any) => (
+          {(item: VariantSave) => (
             <TableRow key={item.name}>
               {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                <TableCell>{renderCell(item, columnKey, form)}</TableCell>
               )}
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <TableActions
-        hasSelected={
-          (selected as Set<VariantSave>).size > 0 ||
-          (selected as string) === "all"
-        }
-        hasPaginator={false}
-        actions={tableActions}
-      />
     </div>
   );
 }

@@ -93,7 +93,7 @@ export function OptionInfo() {
           const selected: Color[] = [];
 
           for (const color of colors) {
-            for (let selectionKey of selectionArray) {
+            for (const selectionKey of selectionArray) {
               if (color.id === parseInt(selectionKey.toString())) {
                 selected.push(color);
               }
@@ -124,13 +124,13 @@ export function OptionInfo() {
           );
         }}
       >
-        {colors?.map((color: any) => (
+        {colors?.map((color) => (
           <SelectItem
             startContent={
               <div
                 className={"w-4 h-4 rounded"}
                 style={{ background: color.hexValue }}
-              ></div>
+              />
             }
             key={color.id}
             textValue={color.hexValue}
@@ -151,7 +151,7 @@ export function OptionInfo() {
           const selected: Size[] = [];
 
           for (const size of sizes) {
-            for (let selectionKey of selectionArray) {
+            for (const selectionKey of selectionArray) {
               if (size.id === parseInt(selectionKey.toString())) {
                 selected.push(size);
               }
@@ -165,7 +165,7 @@ export function OptionInfo() {
           });
         }}
       >
-        {sizes?.map((category: any) => (
+        {sizes?.map((category) => (
           <SelectItem key={category.id} value={category.id}>
             {category.name}
           </SelectItem>

@@ -54,9 +54,10 @@ export function CategoryInfo() {
           }
 
           form.setValue("productCategories", categoryArr);
+          form.trigger();
         }}
       >
-        {categories?.map((category: any) => (
+        {categories?.map((category) => (
           <SelectItem key={category.id} value={category.id}>
             {category.name}
           </SelectItem>

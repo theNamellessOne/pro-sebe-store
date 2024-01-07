@@ -6,19 +6,19 @@ export default withAuth({
     authorized: async ({ req, token }) => {
       const pathname = req.nextUrl.pathname;
 
-      if (pathname.startsWith("/dashboard")) {
-        const role = token?.role;
+      const res = await fetch(`http://localhost:3000/api/users/${token?.id}`);
+      const user = await res.json();
 
+      if (pathname.startsWith("/api/users")) return false;
+
+      if (pathname.startsWith("/dashboard")) {
+        const role = user?.value?.role;
+
+        if (!role) return false;
         if (role === Role.OWNER) return true;
-        else if (
-          role === Role.PACKAGER &&
-          pathname.startsWith("/dashboard/orders")
-        )
+        if (role === Role.PACKAGER && pathname.startsWith("/dashboard/orders"))
           return true;
-        else if (
-          role === Role.MODERATOR &&
-          !pathname.startsWith("/dashboard/users")
-        )
+        if (role === Role.MODERATOR && !pathname.startsWith("/dashboard/users"))
           return true;
 
         return false;
