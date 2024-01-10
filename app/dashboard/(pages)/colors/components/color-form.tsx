@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  ColorSave,
-  colorSchema,
-} from "@/app/dashboard/(pages)/colors/schema/color-schema";
+import { ColorSave, colorSchema } from "@/schema/colors/color-schema";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +9,7 @@ import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 
 import { toast, Toaster } from "react-hot-toast";
-import { ColorService } from "@/app/dashboard/(pages)/colors/service/color-service";
+import { ColorService } from "@/service/colors/color-service";
 
 export function ColorForm({ value }: { value?: ColorSave }) {
   const form = useForm<ColorSave>({

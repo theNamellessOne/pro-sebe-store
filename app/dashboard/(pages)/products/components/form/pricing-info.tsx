@@ -3,7 +3,7 @@
 import { Input } from "@nextui-org/input";
 import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import { ProductSave } from "@/app/dashboard/(pages)/products/schema/product-schema";
+import { ProductSave } from "@/schema/product/product-schema";
 import { Tooltip } from "@nextui-org/react";
 import { HelpCircle } from "lucide-react";
 

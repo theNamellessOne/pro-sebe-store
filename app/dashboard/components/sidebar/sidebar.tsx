@@ -38,13 +38,13 @@ export function Sidebar() {
     {
       icon: <ListTree />,
       name: "Категорії",
-      href: "/dashboard/categories",
+      href: "/dashboard/category",
       role: Role.MODERATOR,
     },
     {
       icon: <LayoutDashboard />,
       name: "Банери",
-      href: "/dashboard/banners",
+      href: "/dashboard/category",
       role: Role.MODERATOR,
     },
     {

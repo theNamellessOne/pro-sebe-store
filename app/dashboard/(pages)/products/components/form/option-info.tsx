@@ -2,15 +2,15 @@
 
 import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import { ProductSave } from "@/app/dashboard/(pages)/products/schema/product-schema";
+import { ProductSave } from "@/schema/product/product-schema";
 import { useEffect, useState } from "react";
 import Loading from "@/app/dashboard/loading";
 import { Select, Selection, SelectItem } from "@nextui-org/react";
 import { Chip } from "@nextui-org/chip";
 import { productEventChannel } from "@/app/dashboard/(pages)/products/events/product-event-channel";
 import { Color, Size } from "@prisma/client";
-import { SizeService } from "@/app/dashboard/(pages)/sizes/service/size-service";
-import { ColorService } from "@/app/dashboard/(pages)/colors/service/color-service";
+import { SizeService } from "@/service/size/size-service";
+import { ColorService } from "@/service/colors/color-service";
 
 export function OptionInfo() {
   const form = useFormContext<ProductSave>();

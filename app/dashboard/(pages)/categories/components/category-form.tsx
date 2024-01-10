@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  CategorySave,
-  categorySchema,
-} from "@/app/dashboard/(pages)/categories/schema/category-schema";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -14,8 +9,12 @@ import { Button } from "@nextui-org/button";
 import { toast, Toaster } from "react-hot-toast";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { CategoryService } from "@/app/dashboard/(pages)/categories/service/category-service";
 import { Category } from "@prisma/client";
+import { CategoryService } from "@/service/category/category-service";
+import {
+  CategorySave,
+  categorySchema,
+} from "@/schema/category/category-schema";
 
 const service = CategoryService.instance;
 
@@ -23,7 +22,7 @@ export function CategoryForm({ value }: { value?: Category }) {
   const [possibleParents, setPossibleParents] = useState<Category[]>([]);
 
   function fetchParents() {
-    service.fetchPossibleParents(value?.id).then((res) => {
+    service.fetchPossibleParents(value?.id).then((res: Category[]) => {
       const possibleParents: Category[] = [
         {
           id: 0,

@@ -6,8 +6,8 @@ import {
   productEventChannel,
 } from "@/app/dashboard/(pages)/products/events/product-event-channel";
 import { useFormContext } from "react-hook-form";
-import { ProductSave } from "@/app/dashboard/(pages)/products/schema/product-schema";
-import { VariantSave } from "@/app/dashboard/(pages)/products/schema/variant-schema";
+import { ProductSave } from "@/schema/product/product-schema";
+import { VariantSave } from "@/schema/product/variant-schema";
 import { VariantTable } from "@/app/dashboard/(pages)/products/components/table/variant-table";
 
 export function VariantInfo() {
@@ -26,6 +26,7 @@ export function VariantInfo() {
           sizeId: size.id,
           colorId: color.id,
           quantity: 0,
+          mediaUrls: [],
         });
       }
     }
@@ -40,8 +41,7 @@ export function VariantInfo() {
     }
 
     form.setValue("variants", combinations);
-    form.trigger();
-    setVariants(combinations);
+    form.trigger().then((_) => setVariants(combinations));
   }
 
   useEffect(() => {

@@ -14,10 +14,10 @@ import { useRouter } from "next/navigation";
 import { useCategoryTableCell } from "@/app/dashboard/(pages)/categories/hooks/use-category-table-cell";
 import { useCategoryList } from "@/app/dashboard/(pages)/categories/hooks/use-category-list";
 import { Key, useState } from "react";
-import { CategoryService } from "@/app/dashboard/(pages)/categories/service/category-service";
 import { TableProps } from "@/app/dashboard/types/table-props";
 import { Selection } from "@nextui-org/react";
 import { TableActions } from "@/app/dashboard/components/table-actions";
+import { CategoryService } from "@/service/category/category-service";
 
 const service = CategoryService.instance;
 

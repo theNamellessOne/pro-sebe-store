@@ -10,14 +10,10 @@ import {
 } from "@nextui-org/table";
 import Loading from "@/app/dashboard/loading";
 import { useVariantTableCell } from "@/app/dashboard/(pages)/products/hooks/use-variant-table-cell";
-import { VariantSave } from "@/app/dashboard/(pages)/products/schema/variant-schema";
+import { VariantSave } from "@/schema/product/variant-schema";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import { Key, useState } from "react";
-import { Selection, useDisclosure } from "@nextui-org/react";
-import { AddQuantityModal } from "@/app/dashboard/(pages)/products/components/modals/add-quantity-modal";
 import { useFormContext } from "react-hook-form";
-import { ProductSave } from "../../schema/product-schema";
-import { contentFieldToContent } from "uploadthing/client";
+import { ProductSave } from "@/schema/product/product-schema";
 
 type VariantTableProps = {
   variants: VariantSave[];
@@ -26,39 +22,12 @@ type VariantTableProps = {
 export function VariantTable({ variants }: VariantTableProps) {
   const form = useFormContext<ProductSave>();
 
-  const [selected, setSelected] = useState<"all" | Set<VariantSave>>(
-    new Set([]),
-  );
-  const {
-    isOpen: isAddQuantityOpen,
-    onOpen: onAddQuantityOpen,
-    onOpenChange: onAddQuantityChange,
-  } = useDisclosure();
-
-  const fromVariantsToKeys = () => {
-    const variants = selected as Set<VariantSave>;
-    const keys = Array.from(variants).map((variant) => variant.name);
-    return new Set(keys);
-  };
-
-  const fromKeysToVariants = (selection: Selection) => {
-    const keys = selection as Set<Key>;
-    const variants = Array.from(keys).map((key) =>
-      findVariantByName(key as string),
-    );
-
-    return new Set(variants);
-  };
-
-  const findVariantByName = (name: string) => {
-    return variants.find((variant) => variant.name === name);
-  };
-
   const renderCell = useVariantTableCell();
   const columns = [
     { name: "Назва", uid: "name" },
-    { name: "Reserved", uid: "reserved" },
-    { name: "Quantity", uid: "quantity" },
+    { name: "Зарезервовано", uid: "reserved" },
+    { name: "К-сть", uid: "quantity" },
+    { name: "Медiа", uid: "media" },
   ];
 
   return (

@@ -1,7 +1,7 @@
 import { SortDescriptor } from "@nextui-org/react";
 import { useList } from "@/hooks/use-list";
 import { Size } from "@prisma/client";
-import { SizeService } from "@/app/dashboard/(pages)/sizes/service/size-service";
+import { SizeService } from "@/service/size/size-service";
 
 export function useSizeList(
   query: string,

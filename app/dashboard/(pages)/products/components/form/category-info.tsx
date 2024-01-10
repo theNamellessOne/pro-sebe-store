@@ -2,11 +2,11 @@
 
 import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import { ProductSave } from "@/app/dashboard/(pages)/products/schema/product-schema";
+import { ProductSave } from "@/schema/product/product-schema";
 import { useEffect, useState } from "react";
 import Loading from "@/app/dashboard/loading";
 import { Select, SelectItem } from "@nextui-org/react";
-import { CategoryService } from "@/app/dashboard/(pages)/categories/service/category-service";
+import { CategoryService } from "@/service/category/category-service";
 import { Category } from "@prisma/client";
 
 const service = CategoryService.instance;
@@ -25,7 +25,7 @@ export function CategoryInfo() {
   );
 
   useEffect(() => {
-    service.fetchAll().then((res) => {
+    service.fetchAll().then((res: Category[]) => {
       setCategories(res);
       setLoading(false);
     });

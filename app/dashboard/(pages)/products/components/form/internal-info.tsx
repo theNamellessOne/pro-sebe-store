@@ -2,10 +2,7 @@
 
 import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import {
-  PRODUCT_STATUSES,
-  ProductSave,
-} from "@/app/dashboard/(pages)/products/schema/product-schema";
+import { PRODUCT_STATUSES, ProductSave } from "@/schema/product/product-schema";
 import { Select, SelectItem } from "@nextui-org/react";
 import { Input } from "@nextui-org/input";
 

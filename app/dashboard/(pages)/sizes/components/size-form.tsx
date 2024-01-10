@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  SizeSave,
-  sizeSchema,
-} from "@/app/dashboard/(pages)/sizes/schema/size-schema";
+import { SizeSave, sizeSchema } from "@/schema/size/size-schema";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +9,7 @@ import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 
 import { toast, Toaster } from "react-hot-toast";
-import { SizeService } from "@/app/dashboard/(pages)/sizes/service/size-service";
+import { SizeService } from "@/service/size/size-service";
 
 export function SizeForm({ value }: { value?: SizeSave }) {
   const form = useForm<SizeSave>({

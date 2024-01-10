@@ -1,8 +1,9 @@
 import { Key, useCallback } from "react";
-import { VariantSave } from "@/app/dashboard/(pages)/products/schema/variant-schema";
-import { Input, divider } from "@nextui-org/react";
-import { ProductSave } from "../schema/product-schema";
+import { VariantSave } from "@/schema/product/variant-schema";
+import { Input } from "@nextui-org/react";
+import { ProductSave } from "@/schema/product/product-schema";
 import { UseFormReturn } from "react-hook-form";
+import { ViewMediaModal } from "@/app/dashboard/(pages)/products/components/modals/view-media-modal";
 
 export function useVariantTableCell() {
   return useCallback(
@@ -22,6 +23,8 @@ export function useVariantTableCell() {
       };
 
       switch (columnKey) {
+        case "media":
+          return <ViewMediaModal variant={variant} form={form} />;
         case "name":
           return variant.name;
         case "reserved":

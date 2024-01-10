@@ -1,6 +1,6 @@
 import { eventbus } from "@/util/event-bus";
 import { Category, Color, Size } from "@prisma/client";
-import { VariantSave } from "@/app/dashboard/(pages)/products/schema/variant-schema";
+import { VariantSave } from "@/schema/product/variant-schema";
 
 export type Options = {
   sizes: Size[];

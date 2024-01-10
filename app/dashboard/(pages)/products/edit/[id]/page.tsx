@@ -1,5 +1,5 @@
 import { DashboardBackHeader } from "@/app/dashboard/components/dashboard-back-header";
-import { ProductService } from "@/app/dashboard/(pages)/products/service/product-service";
+import { ProductService } from "@/service/product/product-service";
 import { ProductForm } from "@/app/dashboard/(pages)/products/components/form/product-form";
 
 export default async function Page({ params }: { params: { id: string } }) {

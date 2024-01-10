@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  ProductSave,
-  productSchema,
-} from "@/app/dashboard/(pages)/products/schema/product-schema";
+import { ProductSave, productSchema } from "@/schema/product/product-schema";
 
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +15,7 @@ import { OptionInfo } from "@/app/dashboard/(pages)/products/components/form/opt
 import { VariantInfo } from "@/app/dashboard/(pages)/products/components/form/variant-info";
 import { useState } from "react";
 import Loading from "@/app/dashboard/loading";
-import { ProductService } from "@/app/dashboard/(pages)/products/service/product-service";
+import { ProductService } from "@/service/product/product-service";
 
 export function ProductForm({
   value,
@@ -37,7 +34,6 @@ export function ProductForm({
     resolver: zodResolver(productSchema),
     defaultValues: value,
   });
-  const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
 
   const handleSubmit = async (formData: ProductSave) => {

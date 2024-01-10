@@ -1,7 +1,7 @@
 import { SortDescriptor } from "@nextui-org/react";
 import { useList } from "@/hooks/use-list";
-import { CategoryService } from "@/app/dashboard/(pages)/categories/service/category-service";
 import { Category } from "@prisma/client";
+import { CategoryService } from "@/service/category/category-service";
 
 export function useCategoryList(
   query: string,

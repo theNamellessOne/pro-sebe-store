@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  BannerSave,
-  bannerSchema,
-} from "@/app/dashboard/(pages)/banners/schema/banner-schema";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -12,12 +7,13 @@ import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 
 import { toast, Toaster } from "react-hot-toast";
-import { BannerService } from "@/app/dashboard/(pages)/banners/service/banner-service";
 import { FileUpload } from "@/app/dashboard/components/ui/file-upload";
 import { Checkbox } from "@nextui-org/react";
 import Image from "next/image";
 import { useState } from "react";
 import { X } from "lucide-react";
+import { BannerSave, bannerSchema } from "@/schema/banner/banner-schema";
+import { BannerService } from "@/service/banner/banner-service";
 
 export function BannerForm({ value }: { value?: BannerSave }) {
   const form = useForm<BannerSave>({

@@ -1,6 +1,6 @@
 import { DashboardBackHeader } from "@/app/dashboard/components/dashboard-back-header";
 import { ColorForm } from "@/app/dashboard/(pages)/colors/components/color-form";
-import { ColorService } from "@/app/dashboard/(pages)/colors/service/color-service";
+import { ColorService } from "@/service/colors/color-service";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { errMsg, value } = await ColorService.instance.fetchById(+params.id);

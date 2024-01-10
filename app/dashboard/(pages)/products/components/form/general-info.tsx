@@ -3,7 +3,7 @@
 import { Input, Textarea } from "@nextui-org/input";
 import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
-import { ProductSave } from "@/app/dashboard/(pages)/products/schema/product-schema";
+import { ProductSave } from "@/schema/product/product-schema";
 
 export function GeneralInfo() {
   const form = useFormContext<ProductSave>();

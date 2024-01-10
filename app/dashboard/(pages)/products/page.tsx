@@ -1,7 +1,7 @@
 import { DashboardHeader } from "@/app/dashboard/components/dashboard-header";
-import { ColorTable } from "@/app/dashboard/(pages)/colors/components/color-table";
 import { Suspense } from "react";
 import { Loader } from "lucide-react";
+import { ProductTable } from "@/app/dashboard/(pages)/products/components/table/product-table";
 
 export default async function Page({
   searchParams,
@@ -17,7 +17,7 @@ export default async function Page({
   const sortDescriptor = searchParams?.sortDescriptor
     ? JSON.parse(searchParams?.sortDescriptor)
     : {
-        column: "id",
+        column: "article",
         direction: "ascending",
       };
 
@@ -26,7 +26,7 @@ export default async function Page({
       <div
         className={"relative flex flex-col gap-4 h-full w-full p-4 px-[20px]"}
       >
-        <DashboardHeader title={"Кольори"} />
+        <DashboardHeader title={"Товари"} />
 
         <Suspense
           key={
@@ -37,7 +37,7 @@ export default async function Page({
           }
           fallback={<Loader />}
         >
-          <ColorTable
+          <ProductTable
             query={query}
             page={currentPage}
             sortDescriptor={sortDescriptor}

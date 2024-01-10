@@ -1,4 +1,4 @@
-import { ColorService } from "@/app/dashboard/(pages)/colors/service/color-service";
+import { ColorService } from "@/service/colors/color-service";
 import { SortDescriptor } from "@nextui-org/react";
 import { useList } from "@/hooks/use-list";
 import { Color } from "@prisma/client";

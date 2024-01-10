@@ -1,7 +1,7 @@
 import { SortDescriptor } from "@nextui-org/react";
 import { useList } from "@/hooks/use-list";
-import { UserService } from "@/app/dashboard/(pages)/users/service/user-service";
-import { UserReadDto } from "@/app/dashboard/(pages)/users/service/impl/user-fetch-service";
+import { UserService } from "@/service/user/user-service";
+import { UserReadDto } from "@/service/user/impl/user-fetch-service";
 
 export function useUserList(
   query: string,
