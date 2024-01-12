@@ -1,6 +1,6 @@
 import { DashboardBackHeader } from "@/app/dashboard/components/dashboard-back-header";
-import { CategoryForm } from "@/app/dashboard/(pages)/categories/components/category-form";
 import { CategoryService } from "@/service/category/category-service";
+import { CategoryForm } from "../../components/category-form";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { errMsg, value } = await CategoryService.instance.fetchById(

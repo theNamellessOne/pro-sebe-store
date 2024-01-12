@@ -35,6 +35,7 @@ export function CategoryTable({ query, page, sortDescriptor }: TableProps) {
     { name: "Id", uid: "id" },
     { name: "Назва", uid: "name" },
     { name: "Батьківська Категорія", uid: "parentId" },
+    { name: "Картинка", uid: "imageUrl" },
   ];
 
   const tableActions = [

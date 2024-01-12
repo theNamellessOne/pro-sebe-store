@@ -107,6 +107,8 @@ model Category {
   parentId Int?
   children Category[] @relation("SubCategories")
 
+  imageUrl String?
+
   productCategores ProductCategory[]
 
   @@index([parentId])
@@ -279,4 +281,14 @@ model Banner {
   name          String
   imageUrl      String
   shouldBeOnTop Boolean
+}
+
+// MISC
+
+model Misc {
+  id Int @id @default(autoincrement())
+
+  freeDeliveryMinPrice Int
+  secondOrderDiscount Int 
+  avgDeliveryTime Int
 }

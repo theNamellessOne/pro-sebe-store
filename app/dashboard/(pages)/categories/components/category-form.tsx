@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -15,11 +17,14 @@ import {
   CategorySave,
   categorySchema,
 } from "@/schema/category/category-schema";
+import { FileUpload } from "@/app/dashboard/components/ui/file-upload";
+import { X } from "lucide-react";
 
 const service = CategoryService.instance;
 
 export function CategoryForm({ value }: { value?: Category }) {
   const [possibleParents, setPossibleParents] = useState<Category[]>([]);
+  const [redraw, setRedraw] = useState(1);
 
   function fetchParents() {
     service.fetchPossibleParents(value?.id).then((res: Category[]) => {
@@ -69,6 +74,32 @@ export function CategoryForm({ value }: { value?: Category }) {
       }
       onSubmit={form.handleSubmit(handleSubmit)}
     >
+      {!form.getValues("imageUrl") ? (
+        <FileUpload
+          endpoint={"bannerImage"}
+          onChange={(url?: string) => {
+            form.setValue("imageUrl", url!);
+            setRedraw(redraw + 1);
+          }}
+        />
+      ) : (
+        <div className={"relative aspect-[4/3] rounded-large overflow-hidden"}>
+          <Button
+            className={"absolute top-2 right-2 z-50"}
+            color={"danger"}
+            variant={"light"}
+            isIconOnly
+            onClick={() => {
+              form.setValue("imageUrl", "");
+              setRedraw(redraw + 1);
+            }}
+          >
+            <X />
+          </Button>
+          <Image fill src={form.getValues("imageUrl")!} alt={"upload"} />
+        </div>
+      )}
+
       <div className={"flex flex-col md:flex-row gap-2"}>
         <Input
           {...form.register("name")}

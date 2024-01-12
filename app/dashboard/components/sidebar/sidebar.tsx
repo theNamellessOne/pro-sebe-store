@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   ListTree,
   MessageSquare,
+  MoreHorizontal,
   Package,
   Palette,
   Ruler,
@@ -38,13 +39,13 @@ export function Sidebar() {
     {
       icon: <ListTree />,
       name: "Категорії",
-      href: "/dashboard/category",
+      href: "/dashboard/categories",
       role: Role.MODERATOR,
     },
     {
       icon: <LayoutDashboard />,
       name: "Банери",
-      href: "/dashboard/category",
+      href: "/dashboard/banners",
       role: Role.MODERATOR,
     },
     {
@@ -63,6 +64,12 @@ export function Sidebar() {
       icon: <User />,
       name: "Користувачі",
       href: "/dashboard/users",
+      role: Role.OWNER,
+    },
+    {
+      icon: <MoreHorizontal />,
+      name: "Рiзне",
+      href: "/dashboard/misc",
       role: Role.OWNER,
     },
   ];
