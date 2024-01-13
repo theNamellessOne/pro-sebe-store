@@ -27,11 +27,14 @@ export function UserTable({ query, page, sortDescriptor }: TableProps) {
     sortDescriptor,
   );
 
+  console.log(list.items);
+
   const columns = [
     { name: "Id", uid: "id" },
     { name: "Роль", uid: "role" },
     { name: "Iм'я", uid: "name" },
     { name: "Email", uid: "email" },
+    { name: "@", uid: "username" },
     { name: "Номер Телефону", uid: "phone" },
     { name: "Дiї", uid: "actions" },
   ];

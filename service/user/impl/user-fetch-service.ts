@@ -15,6 +15,7 @@ export type UserReadDto = {
   email: string | null;
   image: string | null;
   role: string;
+  username: string | null;
 };
 
 const UserSelectDto = {
@@ -24,6 +25,7 @@ const UserSelectDto = {
   email: true,
   image: true,
   role: true,
+  username: true,
 };
 
 export async function _fetchUserById(id: string | undefined) {
