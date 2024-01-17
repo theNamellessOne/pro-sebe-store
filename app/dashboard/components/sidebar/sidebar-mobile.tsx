@@ -47,13 +47,13 @@ export const SidebarMobile = () => {
         {open && (
           <motion.div
             layout
-            className={"z-50 h-full flex fixed"}
+            className={"z-50 h-full flex fixed top-0"}
             initial={{ x: -300 }}
             animate={{ x: 0 }}
             exit={{ x: -300 }}
             transition={{ ease: "easeOut" }}
           >
-            <div className="h-full shadow-small rounded-r-large w-[250px] p-0 bg-white">
+            <div className="h-full shadow-small rounded-r-large w-[250px] p-0 bg-background">
               <Sidebar />
             </div>
           </motion.div>

@@ -3,6 +3,7 @@
 import {
   LayoutDashboard,
   ListTree,
+  LogOut,
   MessageSquare,
   MoreHorizontal,
   Package,
@@ -13,8 +14,10 @@ import {
 } from "lucide-react";
 import React from "react";
 import { SidebarItem } from "@/app/dashboard/components/sidebar/sidebar-item";
-import { ClientProtectedComponent } from "@/app/dashboard/components/protected-component";
+import { ClientProtectedComponent } from "@/app/components/protected-component";
 import { Role } from "@prisma/client";
+import { Button } from "@nextui-org/button";
+import { AuthService } from "@/service/auth/auth-service";
 
 export function Sidebar() {
   const items = [
@@ -77,7 +80,7 @@ export function Sidebar() {
   return (
     <aside
       className={
-        "flex flex-col h-full overflow-y-auto fixed py-6 w-[250px] border-r border-r-zinc-700 border-r-0.5"
+        "flex flex-col h-full top-0 overflow-y-auto fixed py-6 w-[250px] border-r border-r-secondary border-r-0.5"
       }
     >
       <h2 className={"text-4xl pl-6 mb-6"}>/logan</h2>
@@ -88,6 +91,17 @@ export function Sidebar() {
           </ClientProtectedComponent>
         );
       })}
+      <div className={"bottom-0 w-full mt-auto ml-2"}>
+        <Button
+          color={"danger"}
+          variant={"light"}
+          onClick={() => {
+            AuthService.instance.logout();
+          }}
+        >
+          <LogOut /> Logout
+        </Button>
+      </div>
     </aside>
   );
 }

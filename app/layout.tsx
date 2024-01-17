@@ -1,11 +1,11 @@
-import { Raleway } from "next/font/google";
+import { Rubik } from "next/font/google";
 
 import "./globals.css";
 
 import type { Metadata } from "next";
 import { AuthProvider } from "@/providers/auth-provider";
 
-const font = Raleway({ subsets: ["latin"] });
+const font = Rubik({ subsets: ["cyrillic", "latin"] });
 
 export const metadata: Metadata = {
   title: "Pro Sebe Store",
@@ -18,10 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`dark bg-zinc-900 text-white h-full w-full ${font.className}`}
-    >
+    <html lang="en" className={`dark h-full w-full ${font.className}`}>
       <AuthProvider>
         <body>{children}</body>
       </AuthProvider>

@@ -5,28 +5,9 @@ import { FetchFunctionProps } from "@/hooks/use-list";
 import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter";
 import { Key } from "react";
 import { SortDirection } from "@react-types/shared";
+import { UserSelectDto } from "@/service/user/impl/type";
 
 const SIZE_PAGE_SIZE = 10;
-
-export type UserReadDto = {
-  id: string;
-  name: string | null;
-  phone: string | null;
-  email: string | null;
-  image: string | null;
-  role: string;
-  username: string | null;
-};
-
-const UserSelectDto = {
-  id: true,
-  name: true,
-  phone: true,
-  email: true,
-  image: true,
-  role: true,
-  username: true,
-};
 
 export async function _fetchUserById(id: string | undefined) {
   if (!id) return { errMsg: "Id id undefined", value: null };
@@ -42,9 +23,29 @@ export async function _fetchUserById(id: string | undefined) {
   };
 }
 
+export async function _fetchUserByEmail(email: string) {
+  if (!email) return { errMsg: "email is undefined", value: null };
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: UserSelectDto,
+  });
+
+  return {
+    errMsg: user ? null : "Could not find user with specified email",
+    value: user,
+  };
+}
+
 export async function _fetchAllUsers() {
   return prisma.user.findMany({
     select: UserSelectDto,
+  });
+}
+
+export async function _fetchUserAccountByUserId(userId: string) {
+  return prisma.account.findFirst({
+    where: { userId },
   });
 }
 

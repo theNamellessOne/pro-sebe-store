@@ -1,10 +1,11 @@
 import { UserService } from "@/service/user/user-service";
 import { NextRequest } from "next/server";
 
-type CheckAuthSlug = { params: { id: string } };
+type CheckAuthSlug = { params: { email: string } };
 
 async function handler(_: NextRequest, { params }: CheckAuthSlug) {
-  return Response.json(await UserService.instance.fetchById(params.id));
+  const { value } = await UserService.instance.fetchByEmail(params.email);
+  return Response.json(value);
 }
 
 export const GET = handler;

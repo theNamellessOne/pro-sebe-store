@@ -10,7 +10,6 @@ import {
 } from "@nextui-org/table";
 import Loading from "@/app/dashboard/loading";
 import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
-import { useRouter } from "next/navigation";
 import { useUserTableCell } from "@/app/dashboard/(pages)/users/hooks/use-user-table-cell";
 import { useUserList } from "@/app/dashboard/(pages)/users/hooks/use-user-list";
 import { TableProps } from "@/app/dashboard/types/table-props";
@@ -19,15 +18,12 @@ import { userEventChannel } from "@/app/dashboard/(pages)/users/event/user-event
 import { Toaster } from "react-hot-toast";
 
 export function UserTable({ query, page, sortDescriptor }: TableProps) {
-  const router = useRouter();
   const renderCell = useUserTableCell();
   const { loading, list, sort, paginator } = useUserList(
     query,
     page,
     sortDescriptor,
   );
-
-  console.log(list.items);
 
   const columns = [
     { name: "Id", uid: "id" },

@@ -31,8 +31,6 @@ export function MiscForm({ value }: { value?: MiscSave }) {
     }
   };
 
-  console.log(value);
-
   return (
     <form
       className={

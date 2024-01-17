@@ -1,8 +1,8 @@
 "use client";
 
 import { Role } from "@prisma/client";
-import { useSession } from "next-auth/react";
 import { ReactNode } from "react";
+import { useCurrentRole } from "@/hooks/user-current-role";
 
 type ProtectedComponentProps = {
   minimumRequiredRole: Role;
@@ -13,8 +13,7 @@ export function ClientProtectedComponent({
   children,
   minimumRequiredRole,
 }: ProtectedComponentProps) {
-  const { data } = useSession();
-  const userRole = data?.user.role;
+  const userRole = useCurrentRole();
 
   if (!userRole) return null;
   if (determine(minimumRequiredRole, userRole)) return children;
@@ -23,10 +22,10 @@ export function ClientProtectedComponent({
 }
 
 function determine(minimumRequiredRole: Role, userRole: Role) {
-  if (userRole === "OWNER") return true;
+  if (userRole === Role.OWNER) return true;
   if (minimumRequiredRole === userRole) return true;
-  if (userRole === "MODERATOR" && minimumRequiredRole !== "OWNER") return true;
-  if (userRole === "PACKAGER" && minimumRequiredRole === "USER") return true;
+  if (userRole === Role.MODERATOR && minimumRequiredRole !== Role.OWNER)
+    return true;
 
-  return false;
+  return userRole === Role.PACKAGER && minimumRequiredRole === Role.USER;
 }
