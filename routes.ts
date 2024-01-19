@@ -8,11 +8,11 @@ export const USER_ROUTES = [...PUBLIC_ROUTES];
 export const PACKAGER_ROUTES = [...USER_ROUTES, "/dashboard/orders"];
 
 export const MODERATOR_ROUTES = [
-  ...PACKAGER_ROUTES,
-  "/dashboard/banners",
-  "/dashboard/colors",
-  "/dashboard/sizes",
-  "/dashboard/reviews",
-  "/dashboard/products",
-  "/dashboard/categories",
+    ...PACKAGER_ROUTES,
+    "/dashboard/banners",
+    "/dashboard/colors",
+    "/dashboard/sizes",
+    "/dashboard/review",
+    "/dashboard/products",
+    "/dashboard/categories",
 ];
