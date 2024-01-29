@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";
 import { ProductSave } from "@/schema/product/product-schema";
 import { useEffect, useState } from "react";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/loading";
 import { Select, Selection, SelectItem } from "@nextui-org/react";
 import { Chip } from "@nextui-org/chip";
 import { productEventChannel } from "@/app/dashboard/(pages)/products/events/product-event-channel";

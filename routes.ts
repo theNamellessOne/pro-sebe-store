@@ -1,7 +1,7 @@
 export const DEFAULT_LOGIN_REDIRECT = "/home";
 export const API_AUTH_PREFIX = "/api/auth";
 
-export const PUBLIC_ROUTES = ["", "/", "/home"];
+export const PUBLIC_ROUTES = ["", "/", "/home", "/catalogue"];
 
 export const USER_ROUTES = [...PUBLIC_ROUTES];
 

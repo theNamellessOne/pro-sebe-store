@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/loading";
 import { useVariantTableCell } from "@/app/dashboard/(pages)/products/hooks/use-variant-table-cell";
 import { VariantSave } from "@/schema/product/variant-schema";
 import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/section-title";

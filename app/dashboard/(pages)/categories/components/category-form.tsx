@@ -34,6 +34,7 @@ export function CategoryForm({ value }: { value?: Category }) {
           name: "No Parent",
           path: "",
           parentId: 0,
+          imageUrl: "",
         },
       ];
 

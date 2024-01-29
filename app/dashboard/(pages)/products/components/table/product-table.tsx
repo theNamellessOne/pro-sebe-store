@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@nextui-org/table";
 import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/loading";
 import { useProductTableCell } from "@/app/dashboard/(pages)/products/hooks/use-product-table-cell";
 import { useProductList } from "@/app/dashboard/(pages)/products/hooks/use-product-list";
 import { Product } from "@prisma/client";

@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/loading";
 import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
 import { useBannerList } from "@/app/dashboard/(pages)/banners/hooks/use-banner-list";
 import { useRouter } from "next/navigation";

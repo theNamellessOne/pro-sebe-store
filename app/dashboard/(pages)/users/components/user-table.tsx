@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/loading";
 import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
 import { useUserTableCell } from "@/app/dashboard/(pages)/users/hooks/use-user-table-cell";
 import { useUserList } from "@/app/dashboard/(pages)/users/hooks/use-user-list";

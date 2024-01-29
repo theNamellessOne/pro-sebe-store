@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/loading";
 import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
 import { useRouter } from "next/navigation";
 import { useCategoryTableCell } from "@/app/dashboard/(pages)/categories/hooks/use-category-table-cell";

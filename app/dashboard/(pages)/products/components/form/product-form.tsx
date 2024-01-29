@@ -14,7 +14,7 @@ import { CategoryInfo } from "@/app/dashboard/(pages)/products/components/form/c
 import { OptionInfo } from "@/app/dashboard/(pages)/products/components/form/option-info";
 import { VariantInfo } from "@/app/dashboard/(pages)/products/components/form/variant-info";
 import { useState } from "react";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/loading";
 import { ProductService } from "@/service/product/product-service";
 
 export function ProductForm({

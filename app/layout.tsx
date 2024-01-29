@@ -1,11 +1,11 @@
-import { Rubik } from "next/font/google";
+import { Montserrat } from "next/font/google";
 
 import "./globals.css";
 
 import type { Metadata } from "next";
 import { AuthProvider } from "@/providers/auth-provider";
 
-const font = Rubik({ subsets: ["cyrillic", "latin"] });
+const font = Montserrat({ subsets: ["cyrillic", "latin"] });
 
 export const metadata: Metadata = {
   title: "Pro Sebe Store",

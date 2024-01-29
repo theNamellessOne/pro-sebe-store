@@ -4,7 +4,7 @@ import { Checkbox, SortDescriptor } from "@nextui-org/react";
 import { CategoryTable } from "@/app/dashboard/(pages)/categories/components/category-table";
 import { CategoryTree } from "@/app/dashboard/(pages)/categories/components/category-tree";
 import React, { Suspense, useState } from "react";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/loading";
 
 export function CategoryView({
   query,

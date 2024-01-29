@@ -6,10 +6,65 @@ import { Key } from "react";
 import { SortDirection } from "@react-types/shared";
 import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter";
 
-const PRODUCT_PAGE_SIZE = 10;
+const PRODUCT_PAGE_SIZE = 2;
 
 export async function _fetchAllProducts() {
   return prisma.product.findMany();
+}
+
+export async function _fetchPriceExtremes() {
+  const e = await prisma.product.aggregate({
+    _max: { price: true },
+    _min: { price: true },
+  });
+
+  return {
+    max: e._max.price!,
+    min: e._min.price!,
+  };
+}
+
+//todo: add filtering and sorting
+export async function _fetchWithVariants({
+  query,
+  page,
+  sortColumn,
+  sortDirection,
+}: FetchFunctionProps) {
+  const pages = await _countPages(query);
+  if (page < 0 || page > pages) {
+    return {
+      items: [],
+      pages,
+    };
+  }
+
+  const sortDir = convertSortDescriptorToPrisma(sortDirection);
+  const orderBy = {};
+  // @ts-ignore
+  orderBy[sortColumn] = sortDir;
+
+  const items = await prisma.product.findMany({
+    take: PRODUCT_PAGE_SIZE,
+    skip: (page - 1) * PRODUCT_PAGE_SIZE,
+    orderBy: orderBy,
+    where: {
+      name: { contains: query },
+    },
+    include: {
+      variants: {
+        include: {
+          color: true,
+          mediaUrls: true,
+        },
+      },
+    },
+  });
+
+  return {
+    items,
+    pages,
+  };
 }
 
 export async function _fetchProducts({

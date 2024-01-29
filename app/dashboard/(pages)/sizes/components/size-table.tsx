@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/loading";
 import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
 import { useRouter } from "next/navigation";
 import { useSizeTableCell } from "@/app/dashboard/(pages)/sizes/hooks/use-size-table-cell";

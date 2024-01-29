@@ -9,6 +9,7 @@ export default auth(async (req) => {
   const pathname = req.nextUrl.pathname;
 
   if (pathname.startsWith("/api/mail")) return null;
+  if (pathname.startsWith("/api/uploadthing")) return null;
 
   const { nextUrl } = req;
   const res = await fetch(

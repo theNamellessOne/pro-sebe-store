@@ -14,7 +14,7 @@ import {
 } from "@nextui-org/react";
 import { Role, User } from "@prisma/client";
 import { useState } from "react";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/loading";
 import { UserService } from "@/service/user/user-service";
 import { toast } from "react-hot-toast";
 import { userEventChannel } from "@/app/dashboard/(pages)/users/event/user-event-channel";

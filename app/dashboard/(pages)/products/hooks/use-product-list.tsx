@@ -11,7 +11,7 @@ export function useProductList(
   const props = {
     query,
     page,
-    sortColumn: sortDescriptor?.column ?? "id",
+    sortColumn: sortDescriptor?.column ?? "article",
     sortDirection: sortDescriptor?.direction ?? "ascending",
   };
 
