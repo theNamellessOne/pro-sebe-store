@@ -5,16 +5,8 @@ import { FetchFunctionProps } from "@/hooks/use-list";
 import { Key } from "react";
 import { SortDirection } from "@react-types/shared";
 import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter";
-import {
-  Color,
-  MediaUrl,
-  Product,
-  ProductCategory,
-  ProductStatus,
-  Size,
-} from "@prisma/client";
+import { ProductStatus } from "@prisma/client";
 import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
-import { Variant } from "framer-motion";
 
 const PRODUCT_PAGE_SIZE = 10;
 
