@@ -4,17 +4,35 @@ import { useState } from "react";
 import { BsBag } from "react-icons/bs";
 import { Button } from "@nextui-org/button";
 import { Color } from "@/app/(client)/catalogue/components/color";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type ProductCardProps = {
   product: any;
 };
 
 export function ProductCard({ product }: ProductCardProps) {
+  const url = `/catalogue/${product.article}`;
+  const router = useRouter();
+
   const variants = product.variants;
   const [selected, setSelected] = useState(variants[0]);
-  const [shownImage, setShownImage] = useState<string | undefined>(
-    variants[0]?.mediaUrls[0]?.url,
-  );
+
+  const redirectToProductPage = () => {
+    router.push(url);
+  };
+
+  const changeSelected = (colorId: number) => {
+    const f = variants.find((variant: any) => variant.colorId === colorId);
+    setSelected(f ?? variants[0]);
+  };
+
+  const colors = product.variants
+    .map((variant: any) => variant.color)
+    .filter(
+      (color: any, idx: number, arr: any[]) =>
+        arr.findIndex((color1) => color1.id === color.id) === idx,
+    );
 
   return (
     <div
@@ -37,7 +55,9 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       <div className={"flex flex-col items-start w-[290px]"}>
-        <h2 className={"font-semibold"}>{product.name}</h2>
+        <Link href={url}>
+          <h2 className={"font-semibold"}>{product.name}</h2>
+        </Link>
       </div>
 
       <div className={"flex items-start justify-between gap-2 w-[290px] -mt-2"}>
@@ -55,19 +75,19 @@ export function ProductCard({ product }: ProductCardProps) {
           </h2>
 
           <div className={"flex gap-2"}>
-            {variants.map((item: any) => {
-              const color = item.color;
+            {colors.map((color: any) => {
               return (
                 <button
-                  key={item.id}
+                  key={color.id}
+                  onClick={redirectToProductPage}
                   onMouseOver={() => {
-                    setSelected(item);
+                    changeSelected(color.id);
                   }}
                 >
                   <Color
                     hex={color.hexValue}
                     className={`hover:scale-125 ${
-                      selected.id === item.id && "scale-125"
+                      selected.colorId === color.id && "scale-125"
                     } h-[30px] w-[30px] transition-all`}
                   />
                 </button>
@@ -77,6 +97,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <Button
+          onClick={redirectToProductPage}
           variant={"light"}
           className={"rounded-sm text-3xl"}
           color={"primary"}
