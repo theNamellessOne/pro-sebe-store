@@ -5,8 +5,10 @@ import { FetchFunctionProps } from "@/hooks/use-list";
 import { Key } from "react";
 import { SortDirection } from "@react-types/shared";
 import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter";
+import { ProductStatus } from "@prisma/client";
+import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
 
-const PRODUCT_PAGE_SIZE = 2;
+const PRODUCT_PAGE_SIZE = 10;
 
 export async function _fetchAllProducts() {
   return prisma.product.findMany();
@@ -24,33 +26,76 @@ export async function _fetchPriceExtremes() {
   };
 }
 
-//todo: add filtering and sorting
-export async function _fetchWithVariants({
+async function _getWhereClause({
   query,
-  page,
-  sortColumn,
-  sortDirection,
-}: FetchFunctionProps) {
-  const pages = await _countPages(query);
-  if (page < 0 || page > pages) {
+  price,
+  sizes,
+  colors,
+}: {
+  query: string;
+  sizes: number[];
+  colors: number[];
+  price: PriceFilter;
+}) {
+  const priceFilter = {
+    lte: price.max == -1 ? Number.MAX_SAFE_INTEGER : price.max,
+    gte: price.min == -1 ? Number.MIN_SAFE_INTEGER : price.min,
+  };
+
+  let sizeFilter: { in: number[] } | { gte: number };
+  if (sizes.length > 0) sizeFilter = { in: sizes };
+  else sizeFilter = { gte: 0 };
+
+  let colorsFilter: { in: number[] } | { gte: number };
+  if (colors.length > 0) colorsFilter = { in: colors };
+  else colorsFilter = { gte: 0 };
+
+  return {
+    name: { contains: query },
+    status: { equals: ProductStatus.ACTIVE },
+    variants: {
+      some: {
+        quantity: { gt: 0 },
+        sizeId: sizeFilter,
+        colorId: colorsFilter,
+      },
+    },
+    price: priceFilter,
+  };
+}
+
+export async function _fetchAndFilter(
+  props: FetchFunctionProps & {
+    sizes: number[];
+    colors: number[];
+    price: PriceFilter;
+  },
+) {
+  const whereClause = await _getWhereClause({ ...props });
+  const count = await prisma.product.count({
+    where: whereClause,
+  });
+  const pages = Math.ceil(count / PRODUCT_PAGE_SIZE);
+
+  if (props.page < 0 || props.page > pages) {
     return {
       items: [],
       pages,
     };
   }
 
-  const sortDir = convertSortDescriptorToPrisma(sortDirection);
+  console.log(pages);
+
+  const sortDir = convertSortDescriptorToPrisma(props.sortDirection);
   const orderBy = {};
   // @ts-ignore
-  orderBy[sortColumn] = sortDir;
+  orderBy[props.sortColumn] = sortDir;
 
   const items = await prisma.product.findMany({
     take: PRODUCT_PAGE_SIZE,
-    skip: (page - 1) * PRODUCT_PAGE_SIZE,
+    skip: (props.page - 1) * PRODUCT_PAGE_SIZE,
     orderBy: orderBy,
-    where: {
-      name: { contains: query },
-    },
+    where: whereClause,
     include: {
       variants: {
         include: {
@@ -60,6 +105,8 @@ export async function _fetchWithVariants({
       },
     },
   });
+
+  console.log(items);
 
   return {
     items,
@@ -74,6 +121,7 @@ export async function _fetchProducts({
   sortDirection,
 }: FetchFunctionProps) {
   const pages = await _countPages(query);
+
   if (page < 0 || page > pages) {
     return {
       items: [],

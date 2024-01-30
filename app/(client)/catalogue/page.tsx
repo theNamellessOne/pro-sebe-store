@@ -10,30 +10,50 @@ export default async function Page({
     query?: string;
     page?: string;
     sortDescriptor?: string;
+    colorFilter?: string;
+    sizeFilter?: string;
+    priceFilter?: string;
   };
 }) {
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const sortDescriptor = searchParams?.sortDescriptor
     ? JSON.parse(searchParams?.sortDescriptor)
-    : {
-        column: "article",
-        direction: "ascending",
-      };
+    : null;
+  const colorsFilter = searchParams?.colorFilter
+    ? JSON.parse(searchParams?.colorFilter)
+    : null;
+  const sizeFilter = searchParams?.sizeFilter
+    ? JSON.parse(searchParams?.sizeFilter)
+    : null;
+  const priceFilter = searchParams?.priceFilter
+    ? JSON.parse(searchParams?.priceFilter)
+    : null;
 
   return (
     <>
       <Filters />
       <Suspense
         key={
-          query + currentPage + sortDescriptor.direction + sortDescriptor.column
+          query +
+          currentPage +
+          colorsFilter +
+          sizeFilter +
+          sortDescriptor?.name +
+          sortDescriptor?.direction +
+          sortDescriptor?.column +
+          priceFilter?.min +
+          priceFilter?.max
         }
         fallback={<Loading />}
       >
         <ProductList
           query={query}
           page={currentPage}
-          sortDescriptor={sortDescriptor}
+          sortDescriptor={sortDescriptor?.value}
+          colors={colorsFilter}
+          sizes={sizeFilter}
+          price={priceFilter}
         />
       </Suspense>
     </>

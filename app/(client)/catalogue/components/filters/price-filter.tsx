@@ -43,7 +43,7 @@ export function PriceFilter() {
           }, 300)}
           label="Ціна"
           size={"sm"}
-          step={50}
+          step={1}
           minValue={min}
           maxValue={max}
           defaultValue={value}

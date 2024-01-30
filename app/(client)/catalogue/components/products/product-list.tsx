@@ -4,15 +4,18 @@ import { useProductList } from "@/app/(client)/catalogue/hooks/use-product-list"
 import { ProductCard } from "@/app/(client)/catalogue/components/products/product-card";
 import Loading from "@/app/loading";
 import { TableProps } from "@/app/dashboard/types/table-props";
+import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
+import { NamedSortDescriptor } from "@/app/(client)/catalogue/hooks/use-product-sort-descriptor";
 
-type ProductListProps = TableProps & {};
+type ProductListProps = TableProps & {
+  sizes: number[];
+  colors: number[];
+  price: PriceFilter;
+  sortDescriptor: NamedSortDescriptor;
+};
 
-export function ProductList({ query, page, sortDescriptor }: ProductListProps) {
-  const { list, loading, paginator } = useProductList(
-    query,
-    page,
-    sortDescriptor,
-  );
+export function ProductList(props: ProductListProps) {
+  const { list, loading, paginator } = useProductList(props);
 
   if (loading) {
     return <Loading />;

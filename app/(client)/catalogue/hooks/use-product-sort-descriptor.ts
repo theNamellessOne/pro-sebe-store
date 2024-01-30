@@ -2,7 +2,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SortDescriptor } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
-type NamedSortDescriptor = SortDescriptor & { name: string };
+export type NamedSortDescriptor = SortDescriptor & { name: string };
 
 export function useProductSortDescriptor() {
   const options = [
