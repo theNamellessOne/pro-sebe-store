@@ -1,19 +1,20 @@
-"use client";
+import Link from "next/link";
+import { ColorList } from "./color-list";
+import { SizeList } from "./size-list";
+import { Button } from "@/app/(client)/components/ui/button";
+import { Ruler } from "lucide-react";
 
-import { Check } from "lucide-react";
-import { useProduct } from "../hooks/use-product";
-
-export function ProductInfo({ product }: { product: any }) {
-  const { selectedValues, setSelectedColor, setSelectedSize } = useProduct();
-
-  if (selectedValues.colorId === -1) {
-    selectedValues.colorId = product.variants[0].colorId;
-  }
-
-  if (selectedValues.sizeId === -1) {
-    selectedValues.sizeId = product.variants[0].sizeId;
-  }
-
+export function ProductInfo({
+  product,
+  selectedVariant,
+  setSelectedColor,
+  setSelectedSize,
+}: {
+  product: any;
+  selectedVariant: any;
+  setSelectedColor: (colorId: number) => void;
+  setSelectedSize: (sizeId: number) => void;
+}) {
   const colors = product.variants
     .map((variant: any) => variant.color)
     .filter(
@@ -28,73 +29,59 @@ export function ProductInfo({ product }: { product: any }) {
         arr.findIndex((size1) => size1.id === size.id) === idx,
     );
 
+  const getQuantityMessage = () => {
+    const { quantity } = selectedVariant;
+
+    if (quantity <= 0) return <p className={"capitalize"}>не в наявності</p>;
+    if (quantity >= 10) return <p className={"capitalize"}>в наявності</p>;
+    if (quantity <= 10)
+      return <p className={"text-warning capitalize"}>закінчується</p>;
+  };
+
   return (
-    <div className={"flex flex-col gap-2"}>
-      <h2 className={"text-2xl"}>{product.name}</h2>
-      <h3 className={"text-lg flex gap-2"}>
-        {product.compareAtPrice > product.price && (
-          <>
-            <p className={"text-zinc-600 line-through"}>
-              {(Math.round(product.compareAtPrice * 100) / 100).toFixed(2)}
-            </p>
-          </>
-        )}
+    <div className={"flex flex-col gap-4"}>
+      <div className={"flex flex-col gap-2"}>
+        <h2 className={"text-3xl"}>{product.name}</h2>
+        <h3 className={"text-xl flex gap-2"}>
+          {product.compareAtPrice > product.price && (
+            <>
+              <p className={"text-zinc-600 line-through"}>
+                {(Math.round(product.compareAtPrice * 100) / 100).toFixed(2)}
+              </p>
+            </>
+          )}
 
-        <> {(Math.round(product.price * 100) / 100).toFixed(2)} UAH</>
-      </h3>
-
-      <h3 className={"text-lg"}>
-        Колір - {colors.map((color: any) => color.name)}
-      </h3>
-
-      <div className={"flex gap-2"}>
-        {colors.map((color: any) => {
-          return (
-            <button
-              key={color.id}
-              style={{ background: color.hexValue }}
-              onClick={() => setSelectedColor(color.id)}
-              className={
-                "flex flex-col items-center justify-center h-[44px] w-[44px] rounded-sm relative"
-              }
-            >
-              {color.id === selectedValues.colorId && (
-                <div
-                  className={
-                    "absolute inset-0 flex justify-center items-center text-white"
-                  }
-                >
-                  <Check />
-                </div>
-              )}
-            </button>
-          );
-        })}
+          <> {(Math.round(product.price * 100) / 100).toFixed(2)} UAH</>
+        </h3>
       </div>
 
-      <h3 className={"text-lg"}>
-        Розмір - {sizes.map((size: any) => size.name)}
-      </h3>
+      <ColorList
+        colors={colors}
+        colorId={selectedVariant.colorId}
+        setSelectedColor={setSelectedColor}
+      />
 
-      <div className={"flex gap-2"}>
-        {sizes.map((size: any) => {
-          return (
-            <button
-              key={size.id}
-              onClick={() => setSelectedSize(size.id)}
-              className={
-                "flex border-foreground border-1 flex-col items-center " +
-                `${size.id === selectedValues.sizeId ? "bg-secondary" : ""}` +
-                ` justify-center h-[44px] w-[44px] rounded-sm relative text-lg`
-              }
-            >
-              {size.name}
-            </button>
-          );
-        })}
+      <div className={"flex flex-col gap-2"}>
+        <h3 className={"text-xl"}>Опис товару</h3>
+        <p>{product.description}</p>
       </div>
 
-      <p>{product.description}</p>
+      <SizeList
+        sizes={sizes}
+        sizeId={selectedVariant.sizeId}
+        setSelectedSize={setSelectedSize}
+      />
+
+      <h3>{getQuantityMessage()}</h3>
+
+      <Link href={"/"} className={"flex gap-2 font-semibold"}>
+        <Ruler />
+        Перевір свій розмір.
+      </Link>
+
+      <Button type="primary" className={"font-semibold w-fit"}>
+        ДОДАТИ У КОШИК
+      </Button>
     </div>
   );
 }

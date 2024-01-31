@@ -1,0 +1,21 @@
+/* The Masonry Container */
+.masonry {
+  padding: 0 1.5em;
+  column-fill: initial;
+}
+
+.col-1 {
+  column-count: 1;
+}
+
+.col-2 {
+  column-count: 2;
+}
+
+/* The Masonry Brick */
+.item {
+  background: transparent;
+  margin: 0 0 1.5em;
+
+  max-height: 768px;
+}

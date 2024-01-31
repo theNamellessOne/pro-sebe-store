@@ -1,11 +1,11 @@
-import { Montserrat } from "next/font/google";
+import { Comfortaa, Montserrat, Raleway } from "next/font/google";
 
 import "./globals.css";
 
 import type { Metadata } from "next";
 import { AuthProvider } from "@/providers/auth-provider";
 
-const font = Montserrat({ subsets: ["cyrillic", "latin"] });
+const font = Comfortaa({ subsets: ["cyrillic", "latin"] });
 
 export const metadata: Metadata = {
   title: "Pro Sebe Store",
