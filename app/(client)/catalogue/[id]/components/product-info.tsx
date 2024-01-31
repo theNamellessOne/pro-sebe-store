@@ -3,6 +3,7 @@ import { ColorList } from "./color-list";
 import { SizeList } from "./size-list";
 import { Button } from "@/app/(client)/components/ui/button";
 import { Ruler } from "lucide-react";
+import { useCart } from "@/app/(client)/cart/hooks/use-cart";
 
 export function ProductInfo({
   product,
@@ -15,6 +16,8 @@ export function ProductInfo({
   setSelectedColor: (colorId: number) => void;
   setSelectedSize: (sizeId: number) => void;
 }) {
+  const { isInCart, addToCart } = useCart();
+
   const colors = product.variants
     .map((variant: any) => variant.color)
     .filter(
@@ -79,7 +82,19 @@ export function ProductInfo({
         Перевір свій розмір.
       </Link>
 
-      <Button type="primary" className={"font-semibold w-fit"}>
+      <Button
+        disabled={!isInCart(selectedVariant.id)}
+        type="primary"
+        className={"font-semibold w-fit"}
+        onClick={() =>
+          addToCart({
+            id: selectedVariant.id,
+            colorName: selectedVariant.color.name,
+            sizeName: selectedVariant.size.name,
+            unitPrice: product.price,
+          })
+        }
+      >
         ДОДАТИ У КОШИК
       </Button>
     </div>

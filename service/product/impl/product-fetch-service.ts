@@ -84,8 +84,6 @@ export async function _fetchAndFilter(
     };
   }
 
-  console.log(pages);
-
   const sortDir = convertSortDescriptorToPrisma(props.sortDirection);
   const orderBy = {};
   // @ts-ignore
@@ -105,8 +103,6 @@ export async function _fetchAndFilter(
       },
     },
   });
-
-  console.log(items);
 
   return {
     items,

@@ -11,6 +11,7 @@ export function ProductImg({ selectedVariant }: { selectedVariant: any }) {
       {selectedVariant.mediaUrls.map((media: MediaUrl) => {
         return (
           <div
+            key={media.id}
             className={
               "snap-start item flex justify-center items-center overflow-hidden h-full w-full max-h-[400px] lg:max-h-[768px]"
             }

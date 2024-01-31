@@ -1,25 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { BsBag } from "react-icons/bs";
+import { BsBag, BsBagCheck } from "react-icons/bs";
 import { Button } from "@nextui-org/button";
 import { Color } from "@/app/(client)/catalogue/components/color";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useCart } from "@/app/(client)/cart/hooks/use-cart";
 
 type ProductCardProps = {
   product: any;
 };
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { isInCart } = useCart();
+
   const url = `/catalogue/${product.article}`;
   const router = useRouter();
 
   const variants = product.variants;
   const [selected, setSelected] = useState(variants[0]);
 
-  const redirectToProductPage = () => {
+  const redirectToProductPage = (queryParams?: string | undefined) => {
+    if (queryParams) {
+      router.push(url + `?${queryParams}`);
+      return;
+    }
+
     router.push(url);
   };
 
@@ -79,16 +87,17 @@ export function ProductCard({ product }: ProductCardProps) {
               return (
                 <button
                   key={color.id}
-                  onClick={redirectToProductPage}
+                  onClick={() =>
+                    redirectToProductPage(`selectedColor=${color.id}`)
+                  }
                   onMouseOver={() => {
                     changeSelected(color.id);
                   }}
                 >
                   <Color
                     hex={color.hexValue}
-                    className={`hover:scale-125 ${
-                      selected.colorId === color.id && "scale-125"
-                    } h-[30px] w-[30px] transition-all`}
+                    className={`hover:scale-125 ${selected.colorId === color.id && "scale-125"
+                      } h-[30px] w-[30px] transition-all`}
                   />
                 </button>
               );
@@ -97,13 +106,13 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <Button
-          onClick={redirectToProductPage}
+          onClick={() => redirectToProductPage()}
           variant={"light"}
           className={"rounded-sm text-3xl"}
           color={"primary"}
           isIconOnly
         >
-          <BsBag />
+          {isInCart(selected.id) ? <BsBag /> : <BsBagCheck />}
         </Button>
       </div>
     </div>
