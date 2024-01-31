@@ -25,7 +25,7 @@ export function ProductList(props: ProductListProps) {
     <div>
       <div
         className={
-          "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-4 w-fit mx-auto py-4"
+          "container mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 w-fit py-4"
         }
       >
         {list.items.map((item) => {

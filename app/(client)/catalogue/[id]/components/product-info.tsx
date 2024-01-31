@@ -39,10 +39,10 @@ export function ProductInfo({
   };
 
   return (
-    <div className={"flex flex-col gap-4"}>
+    <div className={"flex flex-col gap-6"}>
       <div className={"flex flex-col gap-2"}>
-        <h2 className={"text-3xl"}>{product.name}</h2>
-        <h3 className={"text-xl flex gap-2"}>
+        <h2 className={"text-xl md:text-2xl"}>{product.name}</h2>
+        <h3 className={"text-lg xl:text-xl flex gap-2"}>
           {product.compareAtPrice > product.price && (
             <>
               <p className={"text-zinc-600 line-through"}>
@@ -62,7 +62,7 @@ export function ProductInfo({
       />
 
       <div className={"flex flex-col gap-2"}>
-        <h3 className={"text-xl"}>Опис товару</h3>
+        <h3 className={"text-lg xl:text-xl"}>Опис товару</h3>
         <p>{product.description}</p>
       </div>
 

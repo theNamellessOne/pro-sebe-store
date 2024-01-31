@@ -1,6 +1,5 @@
 /* The Masonry Container */
 .masonry {
-  padding: 0 1.5em;
   column-fill: initial;
 }
 
@@ -16,6 +15,10 @@
 .item {
   background: transparent;
   margin: 0 0 1.5em;
+}
 
-  max-height: 768px;
+@media screen and (max-width: 1024px) {
+  .col-2 {
+    column-count: 1;
+  }
 }

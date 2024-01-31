@@ -11,7 +11,7 @@ export function ColorList({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <h3 className={"text-xl"}>
+      <h3 className={"text-lg xl:text-xl"}>
         Колір -{" "}
         {colors
           .filter((color: any) => color.id === colorId)

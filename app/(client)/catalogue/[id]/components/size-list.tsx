@@ -9,7 +9,7 @@ export function SizeList({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <h3 className={"text-xl"}>
+      <h3 className={"text-lg xl:text-xl"}>
         Розмір -{" "}
         {sizes
           .filter((size: any) => size.id === sizeId)

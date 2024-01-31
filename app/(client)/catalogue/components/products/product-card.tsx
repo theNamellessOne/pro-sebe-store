@@ -6,6 +6,7 @@ import { Button } from "@nextui-org/button";
 import { Color } from "@/app/(client)/catalogue/components/color";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 type ProductCardProps = {
   product: any;
@@ -40,17 +41,16 @@ export function ProductCard({ product }: ProductCardProps) {
         "flex gap-4 items-center flex-col w-[330px] h-[520px] bg-secondary rounded-sm py-[20px] text-secondary-foreground"
       }
     >
-      <div className={"relative"}>
-        <img
+      <div className={"relative w-[290px] h-[329px]"}>
+        <Image
+          className={"aspect-[290/329] object-cover"}
           src={
             selected.mediaUrls[0]
               ? selected.mediaUrls[0]?.url
-              : "https://placehold.co/290x329/white/webp"
+              : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
           }
+          fill
           alt={product.name}
-          className={
-            "w-[290px] h-[329px] rounded-sm overflow-hidden object-cover"
-          }
         />
       </div>
 

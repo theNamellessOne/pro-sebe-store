@@ -18,7 +18,7 @@ export function Button({
   className = "",
   ...props
 }: ButtonProps) {
-  const baseStyle = "text-lg py-2 px-10";
+  const baseStyle = "text-lg py-2 px-10 rounded-sm";
   const primaryStyle =
     "transition-colors border border-primary bg-primary text-primary-foreground hover:bg-transparent hover:text-primary";
   const secondaryStyle =

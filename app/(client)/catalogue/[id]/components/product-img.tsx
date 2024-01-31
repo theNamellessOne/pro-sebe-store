@@ -3,16 +3,23 @@ import { MediaUrl } from "@prisma/client";
 export function ProductImg({ selectedVariant }: { selectedVariant: any }) {
   return (
     <div
-      className={`masonry ${selectedVariant.mediaUrls.length < 2 ? "col-1" : "col-2"}`}
+      className={
+        `masonry ${selectedVariant.mediaUrls.length < 2 ? "col-1" : "col-2"} ` +
+        "max-h-[400px] h-[50vh] lg:h-auto lg:max-h-none overflow-scroll snap-x"
+      }
     >
       {selectedVariant.mediaUrls.map((media: MediaUrl) => {
         return (
-          <div className={"item"}>
+          <div
+            className={
+              "snap-start item flex justify-center items-center overflow-hidden h-full w-full max-h-[400px] lg:max-h-[768px]"
+            }
+          >
             <img
-              className={"h-full w-full"}
               src={media.url}
               key={media.id}
               alt={"media image"}
+              className={"shrink-0 min-w-full min-h-full"}
             />
           </div>
         );
