@@ -26,9 +26,8 @@ export function PriceFilter() {
         <Button
           variant={"bordered"}
           className={"border border-foreground rounded"}
-          isIconOnly
         >
-          <SlidersHorizontal />
+          Ціна
         </Button>
       </PopoverTrigger>
 

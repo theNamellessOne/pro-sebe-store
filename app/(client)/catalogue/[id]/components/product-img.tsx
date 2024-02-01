@@ -1,4 +1,5 @@
 import { MediaUrl } from "@prisma/client";
+import Image from "next/image";
 
 export function ProductImg({ selectedVariant }: { selectedVariant: any }) {
   return (

@@ -17,7 +17,7 @@
   margin: 0 0 1.5em;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 768px) {
   .col-2 {
     column-count: 1;
   }

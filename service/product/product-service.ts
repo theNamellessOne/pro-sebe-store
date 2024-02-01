@@ -4,6 +4,7 @@ import {
   _fetchPriceExtremes,
   _fetchProductById,
   _fetchProducts,
+  _fetchSimilarProducts,
 } from "@/service/product/impl/product-fetch-service";
 
 export class ProductService {
@@ -11,6 +12,7 @@ export class ProductService {
   public fetch = _fetchProducts;
   public fetchAndFilter = _fetchAndFilter;
   public fetchPriceExtremes = _fetchPriceExtremes;
+  public fetchSimilar = _fetchSimilarProducts;
 
   public save = _saveProduct;
 

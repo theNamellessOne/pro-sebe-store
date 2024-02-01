@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AiOutlineHeart } from "react-icons/ai";
 import { BsBag, BsBagCheck } from "react-icons/bs";
 import { Button } from "@nextui-org/button";
 import { Color } from "@/app/(client)/catalogue/components/color";
@@ -60,6 +61,15 @@ export function ProductCard({ product }: ProductCardProps) {
           fill
           alt={product.name}
         />
+
+        <Button
+          className={"absolute rounded-sm top-1 right-1 z-99 text-3xl"}
+          variant={"light"}
+          color={"primary"}
+          isIconOnly
+        >
+          <AiOutlineHeart />
+        </Button>
       </div>
 
       <div className={"flex flex-col items-start w-[290px]"}>
@@ -96,8 +106,9 @@ export function ProductCard({ product }: ProductCardProps) {
                 >
                   <Color
                     hex={color.hexValue}
-                    className={`hover:scale-125 ${selected.colorId === color.id && "scale-125"
-                      } h-[30px] w-[30px] transition-all`}
+                    className={`hover:scale-125 ${
+                      selected.colorId === color.id && "scale-125"
+                    } h-[30px] w-[30px] transition-all`}
                   />
                 </button>
               );
