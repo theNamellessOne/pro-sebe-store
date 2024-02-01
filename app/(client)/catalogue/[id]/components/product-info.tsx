@@ -89,6 +89,8 @@ export function ProductInfo({
         onClick={() =>
           addToCart({
             id: selectedVariant.id,
+            productName: product.name,
+            productImageUrl: selectedVariant.mediaUrls[0].url,
             colorName: selectedVariant.color.name,
             sizeName: selectedVariant.size.name,
             unitPrice: product.price,

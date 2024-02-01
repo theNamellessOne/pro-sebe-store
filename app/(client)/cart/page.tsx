@@ -1,3 +1,5 @@
+import { Cart } from "./components/cart";
+
 export default function Page() {
-  return "suka";
+  return <Cart />;
 }

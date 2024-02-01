@@ -3,13 +3,16 @@ import { useEffect, useState } from "react";
 export type CartItem = {
   id: number;
 
+  productName: string;
+  productImageUrl: string;
+
   sizeName: string;
   colorName: string;
 
   unitPrice: number;
 };
 
-type CartItemWithAmount = CartItem & { amount: number };
+export type CartItemWithAmount = CartItem & { amount: number };
 
 type Cart = {
   items: CartItemWithAmount[];
@@ -27,13 +30,16 @@ export function useCart() {
   };
 
   const calculateTotal = (cartItems: CartItemWithAmount[]) => {
+    if (cartItems.length === 0) return 0;
+
     return cartItems
       .map((item: CartItemWithAmount) => item.unitPrice * item.amount)
       .reduce((accumulator, current) => accumulator + current);
   };
 
   const changeCart = (newCart: Cart) => {
-    setCart(newCart);
+    console.log(newCart);
+    setCart({ ...newCart });
     window.localStorage.setItem("cart", JSON.stringify(newCart));
   };
 
