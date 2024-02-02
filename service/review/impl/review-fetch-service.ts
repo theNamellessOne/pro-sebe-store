@@ -18,16 +18,16 @@ export async function _fetchReviewById(id: number) {
     };
 }
 
-export async function _fetchAllReviews() {
+export async function _fetchAllReview() {
     return prisma.review.findMany();
 }
 
-export async function _fetchReviews({
-                                        query,
-                                        page,
-                                        sortColumn,
-                                        sortDirection,
-                                    }: FetchFunctionProps) {
+export async function _fetchReview({
+                                       query,
+                                       page,
+                                       sortColumn,
+                                       sortDirection,
+                                   }: FetchFunctionProps) {
     const pages = await _countPages(query);
     if (page < 0 || page > pages) {
         return {
@@ -36,7 +36,7 @@ export async function _fetchReviews({
         };
     }
 
-    const items = await _findReviews(query, page, sortColumn, sortDirection);
+    const items = await _findReview(query, page, sortColumn, sortDirection);
 
     return {
         items,
@@ -55,7 +55,7 @@ async function _countPages(query: string) {
     return Math.ceil(count / COLOR_PAGE_SIZE);
 }
 
-async function _findReviews(
+async function _findReview(
     query: string,
     page: number,
     sortColumn: Key,

@@ -1,6 +1,6 @@
 import {DashboardHeader} from "@/app/dashboard/components/dashboard-header";
-import {ColorTable} from "@/app/dashboard/(pages)/colors/components/color-table";
-import {Suspense} from "react";
+import React, {Suspense} from "react";
+import {ReviewTable} from "@/app/dashboard/(pages)/review/components/review-table";
 import {Loader} from "lucide-react";
 import {readSearchParams, SearchParams} from "@/util/read-search-params";
 
@@ -13,10 +13,8 @@ export default async function Page({
 
     return (
         <>
-            <div
-                className={"relative flex flex-col gap-4 h-full w-full p-4 px-[20px]"}
-            >
-                <DashboardHeader title={"Кольори"}/>
+            <div className={"relative flex flex-col gap-4 h-full w-full p-4 px-[20px]"}>
+                <DashboardHeader title={"Відгуки"} showButton={false}/>
 
                 <Suspense
                     key={
@@ -27,7 +25,7 @@ export default async function Page({
                     }
                     fallback={<Loader/>}
                 >
-                    <ColorTable
+                    <ReviewTable
                         query={query}
                         page={currentPage}
                         sortDescriptor={sortDescriptor}

@@ -1,12 +1,17 @@
-import {_fetchAllReviews, _fetchReviewById, _fetchReviews} from "@/service/review/impl/review-fetch-service";
+import {_fetchAllReview, _fetchReview, _fetchReviewById} from "@/service/review/impl/review-fetch-service";
 import {_saveReview} from "@/service/review/impl/review-write-service";
+import {_deleteManyReviews, _deleteReview} from "@/service/review/impl/review-delete-service";
 
 export class ReviewService {
-    public fetchAll = _fetchAllReviews;
+    public fetch = _fetchReview;
+    public fetchAll = _fetchAllReview;
     public fetchById = _fetchReviewById;
-    public fetchReviews = _fetchReviews;
+    public fetchReviews = _fetchReview;
 
     public save = _saveReview;
+
+    public delete = _deleteReview;
+    public deleteMany = _deleteManyReviews;
 
     private static _instance: ReviewService | undefined;
 
