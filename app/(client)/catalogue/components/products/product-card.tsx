@@ -15,7 +15,7 @@ type ProductCardProps = {
 };
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { isInCart } = useCart();
+  const { isInCart } = useCart()!;
 
   const url = `/catalogue/${product.article}`;
   const router = useRouter();

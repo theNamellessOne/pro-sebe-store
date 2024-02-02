@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useCart } from "../hooks/use-cart";
-import { GoPackageDependents } from "react-icons/go";
 import { MiscService } from "@/service/misc/misc-service";
-import { CartPosition } from "./cart-position";
 import { Divider } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import { GoPackageDependents } from "react-icons/go";
+import { useCart } from "../hooks/use-cart";
+import { CartPosition } from "./cart-position";
 
 export function CartItems() {
   const [freeDeliveryMinPrice, setFreeDeliverMinPrice] = useState(0);
-  const { cart, changeItemAmount, removeFromCart } = useCart();
+  const { cart } = useCart()!;
 
   useEffect(() => {
     MiscService.instance.fetch().then((res) => {
@@ -41,12 +41,7 @@ export function CartItems() {
       <div className={"flex flex-col gap-4"}>
         {cart.items.map((item) => (
           <>
-            <CartPosition
-              key={item.id}
-              item={item}
-              changeItemAmount={changeItemAmount}
-              removeFromCart={removeFromCart}
-            />
+            <CartPosition key={item.id} item={item} />
             <Divider className={"my-[30px]"} />
           </>
         ))}

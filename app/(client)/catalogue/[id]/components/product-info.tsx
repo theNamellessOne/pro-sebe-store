@@ -16,7 +16,7 @@ export function ProductInfo({
   setSelectedColor: (colorId: number) => void;
   setSelectedSize: (sizeId: number) => void;
 }) {
-  const { isInCart, addToCart } = useCart();
+  const { isInCart, addToCart } = useCart()!;
 
   const colors = product.variants
     .map((variant: any) => variant.color)
@@ -97,7 +97,7 @@ export function ProductInfo({
           })
         }
       >
-        ДОДАТИ У КОШИК
+        {!isInCart(selectedVariant.id) ? "ВЖЕ У КОШИКУ" : "ДОДАТИ У КОШИК"}
       </Button>
     </div>
   );

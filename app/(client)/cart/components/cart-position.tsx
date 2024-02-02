@@ -1,30 +1,18 @@
 import Image from "next/image";
-import { CartItemWithAmount } from "../hooks/use-cart";
 import { Button, Select, SelectItem } from "@nextui-org/react";
 import { RxCross1 } from "react-icons/rx";
+import { CartItemWithAmount } from "../providers/cart-provider";
+import { useCart } from "../hooks/use-cart";
 
-export function CartPosition({
-  item,
-  changeItemAmount,
-  removeFromCart,
-}: {
+type CartPositionProps = {
   item: CartItemWithAmount;
-  changeItemAmount: (id: number, newAmount: number) => void;
-  removeFromCart: (id: number) => void;
-}) {
-  return (
-    <div className={"flex gap-4 relative"}>
-      <Button
-        size="sm"
-        variant="ghost"
-        color="primary"
-        onClick={() => removeFromCart(item.id)}
-        className={"rounded-sm text-xl absolute z-50 right-5"}
-        isIconOnly
-      >
-        <RxCross1 />
-      </Button>
+};
 
+export function CartPosition({ item }: CartPositionProps) {
+  const { removeFromCart, changeItemAmount } = useCart()!;
+
+  return (
+    <div className={"flex gap-4"}>
       <div
         className={"relative h-[300px] w-[200px] overflow-hidden rounded-sm"}
       >
@@ -37,7 +25,21 @@ export function CartPosition({
       </div>
 
       <div className={"flex flex-col gap-2"}>
-        <h3 className={"font-semibold"}>{item.productName}</h3>
+        <div className="flex items-start gap-2">
+          <h3 className={"font-semibold max-w-[300px]"}>{item.productName}</h3>
+
+          <Button
+            size="sm"
+            variant="light"
+            color="primary"
+            onClick={() => removeFromCart(item.id)}
+            className={"rounded-sm text-xl z-50"}
+            isIconOnly
+          >
+            <RxCross1 />
+          </Button>
+        </div>
+
         <p className={"text-[#808080]"}>Колір: {item.colorName}</p>
         <p className={"text-[#808080]"}>Розмір {item.sizeName}</p>
         <p className={"text-[#808080]"}>Ціна: {item.unitPrice} UAH</p>

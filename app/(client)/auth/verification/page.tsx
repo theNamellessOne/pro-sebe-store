@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { AuthService } from "@/service/auth/auth-service";
 import { ErrorBox } from "@/app/(client)/components/ui/error-box";
 import { SuccessBox } from "@/app/(client)/components/ui/success-box";
+import { AuthService } from "@/service/auth/auth-service";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Page() {
   const [error, setError] = useState<string | undefined>();
