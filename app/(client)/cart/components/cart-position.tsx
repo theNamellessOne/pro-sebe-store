@@ -12,9 +12,9 @@ export function CartPosition({ item }: CartPositionProps) {
   const { removeFromCart, changeItemAmount } = useCart()!;
 
   return (
-    <div className={"flex gap-4"}>
+    <div className={"flex gap-4 relative"}>
       <div
-        className={"relative h-[300px] w-[200px] overflow-hidden rounded-sm"}
+        className={"hidden sm:block relative sm:h-[300px] sm:w-[200px] shrink-0 overflow-hidden rounded-sm"}
       >
         <Image
           className={"aspect-[200/300] object-cover"}
@@ -24,8 +24,8 @@ export function CartPosition({ item }: CartPositionProps) {
         />
       </div>
 
-      <div className={"flex flex-col gap-2"}>
-        <div className="flex items-start gap-2">
+      <div className={"flex flex-col gap-2 grow"}>
+        <div className="flex items-start gap-2 justify-between">
           <h3 className={"font-semibold max-w-[300px]"}>{item.productName}</h3>
 
           <Button

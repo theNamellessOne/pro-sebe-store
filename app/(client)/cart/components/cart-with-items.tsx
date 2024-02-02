@@ -5,9 +5,14 @@ import { CartOrder } from "./cart-order";
 
 export function CartWithItems() {
   return (
-    <div className="flex flex-col lg:flex-row lg:h-screen">
-      <CartItems />
-      <CartOrder />
+    <div className="flex flex-col lg:flex-row h-screen">
+      <div className="lg:w-3/5">
+        <CartItems />
+      </div>
+
+      <div className="grow h-full">
+        <CartOrder />
+      </div>
     </div>
   );
 }

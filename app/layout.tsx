@@ -1,9 +1,7 @@
-import { Comfortaa, Montserrat, Raleway } from "next/font/google";
-
-import "./globals.css";
-
-import type { Metadata } from "next";
 import { AuthProvider } from "@/providers/auth-provider";
+import type { Metadata } from "next";
+import { Comfortaa } from "next/font/google";
+import "./globals.css";
 
 const font = Comfortaa({ subsets: ["cyrillic", "latin"] });
 

@@ -12,6 +12,7 @@ export function EmptyCart() {
       <h2 className={"text-xl lg:text-2xl capitalize"}>ваш кошик пустий</h2>
       <Button
         color="primary"
+        size="lg"
         className={"rounded-sm uppercase text-xl lg:text-2xl py-4"}
       >
         Продовжити купування

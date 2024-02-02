@@ -3,7 +3,7 @@
 import { MiscService } from "@/service/misc/misc-service";
 import { Divider } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { GoPackageDependents } from "react-icons/go";
+import { PiPackageThin } from "react-icons/pi";
 import { useCart } from "../hooks/use-cart";
 import { CartPosition } from "./cart-position";
 
@@ -23,29 +23,33 @@ export function CartItems() {
   }, []);
 
   return (
-    <div>
-      <div className={"flex gap-6 items-center uppercase"}>
-        <h2 className={"font-semibold text-xl lg:text-2xl"}>Кошик</h2>
-        <span className={"rounded-sm bg-secondary py-1 px-4"}>
-          {cart.items.length} товар (-и)
-        </span>
+    <div className={"p-8"}>
+      <div className="flex flex-col gap-6">
+        <div className={"flex gap-6 items-center uppercase"}>
+          <h2 className={"font-bold text-xl lg:text-2xl"}>Кошик</h2>
+          <span className={"rounded-sm bg-secondary py-1 px-4"}>
+            {cart.items.length} товар (-и)
+          </span>
+        </div>
+
+        <div className={"text-xl flex gap-4 items-start"}>
+          <PiPackageThin className={"text-4xl mt-1 "} />
+          <p>
+            Безкоштовна доставка від {freeDeliveryMinPrice} грн
+          </p>
+        </div>
       </div>
 
-      <div className={"text-xl flex gap-4 items-start"}>
-        <GoPackageDependents className={"text-4xl mt-1 "} />
-        <p>
-          Безкоштовна доставка від <br /> {freeDeliveryMinPrice} грн
-        </p>
-      </div>
-
-      <div className={"flex flex-col gap-4"}>
-        {cart.items.map((item) => (
+      <div className={"flex flex-col gap-4 mt-6 lg:mt-8 overflow-y-scroll"}>
+        {cart.items.map((item, idx) => (
           <>
             <CartPosition key={item.id} item={item} />
-            <Divider className={"my-[30px]"} />
+            {idx !== cart.items.length - 1 &&
+              <Divider className={"my-[30px]"} />
+            }
           </>
         ))}
       </div>
-    </div>
+    </ div >
   );
 }
