@@ -63,7 +63,7 @@ export function LoginForm() {
   };
 
   return (
-    <div className={"flex items-center justify-center w-full"}>
+    <div className={"flex items-center justify-center w-full p-8"}>
       <form
         className={
           "mt-6 p-4 min-w-[300px] w-full max-w-[600px] flex flex-col gap-4"
@@ -102,7 +102,7 @@ export function LoginForm() {
               underline={"hover"}
               className={"text-foreground/80 ml-auto"}
             >
-              forgot your password?
+              забули пароль?
             </Link>
           </>
         )}
@@ -115,6 +115,7 @@ export function LoginForm() {
           htmlType={"submit"}
           disabled={isSubmitting || !isValid}
           type={"primary"}
+          className="capitalize"
         >
           <div className={"flex items-center justify-center gap-3"}>
             {isSubmitting && <Spinner size={"sm"} color={"primary"} />}
@@ -124,7 +125,7 @@ export function LoginForm() {
 
         <div className={"flex items-center gap-2 w-full mx-auto"}>
           <span className={"h-0.5 w-full bg-secondary"}></span>
-          <p>or</p>
+          <p>або</p>
           <span className={"h-0.5 w-full bg-secondary"}></span>
         </div>
 

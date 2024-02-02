@@ -19,6 +19,8 @@ export function GoogleLogin({ disabled = false }: { disabled?: boolean }) {
           callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
         });
       }}
+
+      className="capitalize"
     >
       <div className={"flex items-center justify-center gap-3"}>
         <FcGoogle className="h-6 w-6" />

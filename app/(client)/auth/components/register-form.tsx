@@ -98,13 +98,13 @@ export function RegisterForm() {
         >
           <div className={"flex items-center justify-center gap-3"}>
             {isSubmitting && <Spinner size={"sm"} color={"primary"} />}
-            Заре\струватись
+            Зареєструватись
           </div>
         </Button>
 
         <div className={"flex items-center gap-2 w-full mx-auto"}>
           <span className={"h-0.5 w-full bg-secondary"}></span>
-          <p>or</p>
+          <p>або</p>
           <span className={"h-0.5 w-full bg-secondary"}></span>
         </div>
 
