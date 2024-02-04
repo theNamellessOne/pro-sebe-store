@@ -15,6 +15,12 @@ async function _deleteReviewNonTransactional(id: number) {
         }
     }
 
+    await prisma.review.deleteMany({
+        where: {
+            id: id,
+        },
+    });
+
     await prisma.review.delete({where: {id}});
 }
 

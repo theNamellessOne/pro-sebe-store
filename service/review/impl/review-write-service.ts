@@ -3,6 +3,7 @@
 import {ReviewSave, reviewSchema} from "@/schema/review/review-schema";
 import prisma from "@/lib/prisma";
 import {auth} from "@/auth/auth";
+import {ReviewStatus} from "@prisma/client";
 
 export async function _saveReview(review: ReviewSave) {
     return review.id ? _updateReview(review) : _createReview(review);
@@ -53,4 +54,43 @@ async function _updateReview(review: ReviewSave) {
             },
         }),
     };
+}
+
+export async function _setStatus(id: number, status: ReviewStatus) {
+
+    await prisma.review.updateMany({
+        where: {id: id},
+        data: {
+            status,
+        },
+    });
+
+    return prisma.review.update({
+        where: {id: id},
+        data: {
+            status,
+        },
+    });
+}
+
+export async function _setStatusMany(query: string, status: ReviewStatus) {
+    const reviewsToChange = await prisma.review.findMany({
+        where: {
+            content: {
+                contains: query,
+            },
+        },
+    });
+
+    await prisma.$transaction(
+        async () => {
+            for (let i = 0; i < reviewsToChange.length; i++) {
+                await _setStatus(reviewsToChange[i].id, status)
+            }
+        },
+        {
+            maxWait: 5000,
+            timeout: 10000,
+        },
+    );
 }

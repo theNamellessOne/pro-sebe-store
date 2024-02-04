@@ -3,7 +3,7 @@
 import {useRouter} from "next/navigation";
 import {useReviewTableCell} from "@/app/dashboard/(pages)/review/hooks/use-review-table-cell";
 import {useReviewList} from "@/app/dashboard/(pages)/review/hooks/use-review-list";
-import {Key, useState} from "react";
+import {Key, useEffect, useState} from "react";
 import {TableProps} from "@/app/dashboard/types/table-props";
 import {Selection} from "@nextui-org/react";
 import {ReviewService} from "@/service/review/review-service";
@@ -11,6 +11,7 @@ import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@
 import {DashboardSearch} from "@/app/dashboard/components/dashboard-search";
 import Loading from "@/app/dashboard/loading";
 import {TableActions} from "@/app/dashboard/components/table-actions";
+import {reviewEventChannel} from "@/app/dashboard/(pages)/review/event/review-event-channel";
 
 const service = ReviewService.instance;
 
@@ -29,7 +30,16 @@ export function ReviewTable({query, page, sortDescriptor}: TableProps) {
         {name: "User name", uid: "username"},
         {name: "Content", uid: "content"},
         {name: "Status", uid: "status"},
-    ]
+        {name: "Actions", uid: "actions"}
+    ];
+
+    useEffect(() => {
+        const onReviewUpdateUnsub = reviewEventChannel.on("onReviewUpdate", list.reload);
+
+        return () => {
+            onReviewUpdateUnsub();
+        };
+    }, []);
 
     const tableActions = [
         {
@@ -38,8 +48,27 @@ export function ReviewTable({query, page, sortDescriptor}: TableProps) {
                 await deleteAction(service.delete);
             },
         },
+        {
+            name: "change status",
+            action: async () => {
+                // @ts-ignore
+                await updateAction(service.setStatus);
+            }
+        }
     ];
 
+    const updateAction = async (func: (id: number) => Promise<void>) => {
+        if (selected === "all") {
+            // @ts-ignore
+            await service.setStatusMany(query);
+        } else {
+            for (const item of Array.from(selected)) {
+                await func(parseInt(item.toString()));
+            }
+        }
+        setSelected(new Set([]));
+        list.reload();
+    }
     const deleteAction = async (func: (id: number) => Promise<void>) => {
         setLoading(true);
 

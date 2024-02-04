@@ -1,5 +1,5 @@
 import {_fetchAllReview, _fetchReview, _fetchReviewById} from "@/service/review/impl/review-fetch-service";
-import {_saveReview} from "@/service/review/impl/review-write-service";
+import {_saveReview, _setStatus, _setStatusMany} from "@/service/review/impl/review-write-service";
 import {_deleteManyReviews, _deleteReview} from "@/service/review/impl/review-delete-service";
 
 export class ReviewService {
@@ -12,6 +12,8 @@ export class ReviewService {
 
     public delete = _deleteReview;
     public deleteMany = _deleteManyReviews;
+    public setStatus = _setStatus;
+    public setStatusMany = _setStatusMany;
 
     private static _instance: ReviewService | undefined;
 
