@@ -58,13 +58,6 @@ async function _updateReview(review: ReviewSave) {
 
 export async function _setStatus(id: number, status: ReviewStatus) {
 
-    await prisma.review.updateMany({
-        where: {id: id},
-        data: {
-            status,
-        },
-    });
-
     return prisma.review.update({
         where: {id: id},
         data: {
@@ -74,23 +67,23 @@ export async function _setStatus(id: number, status: ReviewStatus) {
 }
 
 export async function _setStatusMany(query: string, status: ReviewStatus) {
-    const reviewsToChange = await prisma.review.findMany({
+    await prisma.review.updateMany({
         where: {
             content: {
                 contains: query,
             },
         },
-    });
+        data: {
+            status
+        }
+    })
+}
 
-    await prisma.$transaction(
-        async () => {
-            for (let i = 0; i < reviewsToChange.length; i++) {
-                await _setStatus(reviewsToChange[i].id, status)
-            }
+export async function _setStatusManyById(ids: number[], status: ReviewStatus) {
+    await prisma.review.updateMany({
+        where: {
+            id: {in: ids}
         },
-        {
-            maxWait: 5000,
-            timeout: 10000,
-        },
-    );
+        data: {status}
+    })
 }

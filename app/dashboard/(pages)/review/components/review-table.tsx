@@ -12,6 +12,7 @@ import {DashboardSearch} from "@/app/dashboard/components/dashboard-search";
 import Loading from "@/app/dashboard/loading";
 import {TableActions} from "@/app/dashboard/components/table-actions";
 import {reviewEventChannel} from "@/app/dashboard/(pages)/review/event/review-event-channel";
+import {ReviewStatus} from "@prisma/client";
 
 const service = ReviewService.instance;
 
@@ -43,32 +44,47 @@ export function ReviewTable({query, page, sortDescriptor}: TableProps) {
 
     const tableActions = [
         {
-            name: "delete",
+            name: "видалити",
             action: async () => {
                 await deleteAction(service.delete);
             },
         },
         {
-            name: "change status",
+            name: "відобразити",
             action: async () => {
-                // @ts-ignore
-                await updateAction(service.setStatus);
+                await approveAction();
+            }
+        },
+        {
+            name: "сховати",
+            action: async () => {
+                await onModerationAction();
             }
         }
     ];
 
-    const updateAction = async (func: (id: number) => Promise<void>) => {
+    const approveAction = async () => {
         if (selected === "all") {
-            // @ts-ignore
-            await service.setStatusMany(query);
+            await service.setStatusMany(query, ReviewStatus.APPROVED);
         } else {
-            for (const item of Array.from(selected)) {
-                await func(parseInt(item.toString()));
-            }
+            //@ts-ignore
+            await service.setStatusManyById(Array.from(selected).map(id => parseInt(id)), ReviewStatus.APPROVED)
         }
         setSelected(new Set([]));
         list.reload();
     }
+
+    const onModerationAction = async () => {
+        if (selected === "all") {
+            await service.setStatusMany(query, ReviewStatus.ON_MODERATION);
+        } else {
+            //@ts-ignore
+            await service.setStatusManyById(Array.from(selected).map(id => parseInt(id)), ReviewStatus.ON_MODERATION)
+        }
+        setSelected(new Set([]));
+        list.reload();
+    }
+
     const deleteAction = async (func: (id: number) => Promise<void>) => {
         setLoading(true);
 
