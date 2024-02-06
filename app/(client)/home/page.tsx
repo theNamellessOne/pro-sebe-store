@@ -5,6 +5,7 @@ import { Button } from "@nextui-org/button";
 import { AuthService } from "@/service/auth/auth-service";
 import { LogOut } from "lucide-react";
 import React from "react";
+import Banner from "@/app/(client)/components/ui/banner";
 
 export default function Page() {
   return (
@@ -19,6 +20,10 @@ export default function Page() {
       >
         <LogOut /> Logout
       </Button>
+
+      <Banner>
+
+      </Banner>
     </div>
   );
 }
