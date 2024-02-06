@@ -183,6 +183,7 @@ model User {
   sessions Session[]
 
   name     String?
+  surname  String?
   username String? @unique
 
   email         String?   @unique
