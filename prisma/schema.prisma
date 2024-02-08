@@ -281,12 +281,25 @@ enum OrderStatus {
   DELIVERED
 }
 
+enum OrderPaymentType {
+  PREPAID
+  POSTPAID
+}
+
+enum OrderDeliveryType {
+  COURIER
+  WAREHOUSE
+}
+
 model Order {
-  id         Int     @id @default(autoincrement())
+  id         String @id @default(cuid())
   isPayedFor Boolean @default(false)
 
   addressParts   AddressParts? @relation(fields: [addressPartsId], references: [id])
   addressPartsId Int?
+
+  paymentType       OrderPaymentType
+  orderDeliveryType OrderDeliveryType
 
   divisionNumber Int?
   orderItems     OrderItem[]
@@ -297,7 +310,7 @@ model Order {
 }
 
 model OrderItem {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid())
 
   variant   Variant @relation(fields: [variantId], references: [id])
   variantId Int
@@ -306,7 +319,7 @@ model OrderItem {
   subTotal Decimal
 
   order   Order @relation(fields: [orderId], references: [id])
-  orderId Int
+  orderId String
 
   @@index([orderId])
   @@index([variantId])
