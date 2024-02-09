@@ -10,9 +10,7 @@ export function CartWithItems() {
         <CartItems />
       </div>
 
-      <div className="grow h-full">
-        <CartOrder />
-      </div>
+      <CartOrder />
     </div>
   );
 }

@@ -93,7 +93,7 @@ export function SubmitSection() {
       </div>
 
       <Button type="primary" className="uppercase">
-        до сплати
+        оформити замовлення
       </Button>
     </div>
   );

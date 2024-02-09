@@ -5,7 +5,12 @@ export function CartOrder() {
   const { cart } = useCart()!;
 
   return (
-    <div className="bg-secondary h-full py-8 px-8 lg:pt-40 flex flex-col gap-12">
+    <div
+      className={
+        "bg-secondary h-full py-8 px-8 lg:pt-40 flex flex-col gap-12 " +
+        "lg:fixed lg:bottom-0 lg:top-0 lg:right-0 lg:w-2/5"
+      }
+    >
       <h2 className="lg:text-lg uppercase flex justify-between">
         <span>загальна сума</span>
         <span>{cart.total} UAH</span>
