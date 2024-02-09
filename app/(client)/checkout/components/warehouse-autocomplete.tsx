@@ -6,15 +6,19 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 export function WarehouseAutocomplete() {
-  const form = useFormContext<OrderInput>();
+  const { register, unregister, watch, setValue } =
+    useFormContext<OrderInput>();
 
-  const settlementRef = form.watch("deliveryInfo.settlementRef");
-  const warehouseKey = form.watch("deliveryInfo.warehouseKey");
+  const settlementRef = watch("deliveryInfo.settlementRef");
+  const warehouseKey = watch("deliveryInfo.warehouseKey");
 
   const [isLoading, setIsLoading] = useState(false);
   const [items, setItems] = useState<any[]>([]);
 
   const load = (findBy = "") => {
+    setItems([]);
+    if (!settlementRef || settlementRef === "") return;
+
     setIsLoading(true);
     NovaPostService.instance
       .fetchWarehouseByCityRef(settlementRef, findBy)
@@ -23,6 +27,11 @@ export function WarehouseAutocomplete() {
   };
 
   useEffect(load, [settlementRef]);
+
+  useEffect(() => {
+    register("deliveryInfo.warehouseKey");
+    return () => unregister("deliveryInfo.warehouseKey");
+  }, [register]);
 
   return (
     <Autocomplete
@@ -38,7 +47,9 @@ export function WarehouseAutocomplete() {
       }}
       onSelectionChange={(selection) => {
         if (selection)
-          form.setValue("deliveryInfo.warehouseKey", selection.toString());
+          setValue("deliveryInfo.warehouseKey", selection.toString(), {
+            shouldValidate: true,
+          });
       }}
     >
       {(item: any) => (

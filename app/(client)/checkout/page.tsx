@@ -7,11 +7,20 @@ import { ContactInfo } from "./components/contact-info";
 import { DeliveryInfo } from "./components/delivery-info";
 import { SubmitSection } from "./components/submit-section";
 import { PaymentMethodSelect } from "./components/payment-method-select";
+import { OrderDeliveryType, OrderPaymentType } from "@prisma/client";
+import { useCart } from "../cart/hooks/use-cart";
 
 export default function Page() {
+  const { cart } = useCart()!;
+
   const form = useForm<OrderInput>({
     mode: "onBlur",
     resolver: zodResolver(orderSchema),
+    defaultValues: {
+      cart,
+      deliveryInfo: { deliveryType: OrderDeliveryType.COURIER },
+      paymentType: OrderPaymentType.PREPAID,
+    },
   });
 
   return (

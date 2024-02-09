@@ -2,7 +2,7 @@ import {
   _calculateApproximateDeliverycost,
   _fetchWarehouseByCityRef,
   _searchSettlement,
-} from "./novapost-fetch-service";
+} from "./impl/novapost-fetch-service";
 
 export class NovaPostService {
   public fetchWarehouseByCityRef = _fetchWarehouseByCityRef;

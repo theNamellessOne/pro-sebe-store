@@ -25,7 +25,7 @@ export function PaymentMethodSelect() {
       <h2 className={"font-semibold text-2xl flex items-center gap-4"}>
         <p
           className={
-            "rounded-full border-black border-2 w-10 h-10 flex justify-center items-center -mt-1"
+            "rounded-full border-foreground border-2 w-10 h-10 flex justify-center items-center -mt-1"
           }
         >
           3
@@ -52,17 +52,18 @@ export function PaymentMethodSelect() {
       >
         <Radio
           classNames={{ base: radioButtonClassNames }}
-          description="По передплаті 150 UAH"
-          value={OrderPaymentType.POSTPAID}
-        >
-          Післяплата
-        </Radio>
-        <Radio
-          classNames={{ base: radioButtonClassNames }}
           description="monobank"
           value={OrderPaymentType.PREPAID}
         >
           За ревізитами
+        </Radio>
+
+        <Radio
+          classNames={{ base: radioButtonClassNames }}
+          description="По передплаті 150 UAH"
+          value={OrderPaymentType.POSTPAID}
+        >
+          Післяплата
         </Radio>
       </RadioGroup>
     </div>

@@ -4,11 +4,19 @@ import { OrderInput } from "@/schema/order/order-schema";
 import { Input } from "@nextui-org/react";
 import { useFormContext } from "react-hook-form";
 import { SettlementAutocomplete } from "./settlement-autocomplete";
+import { useEffect } from "react";
 
 export function CourierDeliveryForm() {
-  const { formState, register } = useFormContext<OrderInput>();
+  const { formState, register, setValue, watch } = useFormContext<OrderInput>();
+  const deliveryType = watch("deliveryInfo.deliveryType");
 
-  const { errors, isSubmitting, isValid } = formState;
+  useEffect(() => {
+    setValue("deliveryInfo.settlementRef", "");
+    setValue("deliveryInfo.warehouseKey", undefined);
+    setValue("deliveryInfo.addressParts", undefined);
+  }, [deliveryType]);
+
+  const { errors, isSubmitting } = formState;
 
   return (
     <>

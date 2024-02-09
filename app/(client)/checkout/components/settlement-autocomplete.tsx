@@ -11,11 +11,14 @@ export function SettlementAutocomplete() {
   const [isLoading, setIsLoading] = useState(false);
   const [items, setItems] = useState<any[]>([]);
 
-  const { formState, setValue, register, watch } = useFormContext<OrderInput>();
+  const { setValue, register, watch, unregister } =
+    useFormContext<OrderInput>();
   const settlementRef = watch("deliveryInfo.settlementRef");
 
   useEffect(() => {
     register("deliveryInfo.settlementRef");
+
+    return () => unregister("deliveryInfo.settlementRef");
   }, [register]);
 
   const selectedName = useMemo(() => {
@@ -51,7 +54,9 @@ export function SettlementAutocomplete() {
       }}
       onSelectionChange={(selection) => {
         if (selection)
-          setValue("deliveryInfo.settlementRef", selection.toString());
+          setValue("deliveryInfo.settlementRef", selection.toString(), {
+            shouldValidate: true,
+          });
       }}
     >
       {(item: any) => (

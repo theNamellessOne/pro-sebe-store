@@ -23,11 +23,15 @@ export function DeliveryTypeSelect() {
       value={value}
       onValueChange={(val) => {
         if (val === OrderDeliveryType.WAREHOUSE) {
-          setValue("deliveryInfo.deliveryType", OrderDeliveryType.WAREHOUSE);
+          setValue("deliveryInfo.deliveryType", OrderDeliveryType.WAREHOUSE, {
+            shouldValidate: true,
+          });
           return;
         }
 
-        setValue("deliveryInfo.deliveryType", OrderDeliveryType.COURIER);
+        setValue("deliveryInfo.deliveryType", OrderDeliveryType.COURIER, {
+          shouldValidate: true,
+        });
       }}
       errorMessage={errors.deliveryInfo?.deliveryType?.message}
       orientation="horizontal"

@@ -56,6 +56,7 @@ model Variant {
 
   orderItems OrderItem[]
   mediaUrls  MediaUrl[]
+  cartItems  CartItem[]
 
   @@index([productArticle])
   @@index([colorId])
@@ -251,6 +252,30 @@ model Review {
   @@index([userId])
 }
 
+// CART
+
+model Cart {
+  id        String     @id @default(cuid())
+  subtotal  Decimal
+  cartItems CartItem[]
+}
+
+model CartItem {
+  id Int @id @default(autoincrement())
+
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId Int
+
+  quantity Int
+  subtotal Decimal
+
+  cart   Cart?   @relation(fields: [cartId], references: [id])
+  cartId String?
+
+  @@index([variantId])
+  @@index([cartId])
+}
+
 // ORDER INFO
 
 model AddressParts {
@@ -269,8 +294,6 @@ model AddressParts {
   note     String
   block    String?
   building String
-
-  orders Order[]
 
   @@index([userId])
 }
@@ -292,25 +315,30 @@ enum OrderDeliveryType {
 }
 
 model Order {
-  id         String @id @default(cuid())
+  id         String  @id @default(cuid())
   isPayedFor Boolean @default(false)
 
-  addressParts   AddressParts? @relation(fields: [addressPartsId], references: [id])
-  addressPartsId Int?
-
-  paymentType       OrderPaymentType
   orderDeliveryType OrderDeliveryType
+  settlementRef     String
+  street            String?
+  houseNo           String?
+  postalIdx         String?
+  warehouseKey      String?
 
-  divisionNumber Int?
-  orderItems     OrderItem[]
+  paymentType OrderPaymentType
+
+  orderItems OrderItem[]
+
+  payed Decimal @default(0)
+  total Decimal
 
   status OrderStatus @default(CREATED)
-
-  @@index([addressPartsId])
 }
 
 model OrderItem {
   id String @id @default(cuid())
+
+  article String
 
   variant   Variant @relation(fields: [variantId], references: [id])
   variantId Int
@@ -318,7 +346,7 @@ model OrderItem {
   amount   Int
   subTotal Decimal
 
-  order   Order @relation(fields: [orderId], references: [id])
+  order   Order  @relation(fields: [orderId], references: [id])
   orderId String
 
   @@index([orderId])

@@ -19,15 +19,27 @@ export const addressPartsSchema = z.object({
   postalIdx: z.string().length(5),
 });
 
-export const deliveryInfoSchema = z.object({
-  settlementRef: z.string().length(36),
-  deliveryType: z.enum([
-    OrderDeliveryType.COURIER,
-    OrderDeliveryType.WAREHOUSE,
-  ]),
-  addressParts: addressPartsSchema.optional(),
-  warehouseKey: z.string().length(36).optional(),
-});
+export const deliveryInfoSchema = z
+  .object({
+    settlementRef: z.string().length(36),
+    deliveryType: z.enum([
+      OrderDeliveryType.COURIER,
+      OrderDeliveryType.WAREHOUSE,
+    ]),
+    addressParts: addressPartsSchema.optional(),
+    warehouseKey: z.string().min(3).optional(),
+  })
+  .refine((data) => {
+    if (data.deliveryType === OrderDeliveryType.WAREHOUSE) {
+      return data.warehouseKey && !data.addressParts;
+    }
+
+    if (data.deliveryType === OrderDeliveryType.COURIER) {
+      return !data.warehouseKey && data.addressParts;
+    }
+
+    return false;
+  }, "Either first or second should be filled in.");
 
 export type DeliveryInfoInput = z.infer<typeof deliveryInfoSchema>;
 
@@ -35,6 +47,14 @@ export const orderSchema = z.object({
   paymentType: z.enum([OrderPaymentType.POSTPAID, OrderPaymentType.PREPAID]),
   contactInfo: contactInfoSchema,
   deliveryInfo: deliveryInfoSchema,
+  cart: z.object({
+    items: z.array(
+      z.object({
+        id: z.coerce.number().min(1),
+        amount: z.coerce.number().min(1),
+      }),
+    ),
+  }),
 });
 
 export type OrderInput = z.infer<typeof orderSchema>;

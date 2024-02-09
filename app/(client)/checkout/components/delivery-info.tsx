@@ -1,14 +1,12 @@
 "use client";
 
-import { useFormContext } from "react-hook-form";
-import { DeliveryTypeSelect } from "./delivery-type-select";
-import { SettlementAutocomplete } from "./settlement-autocomplete";
 import { OrderInput } from "@/schema/order/order-schema";
-import { OrderDeliveryType } from "@prisma/client";
-import { WarehouseAutocomplete } from "./warehouse-autocomplete";
 import { Tab, Tabs } from "@nextui-org/react";
+import { OrderDeliveryType } from "@prisma/client";
+import { useFormContext } from "react-hook-form";
 import { CourierDeliveryForm } from "./courier-delivery-form";
 import { WarehouseDeliveryForm } from "./warehouse-delivery-form";
+import { useEffect } from "react";
 
 export function DeliveryInfo() {
   const { formState, setValue, register, watch } = useFormContext<OrderInput>();
@@ -19,7 +17,7 @@ export function DeliveryInfo() {
       <h2 className={"font-semibold text-2xl flex items-center gap-4"}>
         <p
           className={
-            "rounded-full border-black border-2 w-10 h-10 flex justify-center items-center -mt-1"
+            "rounded-full border-foreground border-2 w-10 h-10 flex justify-center items-center -mt-1"
           }
         >
           1

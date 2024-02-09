@@ -16,7 +16,10 @@ export function SubmitSection() {
   const [freeDeliveryMinPrice, setFreeDeliverMinPrice] = useState(0);
   const [deliveryCost, setDeliveryCost] = useState(0);
 
-  const { watch } = useFormContext<OrderInput>();
+  const {
+    watch,
+    formState: { isValid, isSubmitting, errors },
+  } = useFormContext<OrderInput>();
 
   const settlementRef = watch("deliveryInfo.settlementRef");
   const deliveryType = watch("deliveryInfo.deliveryType");
@@ -59,9 +62,9 @@ export function SubmitSection() {
   }, [settlementRef, paymentType]);
 
   const total = useMemo(() => {
-    if (cart.total >= freeDeliveryMinPrice) return cart.total;
+    if (cart.subtotal >= freeDeliveryMinPrice) return cart.subtotal;
 
-    return cart.total + deliveryCost;
+    return cart.subtotal + deliveryCost;
   }, [deliveryCost, cart]);
 
   return (
@@ -74,13 +77,13 @@ export function SubmitSection() {
       <div className="flex flex-col gap-2">
         <p className="lg:text-lg uppercase flex justify-between">
           <span>ціна товарів</span>
-          <span>{cart.total} UAH</span>
+          <span>{cart.subtotal} UAH</span>
         </p>
 
         <p className="lg:text-lg uppercase flex justify-between">
           <span>доставка</span>
           <span>
-            {cart.total >= freeDeliveryMinPrice
+            {cart.subtotal >= freeDeliveryMinPrice
               ? "безкоштовно"
               : deliveryCost + " UAH"}
           </span>
@@ -92,7 +95,11 @@ export function SubmitSection() {
         </h2>
       </div>
 
-      <Button type="primary" className="uppercase">
+      <Button
+        type="primary"
+        className="uppercase"
+        disabled={!isValid || isSubmitting}
+      >
         оформити замовлення
       </Button>
     </div>

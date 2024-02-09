@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "../../components/ui/button";
 import { useCart } from "../hooks/use-cart";
 
@@ -13,11 +14,13 @@ export function CartOrder() {
     >
       <h2 className="lg:text-lg uppercase flex justify-between">
         <span>загальна сума</span>
-        <span>{cart.total} UAH</span>
+        <span>{cart?.subtotal} UAH</span>
       </h2>
 
       <Button type="primary" className="uppercase">
-        перейти до оформлення
+        <Link href="/checkout" className="text-center">
+          перейти до оформлення
+        </Link>
       </Button>
     </div>
   );
