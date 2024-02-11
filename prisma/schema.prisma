@@ -299,8 +299,10 @@ model AddressParts {
 
 enum OrderStatus {
   CREATED
+  PAID
   PACKED
   DELIVERED
+  CANCELED
 }
 
 enum OrderPaymentType {
@@ -315,7 +317,6 @@ enum OrderDeliveryType {
 
 model Order {
   id         String   @id @default(cuid())
-  paid       Boolean  @default(false)
   createdAt  DateTime @default(now())
 
   name       String
@@ -339,7 +340,6 @@ model Order {
   orderItems OrderItem[]
 
   total   Decimal
-  paidSum Decimal @default(0)
 
   status OrderStatus @default(CREATED)
 }

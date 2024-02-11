@@ -10,9 +10,11 @@ import { useCart } from "../../cart/hooks/use-cart";
 import { Button } from "../../components/ui/button";
 import { OrderService } from "@/service/order/order-service";
 import { Spinner } from "@nextui-org/react";
+import { redirect, useRouter } from "next/navigation";
 
 export function SubmitSection() {
   const { cart } = useCart()!;
+  const router = useRouter();
 
   const [freeDeliveryMinPrice, setFreeDeliverMinPrice] = useState(0);
   const [deliveryCost, setDeliveryCost] = useState(0);
@@ -67,14 +69,13 @@ export function SubmitSection() {
   const total = useMemo(() => {
     if (!cart) return 0;
 
-    if (cart?.subtotal >= freeDeliveryMinPrice) return cart?.subtotal;
+    if (paymentType === OrderPaymentType.POSTPAID) return 150;
 
-    return cart?.subtotal + deliveryCost;
-  }, [deliveryCost, cart]);
+    return cart?.subtotal;
+  }, [deliveryCost, cart, paymentType]);
 
   const onSubmit = async (data: OrderInput) => {
-    const res = await OrderService.instance.placeOrder(cart.id, data);
-    console.log(res);
+    await OrderService.instance.placeOrder(cart.id, data);
   };
 
   return (

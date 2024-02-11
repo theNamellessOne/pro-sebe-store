@@ -1,10 +1,14 @@
 import { Key, useCallback } from "react";
 import { Order, OrderDeliveryType, Review } from "@prisma/client";
+import { Button } from "@nextui-org/react";
 
 export function useOrderTableCell() {
   return useCallback((order: Order, columnKey: Key) => {
     console.log(order);
     switch (columnKey) {
+      case "actions":
+        return <Button>Детальніше</Button>;
+
       case "contactInfo":
         return (
           <p>

@@ -27,7 +27,7 @@ export const deliveryInfoSchema = z
       OrderDeliveryType.WAREHOUSE,
     ]),
     addressParts: addressPartsSchema.optional(),
-    warehouseKey: z.string().min(3).optional(),
+    warehouseKey: z.string().min(1).optional(),
   })
   .refine((data) => {
     if (data.deliveryType === OrderDeliveryType.WAREHOUSE) {

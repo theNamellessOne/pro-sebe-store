@@ -1,9 +1,10 @@
 import { _fetchOrders } from "./impl/order-fetch-service";
-import { _placeOrder } from "./impl/order-write-service";
+import { _confirmOrder, _placeOrder } from "./impl/order-write-service";
 
 export class OrderService {
   public fetch = _fetchOrders;
   public placeOrder = _placeOrder;
+  public confirmOrder = _confirmOrder;
 
   private static _instance: OrderService | undefined;
 

@@ -106,7 +106,7 @@ export async function _fetchWarehouseByCityRef(
 
   return divisions.map((division: any) => ({
     Description: division.Description,
-    SiteKey: division.SiteKey,
+    Number: division.Number,
   }));
 }
 

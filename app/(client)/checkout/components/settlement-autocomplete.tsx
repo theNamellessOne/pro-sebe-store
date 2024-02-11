@@ -21,15 +21,6 @@ export function SettlementAutocomplete() {
     return () => unregister("deliveryInfo.settlementRef");
   }, [register]);
 
-  const selectedName = useMemo(() => {
-    const filtered = items.filter((value: any) => value.Ref === settlementRef);
-    if (filtered.length === 1) {
-      return filtered[0].Present;
-    }
-
-    return "";
-  }, [settlementRef]);
-
   const load = (v: string) => {
     setIsLoading(true);
     NovaPostService.instance
@@ -42,12 +33,15 @@ export function SettlementAutocomplete() {
 
   return (
     <Autocomplete
+      onKeyUp={debounce((e: any) => {
+        e.continuePropagation();
+        load(e.target.value);
+      })}
       onKeyDown={(e: any) => e.continuePropagation()}
       isLoading={isLoading}
       items={items}
       label="Населений пункт"
       variant="underlined"
-      onInputChange={debounce((value: string) => load(value))}
       selectedKey={settlementRef}
       classNames={{
         popoverContent: "rounded-sm",

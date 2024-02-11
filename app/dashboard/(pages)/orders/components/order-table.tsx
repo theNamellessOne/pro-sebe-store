@@ -32,9 +32,9 @@ export function OrderTable({ query, page, sortDescriptor }: TableProps) {
     { name: "ContactInfo", uid: "contactInfo" },
     { name: "DeliveryInfo", uid: "deliveryInfo" },
     { name: "PaymentType", uid: "paymentType" },
-    { name: "Paid", uid: "paidSum" },
     { name: "Total", uid: "total" },
     { name: "Status", uid: "status" },
+    { name: "Actions", uid: "actions" },
   ];
 
   return (

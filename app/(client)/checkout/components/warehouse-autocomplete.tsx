@@ -16,6 +16,8 @@ export function WarehouseAutocomplete() {
   const [items, setItems] = useState<any[]>([]);
 
   const load = (findBy = "") => {
+    if (isLoading) return;
+
     setItems([]);
     if (!settlementRef || settlementRef === "") return;
 
@@ -26,6 +28,8 @@ export function WarehouseAutocomplete() {
       .finally(() => setIsLoading(false));
   };
 
+  console.log(items);
+
   useEffect(load, [settlementRef]);
 
   useEffect(() => {
@@ -35,13 +39,16 @@ export function WarehouseAutocomplete() {
 
   return (
     <Autocomplete
+      onKeyUp={debounce((e: any) => {
+        e.continuePropagation();
+        load(e.target.value);
+      })}
       onKeyDown={(e: any) => e.continuePropagation()}
       isLoading={isLoading}
       defaultItems={items}
       label="Відділення"
       variant="underlined"
       selectedKey={warehouseKey}
-      onInputChange={debounce((value: string) => load(value))}
       classNames={{
         popoverContent: "rounded-sm",
       }}
@@ -53,11 +60,7 @@ export function WarehouseAutocomplete() {
       }}
     >
       {(item: any) => (
-        <AutocompleteItem
-          className={"rounded-sm"}
-          key={item.SiteKey}
-          value={item.Description}
-        >
+        <AutocompleteItem className={"rounded-sm"} key={item.Number}>
           {item.Description}
         </AutocompleteItem>
       )}
