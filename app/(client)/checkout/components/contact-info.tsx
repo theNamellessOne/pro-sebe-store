@@ -45,12 +45,12 @@ export function ContactInfo() {
         </div>
 
         <Input
-          {...form.register("contactInfo.middleName")}
+          {...form.register("contactInfo.middlename")}
           variant={"underlined"}
           label={"отчество"}
           disabled={isSubmitting}
-          isInvalid={!!errors.contactInfo?.middleName}
-          errorMessage={errors.contactInfo?.middleName?.message}
+          isInvalid={!!errors.contactInfo?.middlename}
+          errorMessage={errors.contactInfo?.middlename?.message}
         />
 
         <Input

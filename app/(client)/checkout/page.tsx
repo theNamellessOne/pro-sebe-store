@@ -9,15 +9,17 @@ import { SubmitSection } from "./components/submit-section";
 import { PaymentMethodSelect } from "./components/payment-method-select";
 import { OrderDeliveryType, OrderPaymentType } from "@prisma/client";
 import { useCart } from "../cart/hooks/use-cart";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const { cart } = useCart()!;
+  const { cart, isLoading } = useCart()!;
+
+  if (cart && cart.cartItems.length === 0) useRouter().push("/catalogue");
 
   const form = useForm<OrderInput>({
     mode: "onBlur",
     resolver: zodResolver(orderSchema),
     defaultValues: {
-      cart,
       deliveryInfo: { deliveryType: OrderDeliveryType.COURIER },
       paymentType: OrderPaymentType.PREPAID,
     },

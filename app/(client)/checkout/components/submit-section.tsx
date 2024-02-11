@@ -8,7 +8,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useCart } from "../../cart/hooks/use-cart";
 import { Button } from "../../components/ui/button";
-import { PaymentMethodSelect } from "./payment-method-select";
+import { OrderService } from "@/service/order/order-service";
+import { Spinner } from "@nextui-org/react";
 
 export function SubmitSection() {
   const { cart } = useCart()!;
@@ -17,6 +18,7 @@ export function SubmitSection() {
   const [deliveryCost, setDeliveryCost] = useState(0);
 
   const {
+    handleSubmit,
     watch,
     formState: { isValid, isSubmitting, errors },
   } = useFormContext<OrderInput>();
@@ -37,6 +39,7 @@ export function SubmitSection() {
   }, []);
 
   useEffect(() => {
+    if (!cart) return;
     if (!settlementRef) return;
 
     const deliveryMethod =
@@ -62,10 +65,17 @@ export function SubmitSection() {
   }, [settlementRef, paymentType]);
 
   const total = useMemo(() => {
-    if (cart.subtotal >= freeDeliveryMinPrice) return cart.subtotal;
+    if (!cart) return 0;
 
-    return cart.subtotal + deliveryCost;
+    if (cart?.subtotal >= freeDeliveryMinPrice) return cart?.subtotal;
+
+    return cart?.subtotal + deliveryCost;
   }, [deliveryCost, cart]);
+
+  const onSubmit = async (data: OrderInput) => {
+    const res = await OrderService.instance.placeOrder(cart.id, data);
+    console.log(res);
+  };
 
   return (
     <div
@@ -77,13 +87,13 @@ export function SubmitSection() {
       <div className="flex flex-col gap-2">
         <p className="lg:text-lg uppercase flex justify-between">
           <span>ціна товарів</span>
-          <span>{cart.subtotal} UAH</span>
+          <span>{cart ? cart.subtotal : 0} UAH</span>
         </p>
 
         <p className="lg:text-lg uppercase flex justify-between">
           <span>доставка</span>
           <span>
-            {cart.subtotal >= freeDeliveryMinPrice
+            {cart?.subtotal >= freeDeliveryMinPrice
               ? "безкоштовно"
               : deliveryCost + " UAH"}
           </span>
@@ -99,7 +109,9 @@ export function SubmitSection() {
         type="primary"
         className="uppercase"
         disabled={!isValid || isSubmitting}
+        onClick={handleSubmit(onSubmit)}
       >
+        {isSubmitting && <Spinner size={"sm"} color={"primary"} />}
         оформити замовлення
       </Button>
     </div>

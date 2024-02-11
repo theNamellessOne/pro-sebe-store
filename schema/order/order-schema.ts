@@ -7,7 +7,7 @@ export const contactInfoSchema = z.object({
   email: z.string().email(),
   name: z.string().min(1).max(128),
   surname: z.string().min(1).max(128),
-  middleName: z.string().min(1).max(128),
+  middlename: z.string().min(1).max(128),
   phone: z.string().regex(phoneRegEx, "Invalid!"),
 });
 
@@ -47,14 +47,6 @@ export const orderSchema = z.object({
   paymentType: z.enum([OrderPaymentType.POSTPAID, OrderPaymentType.PREPAID]),
   contactInfo: contactInfoSchema,
   deliveryInfo: deliveryInfoSchema,
-  cart: z.object({
-    items: z.array(
-      z.object({
-        id: z.coerce.number().min(1),
-        amount: z.coerce.number().min(1),
-      }),
-    ),
-  }),
 });
 
 export type OrderInput = z.infer<typeof orderSchema>;

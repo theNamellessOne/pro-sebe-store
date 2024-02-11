@@ -54,9 +54,8 @@ model Variant {
   size   Size @relation(fields: [sizeId], references: [id])
   sizeId Int
 
-  orderItems OrderItem[]
-  mediaUrls  MediaUrl[]
-  cartItems  CartItem[]
+  mediaUrls MediaUrl[]
+  cartItems CartItem[]
 
   @@index([productArticle])
   @@index([colorId])
@@ -315,22 +314,32 @@ enum OrderDeliveryType {
 }
 
 model Order {
-  id         String  @id @default(cuid())
-  isPayedFor Boolean @default(false)
+  id         String   @id @default(cuid())
+  paid       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  name       String
+  surname    String
+  middlename String
+
+  phone String
+  email String
 
   orderDeliveryType OrderDeliveryType
-  settlementRef     String
-  street            String?
-  houseNo           String?
-  postalIdx         String?
-  warehouseKey      String?
+
+  settlementRef String
+
+  street       String?
+  houseNo      String?
+  postalIdx    String?
+  warehouseKey String?
 
   paymentType OrderPaymentType
 
   orderItems OrderItem[]
 
-  payed Decimal @default(0)
-  total Decimal
+  total   Decimal
+  paidSum Decimal @default(0)
 
   status OrderStatus @default(CREATED)
 }
@@ -338,19 +347,20 @@ model Order {
 model OrderItem {
   id String @id @default(cuid())
 
-  article String
+  productName    String
+  productArticle String
 
-  variant   Variant @relation(fields: [variantId], references: [id])
-  variantId Int
+  variantName         String
+  variantImgUrl       String
+  variantSellingPrice Decimal
 
-  amount   Int
-  subTotal Decimal
+  quantity Int
+  subtotal Decimal
 
-  order   Order  @relation(fields: [orderId], references: [id])
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId String
 
   @@index([orderId])
-  @@index([variantId])
 }
 
 // BANNER INFO

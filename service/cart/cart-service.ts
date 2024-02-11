@@ -1,5 +1,5 @@
 import { _removeFromCart } from "./impl/cart-delete-service";
-import { _fetchById } from "./impl/cart-fetch-service";
+import { _fetchAndCreate as fetchOrCreate } from "./impl/cart-fetch-service";
 import {
   _addToCart,
   _changeCartItemQuantity,
@@ -10,11 +10,21 @@ export const CartIncludes = {
   cartItems: {
     include: {
       variant: {
-        include: {
-          size: true,
-          color: true,
-          product: true,
-          mediaUrls: true,
+        select: {
+          id: true,
+          name: true,
+          quantity: false,
+          reserved: false,
+
+          product: {
+            select: {
+              name: true,
+              price: true,
+            },
+          },
+          mediaUrls: {
+            select: { url: true },
+          },
         },
       },
     },
@@ -23,7 +33,7 @@ export const CartIncludes = {
 
 export class CartService {
   public createCart = _createCart;
-  public fetchById = _fetchById;
+  public fetchOrCreate = fetchOrCreate;
   public addToCart = _addToCart;
   public removeFromCart = _removeFromCart;
   public chageCartItemQuantity = _changeCartItemQuantity;

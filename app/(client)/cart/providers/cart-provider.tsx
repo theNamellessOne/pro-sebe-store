@@ -63,10 +63,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    console.log("suka");
     setIsLoading(true);
     CartService.instance
-      .fetchById(window.localStorage.getItem("cuid") ?? "")
+      .fetchOrCreate(window.localStorage.getItem("cuid") ?? "")
       .then((res) => {
         window.localStorage.setItem("cuid", res.id);
         setCart(res);

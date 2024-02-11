@@ -7,7 +7,12 @@ import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 export function PaymentMethodSelect() {
-  const { setValue, register, watch } = useFormContext<OrderInput>();
+  const {
+    setValue,
+    register,
+    watch,
+    formState: { isSubmitting },
+  } = useFormContext<OrderInput>();
 
   useEffect(() => {
     register("paymentType");
@@ -39,6 +44,7 @@ export function PaymentMethodSelect() {
           wrapper: "gap-5",
           label: "text-primary text-md lg:text-lg font-semibold capitalize",
         }}
+        isDisabled={isSubmitting}
         size={"lg"}
         value={value}
         onValueChange={(value) => {

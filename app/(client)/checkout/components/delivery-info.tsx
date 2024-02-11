@@ -9,7 +9,12 @@ import { WarehouseDeliveryForm } from "./warehouse-delivery-form";
 import { useEffect } from "react";
 
 export function DeliveryInfo() {
-  const { formState, setValue, register, watch } = useFormContext<OrderInput>();
+  const {
+    watch,
+    register,
+    setValue,
+    formState: { isSubmitting },
+  } = useFormContext<OrderInput>();
   const value = watch("deliveryInfo.deliveryType");
 
   return (
@@ -26,6 +31,7 @@ export function DeliveryInfo() {
       </h2>
 
       <Tabs
+        isDisabled={isSubmitting}
         size={"lg"}
         selectedKey={value}
         onSelectionChange={(selection) => {

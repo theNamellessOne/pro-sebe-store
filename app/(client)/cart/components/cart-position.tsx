@@ -7,6 +7,8 @@ export function CartPosition({ item }: any) {
   const { removeFromCart, changeItemAmount } = useCart()!;
 
   const itemVariant = item.variant;
+  const colorName = itemVariant.name.split("/")[0];
+  const sizeName = itemVariant.name.split("/")[1];
 
   return (
     <div className={"flex gap-4 relative"}>
@@ -45,8 +47,8 @@ export function CartPosition({ item }: any) {
           </Button>
         </div>
 
-        <p className={"text-[#808080]"}>Колір: {itemVariant.color.name}</p>
-        <p className={"text-[#808080]"}>Розмір {itemVariant.size.name}</p>
+        <p className={"text-[#808080]"}>Колір: {colorName}</p>
+        <p className={"text-[#808080]"}>Розмір {sizeName}</p>
         <p className={"text-[#808080]"}>
           Ціна: {itemVariant.product.price.toString()} UAH
         </p>
