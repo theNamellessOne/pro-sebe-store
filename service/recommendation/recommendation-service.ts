@@ -1,7 +1,11 @@
-import { _fetchSimilar } from "./impl/recommedation-fetch-service";
+import {
+  _fetchSimilar,
+  _precomputeTfIdf,
+} from "./impl/recommedation-fetch-service";
 
 export class RecommendationService {
   public fetchSimilar = _fetchSimilar;
+  public precomputeTfIdf = _precomputeTfIdf;
 
   private static _instance: RecommendationService | undefined;
 

@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { CategoryService } from "@/service/category/category-service";
 import { Product } from "@prisma/client";
 import { VariantSave } from "@/schema/product/variant-schema";
+import { RecommendationService } from "@/service/recommendation/recommendation-service";
 
 export async function _saveProduct(product: ProductSave) {
   var response: {
@@ -25,6 +26,8 @@ export async function _saveProduct(product: ProductSave) {
     },
     { timeout: 1000 * 20 },
   );
+
+  await RecommendationService.instance.precomputeTfIdf();
 
   //@ts-ignore
   return response;
