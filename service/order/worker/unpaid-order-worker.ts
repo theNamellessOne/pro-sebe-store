@@ -1,8 +1,9 @@
 import prisma from "@/lib/prisma";
+import { OrderStatus } from "@prisma/client";
 
 let working = false;
 
-async function deleteUnpaidOrder(order: any) {
+async function cancelUnpaidOrder(order: any) {
   try {
     await prisma.$transaction(async (prisma) => {
       for (const item of order.orderItems) {
@@ -18,7 +19,10 @@ async function deleteUnpaidOrder(order: any) {
         });
       }
 
-      await prisma.order.delete({ where: { id: order.id } });
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { status: OrderStatus.CANCELED },
+      });
     });
   } catch (err) {
     console.log(err);
@@ -29,6 +33,7 @@ async function processUnpaidOrders() {
   try {
     const unpaidOrders = await prisma.order.findMany({
       where: {
+        status: OrderStatus.CREATED,
         createdAt: {
           lte: new Date(Date.now() - 60 * 60 * 1000), // 60 minutes ago
         },
@@ -39,7 +44,7 @@ async function processUnpaidOrders() {
     });
 
     for (const unpaidOrder of unpaidOrders) {
-      await deleteUnpaidOrder(unpaidOrder);
+      await cancelUnpaidOrder(unpaidOrder);
     }
   } finally {
     working = false;

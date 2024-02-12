@@ -1,6 +1,6 @@
 "use client";
 
-import { Key, useEffect, useState } from "react";
+import { useState } from "react";
 import { TableProps } from "@/app/dashboard/types/table-props";
 import { Selection } from "@nextui-org/react";
 import {
@@ -13,18 +13,21 @@ import {
 } from "@nextui-org/table";
 import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
 import Loading from "@/app/loading";
-import { OrderService } from "@/service/order/order-service";
 import { useOrderTableCell } from "../hooks/use-order-table-cell";
 import { useOrderList } from "../hooks/use-order-list";
 
-const service = OrderService.instance;
-
-export function OrderTable({ query, page, sortDescriptor }: TableProps) {
+export function OrderTable({
+  query,
+  page,
+  sortDescriptor,
+  status,
+}: TableProps & { status: string }) {
   const renderCell = useOrderTableCell();
   const { loading, setLoading, list, sort, paginator } = useOrderList(
     query,
     page,
     sortDescriptor,
+    status,
   );
   const [selected, setSelected] = useState<Selection>(new Set([]));
 
