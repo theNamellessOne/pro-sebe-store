@@ -1,9 +1,9 @@
 import { Suspense } from "react";
-import { Download, Loader } from "lucide-react";
 import { DashboardHeader } from "@/app/dashboard/components/dashboard-header";
 import { UserTable } from "@/app/dashboard/(pages)/users/components/user-table";
 import { readSearchParams, SearchParams } from "@/util/read-search-params";
-import { Button } from "@nextui-org/button";
+import { ExportEmailButton } from "./components/export-email-button";
+import Loading from "@/app/loading";
 
 export default async function Page({
   searchParams,
@@ -19,14 +19,7 @@ export default async function Page({
       >
         <div className={"flex justify-between"}>
           <DashboardHeader title={"Користувачi"} showButton={false} />
-          <Button
-            className={"font-semibold"}
-            variant={"shadow"}
-            color={"primary"}
-            startContent={<Download />}
-          >
-            Експортувати Пошти
-          </Button>
+          <ExportEmailButton />
         </div>
 
         <Suspense
@@ -36,7 +29,7 @@ export default async function Page({
             sortDescriptor.direction +
             sortDescriptor.column
           }
-          fallback={<Loader />}
+          fallback={<Loading />}
         >
           <UserTable
             query={query}
