@@ -29,7 +29,6 @@ async function processUnpaidOrders() {
   try {
     const unpaidOrders = await prisma.order.findMany({
       where: {
-        paid: false,
         createdAt: {
           lte: new Date(Date.now() - 60 * 60 * 1000), // 60 minutes ago
         },

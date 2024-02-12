@@ -26,47 +26,6 @@ export async function _fetchPriceExtremes() {
   };
 }
 
-export async function _fetchSimilarProducts(article: string) {
-  const product = await prisma.product.findUnique({
-    where: { article },
-    include: { productCategories: true },
-  });
-
-  if (!product) {
-    return {
-      errMsg: "could not find product with specified id",
-      value: null,
-    };
-  }
-
-  return {
-    errMsg: null,
-    value: await prisma.product.findMany({
-      take: 10,
-      where: {
-        NOT: { article: product.article },
-        status: "ACTIVE",
-        variants: {
-          some: { quantity: { gt: 0 } },
-        },
-        productCategories: {
-          some: {
-            categoryId: {
-              in: product.productCategories.map((pc) => pc.categoryId),
-            },
-          },
-        },
-      },
-      include: {
-        productCategories: true,
-        variants: {
-          include: { mediaUrls: true },
-        },
-      },
-    }),
-  };
-}
-
 async function _getWhereClause({
   query,
   price,
