@@ -54,8 +54,8 @@ model Variant {
   size   Size @relation(fields: [sizeId], references: [id])
   sizeId Int
 
-  orderItems OrderItem[]
-  mediaUrls  MediaUrl[]
+  mediaUrls MediaUrl[]
+  cartItems CartItem[]
 
   @@index([productArticle])
   @@index([colorId])
@@ -183,6 +183,7 @@ model User {
   sessions Session[]
 
   name     String?
+  surname  String?
   username String? @unique
 
   email         String?   @unique
@@ -250,6 +251,30 @@ model Review {
   @@index([userId])
 }
 
+// CART
+
+model Cart {
+  id        String     @id @default(cuid())
+  subtotal  Decimal
+  cartItems CartItem[]
+}
+
+model CartItem {
+  id Int @id @default(autoincrement())
+
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId Int
+
+  quantity Int
+  subtotal Decimal
+
+  cart   Cart?   @relation(fields: [cartId], references: [id])
+  cartId String?
+
+  @@index([variantId])
+  @@index([cartId])
+}
+
 // ORDER INFO
 
 model AddressParts {
@@ -269,46 +294,73 @@ model AddressParts {
   block    String?
   building String
 
-  orders Order[]
-
   @@index([userId])
 }
 
 enum OrderStatus {
   CREATED
+  PAID
   PACKED
   DELIVERED
+  CANCELED
+}
+
+enum OrderPaymentType {
+  PREPAID
+  POSTPAID
+}
+
+enum OrderDeliveryType {
+  COURIER
+  WAREHOUSE
 }
 
 model Order {
-  id         Int     @id @default(autoincrement())
-  isPayedFor Boolean @default(false)
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
 
-  addressParts   AddressParts? @relation(fields: [addressPartsId], references: [id])
-  addressPartsId Int?
+  name       String
+  surname    String
+  middlename String
 
-  divisionNumber Int?
-  orderItems     OrderItem[]
+  phone String
+  email String
+
+  orderDeliveryType OrderDeliveryType
+
+  settlementRef String
+
+  street       String?
+  houseNo      String?
+  postalIdx    String?
+  warehouseKey String?
+
+  paymentType OrderPaymentType
+
+  orderItems OrderItem[]
+
+  total   Decimal
 
   status OrderStatus @default(CREATED)
-
-  @@index([addressPartsId])
 }
 
 model OrderItem {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid())
 
-  variant   Variant @relation(fields: [variantId], references: [id])
-  variantId Int
+  productName    String
+  productArticle String
 
-  amount   Int
-  subTotal Decimal
+  variantName         String
+  variantImgUrl       String
+  variantSellingPrice Decimal
 
-  order   Order @relation(fields: [orderId], references: [id])
-  orderId Int
+  quantity Int
+  subtotal Decimal
+
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
 
   @@index([orderId])
-  @@index([variantId])
 }
 
 // BANNER INFO

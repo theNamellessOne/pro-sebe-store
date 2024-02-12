@@ -63,7 +63,7 @@ export function LoginForm() {
   };
 
   return (
-    <div className={"flex items-center justify-center w-full p-8"}>
+    <div className={"flex items-center justify-center w-full p-4 sm:p-8"}>
       <form
         className={
           "mt-6 p-4 min-w-[300px] w-full max-w-[600px] flex flex-col gap-4"

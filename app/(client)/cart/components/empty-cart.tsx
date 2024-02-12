@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "../../components/ui/button";
 
 export function EmptyCart() {
@@ -11,10 +12,11 @@ export function EmptyCart() {
     >
       <h2 className={"text-xl lg:text-2xl capitalize"}>ваш кошик пустий</h2>
 
-
-      <Button type="primary" className="uppercase">
-        Продовжити купування
-      </Button>
+      <Link href="/catalogue">
+        <Button type="primary" className="uppercase">
+          Продовжити купування
+        </Button>
+      </Link>
     </div>
   );
 }

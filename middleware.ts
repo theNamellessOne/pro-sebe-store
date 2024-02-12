@@ -24,9 +24,10 @@ export default auth(async (req) => {
   const isDashboardRoute = pathname.startsWith("/dashboard");
   const isApiAuthRoute = pathname.startsWith("/api/auth");
   const isAuthRoute = pathname.startsWith("/auth");
+  const isCatalogueRoute = pathname.startsWith("/catalogue");
 
   const isLoggedIn = !!user?.role;
-  const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+  const isPublicRoute = PUBLIC_ROUTES.includes(pathname) || isCatalogueRoute;
   const isUserRoute = USER_ROUTES.includes(pathname);
 
   let callbackUrl = nextUrl.pathname;

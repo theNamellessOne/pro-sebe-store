@@ -4,6 +4,9 @@ const nextConfig = {
   images: {
     domains: ["utfs.io", "placehold.co"],
   },
+  experimental: {
+    instrumentationHook: true,
+  },
 };
 
 module.exports = nextConfig;
