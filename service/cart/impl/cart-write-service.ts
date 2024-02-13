@@ -5,9 +5,9 @@ import { Cart, CartItem, ProductStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { CartIncludes } from "../cart-service";
 
-export async function _createCart() {
+export async function _createCart(userId?: string | undefined) {
   return prisma.cart.create({
-    data: { subtotal: 0 },
+    data: { subtotal: 0, userId: userId },
     include: CartIncludes,
   });
 }

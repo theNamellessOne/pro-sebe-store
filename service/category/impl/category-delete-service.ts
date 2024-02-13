@@ -53,13 +53,16 @@ async function _deleteCategoryTreeNonTransactional(id: number) {
   await prisma.category.delete({ where: { id } });
 }
 
+function _getWhere(query: string | undefined) {
+  let search: { search: string } | undefined;
+  if (query && query.length > 0) search = { search: `${query}*` };
+
+  return { name: { ...search } };
+}
+
 export async function _deleteManyCategories(query: string) {
   const categoriesToDelete = await prisma.category.findMany({
-    where: {
-      name: {
-        contains: query,
-      },
-    },
+    where: _getWhere(query),
   });
 
   await prisma.$transaction(

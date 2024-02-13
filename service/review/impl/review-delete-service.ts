@@ -10,16 +10,19 @@ export async function _deleteManyInIds(ids: number[]) {
   });
 }
 
+function _getWhere(query: string | undefined) {
+  let search: { search: string } | undefined;
+  if (query && query.length > 0) search = { search: `${query}*` };
+
+  return { content: { ...search } };
+}
+
 export async function _deleteReview(id: number) {
   await prisma.review.delete({ where: { id } });
 }
 
 export async function _deleteManyReviews(query: string) {
   await prisma.review.deleteMany({
-    where: {
-      content: {
-        contains: query,
-      },
-    },
+    where: _getWhere(query),
   });
 }
