@@ -71,15 +71,36 @@ export async function _fetchUsers({
   };
 }
 
+function _getWhere(query: string) {
+  let nameFilter: { name: { search: string } } | {} = {};
+  let emailFilter: { email: { search: string } } | {} = {};
+  let phoneFilter: { phone: { search: string } } | {} = {};
+  let surnameFilter: { surname: { search: string } } | {} = {};
+  let middleNameFilter: { middlename: { search: string } } | {} = {};
+
+  if (query && query.length > 0) {
+    nameFilter = { name: { search: `${query}*` } };
+    emailFilter = { email: { search: `${query}*` } };
+    phoneFilter = { phone: { search: `${query}*` } };
+    surnameFilter = { surname: { search: `${query}*` } };
+    middleNameFilter = { middlename: { search: `${query}*` } };
+  }
+
+  const OR = [
+    { ...nameFilter },
+    { ...emailFilter },
+    { ...phoneFilter },
+    { ...surnameFilter },
+  ].filter((x) => Object.keys(x).length > 0);
+
+  return {
+    OR: OR.length > 0 ? OR : undefined,
+  };
+}
+
 async function _countPages(query: string) {
   const count = await prisma.user.count({
-    where: {
-      OR: [
-        { name: { contains: query } },
-        { email: { contains: query } },
-        { phone: { contains: query } },
-      ],
-    },
+    where: _getWhere(query),
   });
   return Math.ceil(count / SIZE_PAGE_SIZE);
 }
@@ -100,12 +121,6 @@ async function _findUsers(
     take: SIZE_PAGE_SIZE,
     skip: (page - 1) * SIZE_PAGE_SIZE,
     select: UserSelectDto,
-    where: {
-      OR: [
-        { name: { contains: query } },
-        { email: { contains: query } },
-        { phone: { contains: query } },
-      ],
-    },
+    where: _getWhere(query),
   });
 }

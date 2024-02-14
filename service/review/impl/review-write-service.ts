@@ -64,13 +64,16 @@ export async function _setStatus(id: number, status: ReviewStatus) {
   });
 }
 
+function _getWhere(query: string | undefined) {
+  let search: { search: string } | undefined;
+  if (query && query.length > 0) search = { search: `${query}*` };
+
+  return { content: { ...search } };
+}
+
 export async function _setStatusMany(query: string, status: ReviewStatus) {
   await prisma.review.updateMany({
-    where: {
-      content: {
-        contains: query,
-      },
-    },
+    where: _getWhere(query),
     data: {
       status,
     },

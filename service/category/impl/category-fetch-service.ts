@@ -74,13 +74,16 @@ export async function _fetchCategoryTree() {
   return root;
 }
 
+function _getWhere(query: string | undefined) {
+  let search: { search: string } | undefined;
+  if (query && query.length > 0) search = { search: `${query}*` };
+
+  return { name: { ...search } };
+}
+
 async function _countPages(query: string) {
   const count = await prisma.category.count({
-    where: {
-      name: {
-        contains: query,
-      },
-    },
+    where: _getWhere(query),
   });
   return Math.ceil(count / CATEGORY_PAGE_SIZE);
 }
@@ -100,11 +103,7 @@ async function _findCategories(
     orderBy,
     take: CATEGORY_PAGE_SIZE,
     skip: (page - 1) * CATEGORY_PAGE_SIZE,
-    where: {
-      name: {
-        contains: query,
-      },
-    },
+    where: _getWhere(query),
     include: {
       parent: true,
     },

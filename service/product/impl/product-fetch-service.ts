@@ -37,30 +37,42 @@ async function _getWhereClause({
   colors: number[];
   price: PriceFilter;
 }) {
-  const priceFilter = {
-    lte: price.max == -1 ? Number.MAX_SAFE_INTEGER : price.max,
-    gte: price.min == -1 ? Number.MIN_SAFE_INTEGER : price.min,
+  let priceFilter: { price: { lte: number; gte: number } } | {};
+  priceFilter = {
+    price: {
+      lte: price.max == -1 ? Number.MAX_SAFE_INTEGER : price.max,
+      gte: price.min == -1 ? Number.MIN_SAFE_INTEGER : price.min,
+    },
   };
 
-  let sizeFilter: { in: number[] } | { gte: number };
-  if (sizes.length > 0) sizeFilter = { in: sizes };
-  else sizeFilter = { gte: 0 };
+  let sizeFilter: { sizeId: { in: number[] } } | {} = {};
+  if (sizes.length > 0) sizeFilter = { sizeId: { in: sizes } };
 
-  let colorsFilter: { in: number[] } | { gte: number };
-  if (colors.length > 0) colorsFilter = { in: colors };
-  else colorsFilter = { gte: 0 };
+  let colorsFilter: { colorId: { in: number[] } } | {} = {};
+  if (colors.length > 0) colorsFilter = { colorId: { in: colors } };
+
+  let nameFilter: { name: { search: string } } | {} = {};
+  if (query && query.length > 0) nameFilter = { name: { search: `${query}*` } };
+
+  let descriptionFilter: { name: { search: string } } | {} = {};
+  if (query && query.length > 0)
+    descriptionFilter = { description: { search: `${query}*` } };
+
+  const OR = [{ ...nameFilter }, { ...descriptionFilter }].filter(
+    (x) => Object.keys(x).length > 0,
+  );
 
   return {
-    name: { contains: query },
+    OR: OR.length > 0 ? OR : undefined,
     status: { equals: ProductStatus.ACTIVE },
     variants: {
       some: {
         quantity: { gt: 0 },
-        sizeId: sizeFilter,
-        colorId: colorsFilter,
+        ...sizeFilter,
+        ...colorsFilter,
       },
     },
-    price: priceFilter,
+    ...priceFilter,
   };
 }
 
@@ -135,11 +147,30 @@ export async function _fetchProducts({
 
 async function _countPages(query: string) {
   const count = await prisma.product.count({
-    where: {
-      OR: [{ article: { contains: query } }, { name: { contains: query } }],
-    },
+    where: _getDashboardWhere(query),
   });
   return Math.ceil(count / PRODUCT_PAGE_SIZE);
+}
+
+function _getDashboardWhere(query: string) {
+  let nameFilter: { name: { search: string } } | {} = {};
+  if (query && query.length > 0) nameFilter = { name: { search: `${query}*` } };
+
+  let descriptionFilter: { description: { search: string } } | {} = {};
+  if (query && query.length > 0)
+    descriptionFilter = { description: { search: `${query}*` } };
+
+  let articleFilter: { article: { search: string } } | {} = {};
+  if (query && query.length > 0)
+    articleFilter = { article: { search: `${query}*` } };
+
+  const OR = [
+    { ...nameFilter },
+    { ...descriptionFilter },
+    { ...articleFilter },
+  ].filter((x) => Object.keys(x).length > 0);
+
+  return { OR: OR.length > 0 ? OR : undefined };
 }
 
 async function _findProducts(
@@ -157,9 +188,7 @@ async function _findProducts(
     orderBy,
     take: PRODUCT_PAGE_SIZE,
     skip: (page - 1) * PRODUCT_PAGE_SIZE,
-    where: {
-      OR: [{ article: { contains: query } }, { name: { contains: query } }],
-    },
+    where: _getDashboardWhere(query),
   });
 }
 
