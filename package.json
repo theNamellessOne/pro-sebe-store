@@ -21,7 +21,6 @@
     "axios": "^1.6.3",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.0.0",
-    "force": "^0.0.3",
     "framer-motion": "^10.16.16",
     "lucide-react": "^0.294.0",
     "natural": "^6.10.4",
