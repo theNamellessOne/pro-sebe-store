@@ -49,6 +49,7 @@ model Product {
 // PRODUCT VARIANTS INFO
 
 model Variant {
+
   id String @id 
 
   name String
@@ -284,6 +285,7 @@ model CartItem {
   id Int @id @default(autoincrement())
 
   variant   Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
   variantId String
 
   quantity Int
