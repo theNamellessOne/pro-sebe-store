@@ -1,74 +1,76 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { FetchFunctionProps } from "@/hooks/use-list";
-import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter";
-import { Key } from "react";
-import { SortDirection } from "@react-types/shared";
-import { UserSelectDto } from "@/service/user/impl/type";
+import {FetchFunctionProps} from "@/hooks/use-list";
+import {convertSortDescriptorToPrisma} from "@/util/sort-descriptor-converter";
+import {Key} from "react";
+import {SortDirection} from "@react-types/shared";
+import {UserSelectDto} from "@/service/user/impl/type";
+import {NextApiRequest, NextApiResponse} from "next";
+import {auth} from "@/auth/auth";
 
 const SIZE_PAGE_SIZE = 10;
 
 export async function _fetchUserById(id: string | undefined) {
-  if (!id) return { errMsg: "Id id undefined", value: null };
+    if (!id) return {errMsg: "Id id undefined", value: null};
 
-  const user = await prisma.user.findUnique({
-    where: { id },
-    select: UserSelectDto,
-  });
+    const user = await prisma.user.findUnique({
+        where: {id},
+        select: UserSelectDto,
+    });
 
-  return {
-    errMsg: user ? null : "Could not find user with specified Id",
-    value: user,
-  };
+    return {
+        errMsg: user ? null : "Could not find user with specified Id",
+        value: user,
+    };
 }
 
 export async function _fetchUserByEmail(email: string) {
-  if (!email) return { errMsg: "email is undefined", value: null };
+    if (!email) return {errMsg: "email is undefined", value: null};
 
-  const user = await prisma.user.findUnique({
-    where: { email },
-    select: UserSelectDto,
-  });
+    const user = await prisma.user.findUnique({
+        where: {email},
+        select: UserSelectDto,
+    });
 
-  return {
-    errMsg: user ? null : "Could not find user with specified email",
-    value: user,
-  };
+    return {
+        errMsg: user ? null : "Could not find user with specified email",
+        value: user,
+    };
 }
 
 export async function _fetchAllUsers() {
-  return prisma.user.findMany({
-    select: UserSelectDto,
-  });
+    return prisma.user.findMany({
+        select: UserSelectDto,
+    });
 }
 
 export async function _fetchUserAccountByUserId(userId: string) {
-  return prisma.account.findFirst({
-    where: { userId },
-  });
+    return prisma.account.findFirst({
+        where: {userId},
+    });
 }
 
 export async function _fetchUsers({
-  query,
-  page,
-  sortColumn,
-  sortDirection,
-}: FetchFunctionProps) {
-  const pages = await _countPages(query);
-  if (page < 0 || pages === 0 || page > pages) {
+                                      query,
+                                      page,
+                                      sortColumn,
+                                      sortDirection,
+                                  }: FetchFunctionProps) {
+    const pages = await _countPages(query);
+    if (page < 0 || pages === 0 || page > pages) {
+        return {
+            items: [],
+            pages,
+        };
+    }
+
+    const items = await _findUsers(query, page, sortColumn, sortDirection);
+
     return {
-      items: [],
-      pages,
+        items,
+        pages,
     };
-  }
-
-  const items = await _findUsers(query, page, sortColumn, sortDirection);
-
-  return {
-    items,
-    pages,
-  };
 }
 
 function _getWhere(query: string) {
@@ -106,10 +108,10 @@ async function _countPages(query: string) {
 }
 
 async function _findUsers(
-  query: string,
-  page: number,
-  sortColumn: Key,
-  sortDirection: SortDirection,
+    query: string,
+    page: number,
+    sortColumn: Key,
+    sortDirection: SortDirection,
 ) {
   const sortDir = convertSortDescriptorToPrisma(sortDirection);
   const orderBy = {};
