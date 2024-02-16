@@ -47,7 +47,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
   let redirectUrl = "";
 
   try {
-    let value: Order | undefined = undefined;
+    let value: any = undefined;
 
     const mono: MonobankRequest = {
       amount: 0,
@@ -62,112 +62,118 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
       paymentType: "debit",
     };
 
-    await prisma.$transaction(async (prisma) => {
-      const cart = await _fetchCartById(cartId);
+    await prisma.$transaction(
+      async (prisma) => {
+        const cart = await _fetchCartById(cartId);
 
-      if (!cart) throw new Error("no cart");
+        if (!cart) throw new Error("no cart");
 
-      const orderItems: {
-        productName: string;
-        productArticle: string;
+        const orderItems: {
+          productName: string;
+          productArticle: string;
 
-        variantName: string;
-        variantImgUrl: string;
-        variantSellingPrice: Decimal;
+          variantName: string;
+          variantImgUrl: string;
+          variantSellingPrice: Decimal;
 
-        quantity: number;
-        subtotal: Decimal;
-      }[] = [];
+          quantity: number;
+          subtotal: Decimal;
+        }[] = [];
 
-      for (const item of cart.cartItems) {
-        if (item.variant.quantity < item.quantity) {
-          throw new Error(
-            `insufficient stock for ${item.variant.product.name}`,
+        let total = new Decimal(0);
+        const promises: any = [];
+
+        for (const item of cart.cartItems) {
+          if (item.variant.quantity < item.quantity) {
+            throw new Error(
+              `insufficient stock for ${item.variant.product.name}`,
+            );
+          }
+
+          if (item.variant.product.status !== ProductStatus.ACTIVE) {
+            throw new Error(`product not found - ${item.variant.product.name}`);
+          }
+
+          total = total.add(item.variant.product.price.mul(item.quantity));
+          mono.merchantPaymInfo.basketOrder.push({
+            name: item.variant.product.name,
+            qty: item.quantity,
+            sum: item.variant.product.price.mul(100).toNumber(),
+            icon:
+              item.variant.mediaUrls.length > 0
+                ? item.variant.mediaUrls[0].url
+                : "no",
+            unit: "банан",
+            code: item.variant.productArticle,
+          });
+
+          orderItems.push({
+            productName: item.variant.product.name,
+            productArticle: item.variant.productArticle,
+
+            variantName: item.variant.name,
+            variantImgUrl:
+              item.variant.mediaUrls.length > 0
+                ? item.variant.mediaUrls[0].url
+                : "",
+            variantSellingPrice: item.variant.product.price,
+
+            quantity: item.quantity,
+            subtotal: item.subtotal,
+          });
+
+          promises.push(
+            prisma.variant.update({
+              where: { id: item.variantId },
+              data: {
+                quantity: { decrement: item.quantity },
+                reserved: { increment: item.quantity },
+              },
+            }),
           );
         }
 
-        if (item.variant.product.status !== ProductStatus.ACTIVE) {
-          throw new Error(`product not found - ${item.variant.product.name}`);
-        }
+        promises.push(prisma.cart.delete({ where: { id: cart.id } }));
+        await Promise.all(promises);
 
-        if (!item.variant.product.price.eq(item.subtotal.div(item.quantity))) {
-          throw new Error(`product not found - ${item.variant.product.name}`);
-        }
-
-        mono.merchantPaymInfo.basketOrder.push({
-          name: item.variant.product.name,
-          qty: item.quantity,
-          sum: item.variant.product.price.mul(100).toNumber(),
-          icon:
-            item.variant.mediaUrls.length > 0
-              ? item.variant.mediaUrls[0].url
-              : "no",
-          unit: "банан",
-          code: item.variant.productArticle,
-        });
-
-        orderItems.push({
-          productName: item.variant.product.name,
-          productArticle: item.variant.productArticle,
-
-          variantName: item.variant.name,
-          variantImgUrl:
-            item.variant.mediaUrls.length > 0
-              ? item.variant.mediaUrls[0].url
-              : "",
-          variantSellingPrice: item.variant.product.price,
-
-          quantity: item.quantity,
-          subtotal: item.subtotal,
-        });
-
-        await prisma.variant.update({
-          where: { id: item.variantId },
+        value = await prisma.order.create({
           data: {
-            quantity: { decrement: item.quantity },
-            reserved: { increment: item.quantity },
+            ...order.contactInfo,
+
+            orderDeliveryType: order.deliveryInfo.deliveryType,
+
+            settlementRef: order.deliveryInfo.settlementRef,
+
+            street: order.deliveryInfo.addressParts?.street,
+            houseNo: order.deliveryInfo.addressParts?.houseNo,
+            postalIdx: order.deliveryInfo.addressParts?.postalIdx,
+
+            warehouseKey: order.deliveryInfo.warehouseKey,
+
+            paymentType: order.paymentType,
+
+            total: total,
+
+            orderItems: {
+              createMany: { data: orderItems },
+            },
           },
         });
-      }
 
-      value = await prisma.order.create({
-        data: {
-          ...order.contactInfo,
+        if (order.paymentType === OrderPaymentType.PREPAID) {
+          mono.amount = value.total.mul(100).toNumber();
+        }
 
-          orderDeliveryType: order.deliveryInfo.deliveryType,
+        if (order.paymentType === OrderPaymentType.POSTPAID) {
+          mono.amount = 15000;
+        }
 
-          settlementRef: order.deliveryInfo.settlementRef,
-
-          street: order.deliveryInfo.addressParts?.street,
-          houseNo: order.deliveryInfo.addressParts?.houseNo,
-          postalIdx: order.deliveryInfo.addressParts?.postalIdx,
-
-          warehouseKey: order.deliveryInfo.warehouseKey,
-
-          paymentType: order.paymentType,
-
-          total: cart.subtotal,
-
-          orderItems: {
-            createMany: { data: orderItems },
-          },
-        },
-      });
-
-      await prisma.cart.delete({ where: { id: cart.id } });
-
-      if (order.paymentType === OrderPaymentType.PREPAID) {
-        mono.amount = value.total.mul(100).toNumber();
-      }
-
-      if (order.paymentType === OrderPaymentType.POSTPAID) {
-        mono.amount = 15000;
-      }
-
-      mono.amount = 1;
-      mono.merchantPaymInfo.reference = value.id;
-      mono.redirectUrl = `http://localhost:3000/api/payment-confirm/${value.id}`;
-    });
+        mono.amount = 1;
+        mono.merchantPaymInfo.reference = value.id;
+        mono.redirectUrl = `http://localhost:3000/api/payment-confirm/${value.id}`;
+      },
+      { timeout: 10000 },
+    );
 
     const res = await fetch(
       "https://api.monobank.ua/api/merchant/invoice/create",
@@ -189,7 +195,6 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
   if (redirectUrl !== "") redirect(redirectUrl);
 }
 
-// @ts-ignore
 async function _fetchCartById(cartId: string) {
   return prisma.cart.findUnique({
     where: { id: cartId },

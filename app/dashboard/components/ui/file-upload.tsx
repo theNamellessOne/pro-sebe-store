@@ -1,22 +1,27 @@
-"use client";
-
 import { UploadDropzone } from "@/lib/uploadthing";
 import { fileRouter } from "@/app/api/uploadthing/core";
+import { UploadFileResponse } from "uploadthing/client";
 
 type FileUploadProps = {
-  onChange: (url?: string) => void;
+  onUploadComplete?: (res: UploadFileResponse<null>[]) => void;
+  onUploadBegin?: (fileName?: string) => void;
   endpoint: keyof typeof fileRouter;
+  input?: any;
 };
 
-export function FileUpload({ onChange, endpoint }: FileUploadProps) {
+export function FileUpload({
+  onUploadComplete,
+  onUploadBegin,
+  endpoint,
+  input,
+}: FileUploadProps) {
   return (
     <UploadDropzone
+      input={input}
       className={"rounded-large border-none shadow-small py-4"}
       endpoint={endpoint}
-      onClientUploadComplete={(res: any) => {
-        console.log("suka");
-        onChange(res?.[0].url);
-      }}
+      onClientUploadComplete={onUploadComplete}
+      onUploadBegin={onUploadBegin}
     />
   );
 }

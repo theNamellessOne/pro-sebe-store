@@ -55,5 +55,5 @@ export function VariantInfo() {
     };
   }, []);
 
-  return <VariantTable variants={variants} />;
+  return <VariantTable />;
 }
