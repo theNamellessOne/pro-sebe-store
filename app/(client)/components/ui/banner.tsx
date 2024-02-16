@@ -26,10 +26,10 @@ const Banner = () => {
         )
     }
     return (
-        <div className='w-full h-1/3'>
+        <div className='w-3/4 h-1/3 justify-center items-center ml-300'>
             <Zoom {...zoomInProperties}>
                 {images.map((each, index) =>
-                <div key={index} className='flex justify-center md:items-center items-start w-screen h-1/3 relative'>
+                <div key={index} className='flex justify-center md:items-center items-center w-screen h-1/2 relative'>
                     <img className='w-screen' src={each} alt='v'/>
                 </div>
                 )}
