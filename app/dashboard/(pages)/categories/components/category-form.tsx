@@ -78,8 +78,8 @@ export function CategoryForm({ value }: { value?: Category }) {
       {!form.getValues("imageUrl") ? (
         <FileUpload
           endpoint={"bannerImage"}
-          onChange={(url?: string) => {
-            form.setValue("imageUrl", url!);
+          onUploadComplete={(res) => {
+            form.setValue("imageUrl", res[0].url!);
             setRedraw(redraw + 1);
           }}
         />

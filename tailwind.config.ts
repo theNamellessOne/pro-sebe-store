@@ -20,6 +20,11 @@ const config: Config = {
   darkMode: "class",
   plugins: [
     nextui({
+      layout: {
+        borderWidth: {
+          medium: "1px",
+        },
+      },
       themes: {
         light: {
           colors: {

@@ -58,7 +58,7 @@ export function CategoryInfo() {
         }}
       >
         {categories?.map((category) => (
-          <SelectItem key={category.id} value={category.id}>
+          <SelectItem key={category.id.toString()} value={category.id}>
             {category.name}
           </SelectItem>
         ))}

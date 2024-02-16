@@ -4,6 +4,12 @@ import { ProductStatus } from "@prisma/client";
 
 export const PRODUCT_STATUSES = Object.keys(ProductStatus);
 
+export const createProductSchema = z.object({
+  article: z.string(),
+});
+
+export type ProductCreate = z.infer<typeof createProductSchema>;
+
 export const productSchema = z.object({
   name: z.string().min(2).max(64),
   article: z.string(),

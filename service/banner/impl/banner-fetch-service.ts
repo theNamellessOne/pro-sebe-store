@@ -44,13 +44,16 @@ export async function _fetchBanners({
   };
 }
 
+function _getWhere(query: string | undefined) {
+  let search: { search: string } | undefined;
+  if (query && query.length > 0) search = { search: `${query}*` };
+
+  return { name: { ...search } };
+}
+
 async function _countPages(query: string) {
   const count = await prisma.banner.count({
-    where: {
-      name: {
-        contains: query,
-      },
-    },
+    where: _getWhere(query),
   });
   return Math.ceil(count / COLOR_PAGE_SIZE);
 }
@@ -70,10 +73,6 @@ async function _findBanners(
     orderBy,
     take: COLOR_PAGE_SIZE,
     skip: (page - 1) * COLOR_PAGE_SIZE,
-    where: {
-      name: {
-        contains: query,
-      },
-    },
+    where: _getWhere(query),
   });
 }

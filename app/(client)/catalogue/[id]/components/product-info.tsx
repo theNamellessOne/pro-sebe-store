@@ -86,16 +86,7 @@ export function ProductInfo({
         disabled={!isInCart(selectedVariant.id)}
         type="primary"
         className={"font-semibold w-fit"}
-        onClick={() =>
-          addToCart({
-            id: selectedVariant.id,
-            productName: product.name,
-            productImageUrl: selectedVariant.mediaUrls[0].url,
-            colorName: selectedVariant.color.name,
-            sizeName: selectedVariant.size.name,
-            unitPrice: product.price,
-          })
-        }
+        onClick={() => addToCart(selectedVariant.id)}
       >
         {!isInCart(selectedVariant.id) ? "ВЖЕ У КОШИКУ" : "ДОДАТИ У КОШИК"}
       </Button>

@@ -1,110 +1,95 @@
+import Loading from "@/app/loading";
+import { CartService } from "@/service/cart/cart-service";
 import { ReactNode, createContext, useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 export const CartContext = createContext<CartContext | undefined>(undefined);
 
 type CartContext = {
-  cart: Cart;
-  isInCart: (id: number) => boolean;
-  addToCart: (item: CartItem) => void;
-  removeFromCart: (id: number) => void;
-  changeItemAmount: (id: number, newAmount: number) => void;
-};
-
-export type CartItem = {
-  id: number;
-
-  productName: string;
-  productImageUrl: string;
-
-  sizeName: string;
-  colorName: string;
-
-  unitPrice: number;
-};
-
-export type CartItemWithAmount = CartItem & { amount: number };
-
-type Cart = {
-  items: CartItemWithAmount[];
-  total: number;
+  cart: any;
+  isLoading: boolean;
+  isInCart: (id: string) => boolean;
+  addToCart: (id: string) => void;
+  removeFromCart: (id: string) => void;
+  changeItemAmount: (id: string, newAmount: number) => void;
 };
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<Cart>({
-    items: [],
-    total: 0,
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [cart, setCart] = useState<any>();
 
-  const isInCart = (id: number) => {
-    return cart.items.filter((item) => item.id === id).length === 0;
+  const isInCart = (id: string) => {
+    if (!cart) return false;
+
+    return (
+      cart?.cartItems.filter((item: any) => item.variantId === id).length === 0
+    );
   };
 
-  const calculateTotal = (cartItems: CartItemWithAmount[]) => {
-    if (cartItems.length === 0) return 0;
+  const addToCart = (id: string) => {
+    if (!cart) return;
 
-    return cartItems
-      .map((item: CartItemWithAmount) => item.unitPrice * item.amount)
-      .reduce((accumulator, current) => accumulator + current);
+    setIsLoading(true);
+    CartService.instance
+      .addToCart(cart.id, id, 1)
+      .then((res) => {
+        if (res.errMsg) toast.error(res.errMsg);
+        if (!res.errMsg) setCart(res.value);
+      })
+      .finally(() => setIsLoading(false));
   };
 
-  const changeCart = (newCart: Cart) => {
-    console.log(newCart);
-    setCart({ ...newCart });
-    window.localStorage.setItem("cart", JSON.stringify(newCart));
+  const removeFromCart = (id: string) => {
+    if (!cart) return;
+
+    setIsLoading(true);
+    CartService.instance
+      .removeFromCart(cart.id, id)
+      .then((res) => {
+        if (res.errMsg) toast.error(res.errMsg);
+        if (!res.errMsg) setCart(res.value);
+      })
+      .finally(() => setIsLoading(false));
   };
 
-  const addToCart = (item: CartItem) => {
-    const items = [...cart.items, { ...item, amount: 1 }];
-    const total = calculateTotal(items);
+  const changeItemAmount = (id: string, newQuantity: number) => {
+    if (!cart) return;
 
-    changeCart({ items, total });
-  };
-
-  const removeFromCart = (id: number) => {
-    const items = cart.items.filter((item) => item.id !== id);
-    const total = calculateTotal(items);
-
-    changeCart({ items, total });
-  };
-
-  const changeItemAmount = (id: number, newAmount: number) => {
-    const items = cart.items.map((item) => {
-      if (item.id === id) {
-        return { ...item, amount: newAmount };
-      }
-
-      return item;
-    });
-    const total = calculateTotal(items);
-
-    changeCart({ items, total });
+    setIsLoading(true);
+    CartService.instance
+      .chageCartItemQuantity(cart.id, id, newQuantity)
+      .then((res) => {
+        if (res.errMsg) toast.error(res.errMsg);
+        if (!res.errMsg) setCart(res.value);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
-    const cartStr = window.localStorage.getItem("cart");
-
-    if (!cartStr) return;
-
-    const parsedCart = JSON.parse(cartStr);
-
-    if ("items" in parsedCart && "total" in parsedCart) {
-      setCart(parsedCart);
-    } else {
-      setCart({ items: [], total: 0 });
-    }
+    setIsLoading(true);
+    CartService.instance
+      .fetchOrCreate(window.localStorage.getItem("cuid") ?? "")
+      .then((res) => {
+        window.localStorage.setItem("cuid", res.id);
+        setCart(res);
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
     <CartContext.Provider
       value={{
         cart,
+        isLoading,
         isInCart,
         addToCart,
         removeFromCart,
         changeItemAmount,
       }}
     >
+      {isLoading && <Loading />}
       {children}
+      <Toaster />
     </CartContext.Provider>
   );
 }

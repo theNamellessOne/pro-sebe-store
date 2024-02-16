@@ -23,7 +23,7 @@ export function PricingInfo() {
         type={"number"}
         step={0.01}
         label={"Цiна"}
-        disabled={isSubmitting}
+        isDisabled={isSubmitting}
         isInvalid={!!errors.price}
         defaultValue={form.getValues().price?.toString()}
         errorMessage={errors.price?.message}
