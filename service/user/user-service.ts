@@ -3,24 +3,27 @@ import {
   _fetchUserByEmail,
   _fetchUserById,
   _fetchUsers,
+  _getServerSideProp,
 } from "@/service/user/impl/user-fetch-service";
-import { _setRole } from "@/service/user/impl/user-write-service";
+import {_setRole} from "@/service/user/impl/user-write-service";
 
 export class UserService {
-  public fetchAccountByUserId = _fetchUserAccountByUserId;
-  public fetchById = _fetchUserById;
-  public fetchByEmail = _fetchUserByEmail;
-  public fetch = _fetchUsers;
+    public fetchAccountByUserId = _fetchUserAccountByUserId;
+    public fetchById = _fetchUserById;
+    public fetchByEmail = _fetchUserByEmail;
+    public fetch = _fetchUsers;
 
-  public setRole = _setRole;
+    public getAuthUser = _getServerSideProp;
 
-  private static _instance: UserService | undefined;
+    public setRole = _setRole;
 
-  static get instance() {
-    if (!UserService._instance) {
-      UserService._instance = new UserService();
+    private static _instance: UserService | undefined;
+
+    static get instance() {
+        if (!UserService._instance) {
+            UserService._instance = new UserService();
+        }
+
+        return UserService._instance;
     }
-
-    return UserService._instance;
-  }
 }
