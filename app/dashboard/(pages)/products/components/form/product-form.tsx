@@ -16,12 +16,13 @@ import { VariantInfo } from "@/app/dashboard/(pages)/products/components/form/va
 import { useState } from "react";
 import Loading from "@/app/loading";
 import { ProductService } from "@/service/product/product-service";
+import { ProductImageProvider } from "../../providers/product-image-provider";
 
 export function ProductForm({
   value,
   isEditing = false,
 }: {
-  value?: ProductSave;
+  value: ProductSave;
   isEditing?: boolean;
 }) {
   const [loading, setLoading] = useState(false);
@@ -32,7 +33,13 @@ export function ProductForm({
   const form = useForm<ProductSave>({
     mode: "onBlur",
     resolver: zodResolver(productSchema),
-    defaultValues: value,
+    defaultValues: {
+      ...value,
+      productCategories: value.productCategories.map((pc) => {
+        //@ts-ignore
+        return { id: pc.categoryId };
+      }),
+    },
   });
   const { isSubmitting, isValid } = form.formState;
 
@@ -49,33 +56,35 @@ export function ProductForm({
 
   return (
     <FormProvider {...form}>
-      {loading && <Loading />}
+      <ProductImageProvider product={value}>
+        {loading && <Loading />}
 
-      <form className={"mt-6 p-4"} onSubmit={form.handleSubmit(handleSubmit)}>
-        <div className={"flex flex-col lg:flex-row gap-4"}>
-          <div className={"flex flex-col gap-4 grow"}>
-            <GeneralInfo />
-            <PricingInfo />
-            <VariantInfo />
+        <form className={"mt-6 p-4"} onSubmit={form.handleSubmit(handleSubmit)}>
+          <div className={"flex flex-col lg:flex-row gap-4"}>
+            <div className={"flex flex-col gap-4 grow"}>
+              <GeneralInfo />
+              <PricingInfo />
+              <VariantInfo />
+            </div>
+            <div className={"flex flex-col gap-4 lg:w-[280px] xl:w-[340px]"}>
+              <InternalInfo isEditing={isEditing} />
+              <CategoryInfo />
+              <OptionInfo />
+            </div>
           </div>
-          <div className={"flex flex-col gap-4 lg:w-[280px] xl:w-[340px]"}>
-            <InternalInfo isEditing={isEditing} />
-            <CategoryInfo />
-            <OptionInfo />
-          </div>
-        </div>
-        <Button
-          className={"font-semibold"}
-          color={"primary"}
-          type={"submit"}
-          isDisabled={isSubmitting || !isValid}
-          isLoading={isSubmitting || loading}
-        >
-          Зберегти
-        </Button>
+          <Button
+            className={"font-semibold"}
+            color={"primary"}
+            type={"submit"}
+            isDisabled={isSubmitting || !isValid}
+            isLoading={isSubmitting || loading}
+          >
+            Зберегти
+          </Button>
 
-        <Toaster />
-      </form>
+          <Toaster />
+        </form>
+      </ProductImageProvider>
     </FormProvider>
   );
 }

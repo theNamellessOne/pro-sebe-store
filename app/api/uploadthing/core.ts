@@ -7,7 +7,7 @@ export const fileRouter = {
     image: { maxFileSize: "2MB", maxFileCount: 1 },
   }).onUploadComplete(() => {}),
   productImage: f({
-    image: { maxFileSize: "2MB", maxFileCount: 1 },
+    image: { maxFileSize: "16MB", maxFileCount: 10 },
   }).onUploadComplete(() => {}),
 } satisfies FileRouter;
 
