@@ -11,6 +11,7 @@ import { Button } from "../../components/ui/button";
 import { OrderService } from "@/service/order/order-service";
 import { Spinner } from "@nextui-org/react";
 import { redirect, useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
 export function SubmitSection() {
   const { cart } = useCart()!;
@@ -75,7 +76,8 @@ export function SubmitSection() {
   }, [deliveryCost, cart, paymentType]);
 
   const onSubmit = async (data: OrderInput) => {
-    await OrderService.instance.placeOrder(cart.id, data);
+    const response = await OrderService.instance.placeOrder(cart.id, data);
+    if (response?.errMsg) toast.error(response.errMsg);
   };
 
   return (
@@ -115,6 +117,7 @@ export function SubmitSection() {
         {isSubmitting && <Spinner size={"sm"} color={"primary"} />}
         оформити замовлення
       </Button>
+      <Toaster />
     </div>
   );
 }

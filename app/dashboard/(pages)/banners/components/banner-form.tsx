@@ -69,8 +69,10 @@ export function BannerForm({ value }: { value?: BannerSave }) {
         {!form.getValues("imageUrl") ? (
           <FileUpload
             endpoint={"bannerImage"}
-            onChange={(url?: string) => {
-              form.setValue("imageUrl", url!);
+            onUploadComplete={(res) => {
+              if (!res) return;
+
+              form.setValue("imageUrl", res[0].url!);
               setRedraw(redraw + 1);
             }}
           />

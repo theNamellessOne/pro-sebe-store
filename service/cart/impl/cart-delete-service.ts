@@ -1,32 +1,38 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { _rehydrateCart } from "./cart-write-service";
 
-export async function _removeFromCart(cartId: string, variantId: number) {
+export async function _removeFromCart(cartId: string, variantId: string) {
   const cart = await prisma.cart.findUnique({
     where: { id: cartId },
-    include: { cartItems: true },
+    include: {
+      cartItems: {
+        include: { variant: { include: { product: true } } },
+      },
+    },
   });
 
   if (!cart) {
     return { errMsg: "cart with specified id does not exist", value: null };
   }
 
-  const cartItem = cart.cartItems.find((item) => item.variantId === variantId);
+  const cartItems = cart.cartItems.filter(
+    (item) => item.variantId !== variantId,
+  );
 
-  if (!cartItem) {
-    return { errMsg: "product is not in cart", value: null };
-  }
+  return await _rehydrateCart(
+    cartId,
+    cartItems.map((item) => {
+      return {
+        variantId: item.variantId,
+        unitPrice: item.variant.product.price,
+        quantity: item.quantity,
+      };
+    }),
+  );
+}
 
-  const value = await prisma.cart.update({
-    where: { id: cartId },
-    data: {
-      cartItems: {
-        delete: { id: cartItem.id },
-      },
-      subtotal: cart.subtotal.sub(cartItem.subtotal),
-    },
-  });
-
-  return { errMsg: null, value };
+export async function _clearCart(cartId: string) {
+  return prisma.cartItem.deleteMany({ where: { cartId } });
 }

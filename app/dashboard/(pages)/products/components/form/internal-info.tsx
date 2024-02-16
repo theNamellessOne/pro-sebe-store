@@ -5,6 +5,7 @@ import { SectionTitle } from "@/app/dashboard/(pages)/products/components/form/s
 import { PRODUCT_STATUSES, ProductSave } from "@/schema/product/product-schema";
 import { Select, SelectItem } from "@nextui-org/react";
 import { Input } from "@nextui-org/input";
+import { ProductStatus } from "@prisma/client";
 
 export function InternalInfo({ isEditing = false }: { isEditing?: boolean }) {
   const form = useFormContext<ProductSave>();
@@ -32,10 +33,21 @@ export function InternalInfo({ isEditing = false }: { isEditing?: boolean }) {
 
       <Select
         label="Статус"
-        defaultSelectedKeys={new Set([form.getValues().status])}
+        defaultSelectedKeys={new Set([form.watch("status")])}
         isDisabled={isSubmitting}
         isInvalid={!!errors.status}
         errorMessage={errors.status?.message}
+        onSelectionChange={(keys) => {
+          if (keys) {
+            form.setValue(
+              "status",
+              Array.from(keys)[0].toString() as ProductStatus,
+              {
+                shouldValidate: true,
+              },
+            );
+          }
+        }}
       >
         {PRODUCT_STATUSES.map((status) => (
           <SelectItem key={status} value={status}>

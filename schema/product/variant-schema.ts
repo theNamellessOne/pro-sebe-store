@@ -5,7 +5,7 @@ export const mediaUrlSchema = z.object({
 });
 
 export const variantSchema = z.object({
-  id: z.coerce.number().optional(),
+  id: z.string().optional(),
   name: z.string(),
   sizeId: z.coerce.number(),
   colorId: z.coerce.number(),
