@@ -49,7 +49,7 @@ model Product {
 // PRODUCT VARIANTS INFO
 
 model Variant {
-  id Int @id @default(autoincrement())
+  id String @id
 
   name String
 
@@ -79,7 +79,7 @@ model MediaUrl {
   url String @default("")
 
   variant   Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
-  variantId Int
+  variantId String
 
   @@index([variantId])
 }
@@ -284,7 +284,7 @@ model CartItem {
   id Int @id @default(autoincrement())
 
   variant   Variant @relation(fields: [variantId], references: [id])
-  variantId Int
+  variantId String
 
   quantity Int
   subtotal Decimal
