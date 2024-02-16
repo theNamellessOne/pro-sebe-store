@@ -4,6 +4,9 @@ import prisma from "@/lib/prisma";
 import { Cart, CartItem, ProductStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { CartIncludes } from "../cart-service";
+import { _calculateCart } from "./cart-util-service";
+import { _clearCart } from "./cart-delete-service";
+import { CartItems } from "@/app/(client)/cart/components/cart-items";
 
 export async function _createCart(userId?: string | undefined) {
   return prisma.cart.create({
@@ -14,10 +17,21 @@ export async function _createCart(userId?: string | undefined) {
 
 export async function _addToCart(
   cartId: string,
-  variantId: number,
+  variantId: string,
   quantity: number,
 ) {
-  const cart = await prisma.cart.findUnique({ where: { id: cartId } });
+  const cart = await prisma.cart.findUnique({
+    where: { id: cartId },
+    include: {
+      cartItems: {
+        include: {
+          variant: {
+            include: { product: true },
+          },
+        },
+      },
+    },
+  });
 
   if (!cart) {
     return { errMsg: "could not find cart with specified id", value: null };
@@ -40,44 +54,38 @@ export async function _addToCart(
     return { errMsg: "requested product quantity exceeds stock", value: null };
   }
 
-  const addedCost = variant.product.price.mul(quantity);
-
-  const value = await prisma.cart.update({
-    where: { id: cartId },
-    data: {
-      cartItems: {
-        create: {
-          subtotal: addedCost,
-          variantId,
-          quantity,
-        },
-      },
-      subtotal: cart.subtotal.add(addedCost),
+  return await _rehydrateCart(cartId, [
+    ...cart.cartItems.map((item) => {
+      return {
+        quantity: item.quantity,
+        variantId: item.variantId,
+        unitPrice: item.variant.product.price,
+      };
+    }),
+    {
+      variantId: variantId,
+      unitPrice: variant.product.price,
+      quantity: quantity,
     },
-    include: CartIncludes,
-  });
-
-  return { errMsg: null, value };
+  ]);
 }
 
 export async function _changeCartItemQuantity(
   cartId: string,
-  variantId: number,
+  variantId: string,
   newQuantity: number,
 ) {
   const cart = await prisma.cart.findUnique({
     where: { id: cartId },
-    include: { cartItems: true },
+    include: {
+      cartItems: {
+        include: { variant: { include: { product: true } } },
+      },
+    },
   });
 
   if (!cart) {
     return { errMsg: "cart with specified id does not exist", value: null };
-  }
-
-  const cartItem = cart.cartItems.find((item) => item.variantId === variantId);
-
-  if (!cartItem) {
-    return { errMsg: "product is not in cart", value: null };
   }
 
   const variant = await prisma.variant.findUnique({
@@ -97,36 +105,40 @@ export async function _changeCartItemQuantity(
     return { errMsg: "requested product quantity exceeds stock", value: null };
   }
 
-  return _chageQuantity(cart, cartItem, variant.product.price, newQuantity);
+  return await _rehydrateCart(
+    cartId,
+    cart.cartItems.map((item) => {
+      return {
+        variantId: item.variantId,
+        unitPrice: item.variant.product.price,
+        quantity: item.variantId === variantId ? newQuantity : item.quantity,
+      };
+    }),
+  );
 }
 
-async function _chageQuantity(
-  cart: Cart,
-  cartItem: CartItem,
-  unitCost: Decimal,
-  newQuantity: number,
+export async function _rehydrateCart(
+  cartId: string,
+  items: {
+    quantity: number;
+    unitPrice: Decimal;
+    variantId: string;
+  }[],
 ) {
-  const newItemSubtotal = unitCost.mul(newQuantity);
+  const info = _calculateCart(items);
+  await _clearCart(cartId);
 
-  let newCartSubtotal = cart.subtotal.sub(cartItem.subtotal);
-  newCartSubtotal = cart.subtotal.add(newItemSubtotal);
-
-  const value = await prisma.cart.update({
-    where: { id: cart.id },
-    data: {
-      cartItems: {
-        update: {
-          where: { id: cartItem.id },
-          data: {
-            quantity: newQuantity,
-            subtotal: newItemSubtotal,
-          },
+  return {
+    errMsg: null,
+    value: await prisma.cart.update({
+      where: { id: cartId },
+      data: {
+        cartItems: {
+          createMany: { data: info.cartItems },
         },
+        subtotal: info.subtotal,
       },
-      subtotal: newCartSubtotal,
-    },
-    include: CartIncludes,
-  });
-
-  return { errMsg: null, value };
+      include: CartIncludes,
+    }),
+  };
 }

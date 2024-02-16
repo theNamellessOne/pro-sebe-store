@@ -28,8 +28,6 @@ export function WarehouseAutocomplete() {
       .finally(() => setIsLoading(false));
   };
 
-  console.log(items);
-
   useEffect(load, [settlementRef]);
 
   useEffect(() => {

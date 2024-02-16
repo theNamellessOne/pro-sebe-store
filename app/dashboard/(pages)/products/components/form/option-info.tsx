@@ -20,10 +20,12 @@ export function OptionInfo() {
 
   const [sizes, setSizes] = useState<Size[]>([]);
   const [colors, setColors] = useState<Color[]>([]);
+
   const [selectedSizes, setSelectedSizes] = useState<Size[]>([]);
   const [selectedSizesKeys, setSelectedSizesKeys] = useState<Selection>(
     new Set([]),
   );
+
   const [selectedColors, setSelectedColors] = useState<Color[]>([]);
   const [selectedColorsKeys, setSelectedColorsKeys] = useState<Selection>(
     new Set([]),
@@ -41,8 +43,9 @@ export function OptionInfo() {
       setSizes(options.sizes);
       setColors(options.colors);
 
-      const sizesValue: Size[] = [];
-      const colorsValue: Color[] = [];
+      const sizesValue: Set<Size> = new Set();
+      const colorsValue: Set<Color> = new Set();
+
       const variants = form.getValues("variants");
 
       if (!variants) {
@@ -52,21 +55,22 @@ export function OptionInfo() {
 
       for (const variant of variants) {
         for (const size of options.sizes) {
-          if (variant.sizeId === size.id) sizesValue.push(size);
+          if (variant.sizeId === size.id) sizesValue.add(size);
         }
         for (const color of options.colors) {
-          if (variant.colorId === color.id) colorsValue.push(color);
+          if (variant.colorId === color.id) colorsValue.add(color);
         }
       }
 
-      setSelectedSizes(sizesValue);
-      setSelectedColors(colorsValue);
+      const sizesArr = Array.from(sizesValue);
+      const colorsArr = Array.from(colorsValue);
 
-      setSelectedSizesKeys(
-        new Set(sizesValue.map((size) => size.id.toString())),
-      );
+      setSelectedSizes(sizesArr);
+      setSelectedColors(colorsArr);
+
+      setSelectedSizesKeys(new Set(sizesArr.map((size) => size.id.toString())));
       setSelectedColorsKeys(
-        new Set(colorsValue.map((color) => color.id.toString())),
+        new Set(colorsArr.map((color) => color.id.toString())),
       );
 
       setLoading(false);

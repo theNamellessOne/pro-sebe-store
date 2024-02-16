@@ -13,8 +13,8 @@ export const CartIncludes = {
         select: {
           id: true,
           name: true,
-          quantity: false,
-          reserved: false,
+          quantity: true,
+          reserved: true,
 
           product: {
             select: {

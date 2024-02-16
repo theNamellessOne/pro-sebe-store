@@ -1,4 +1,7 @@
-import { _saveProduct } from "@/service/product/impl/product-write-service";
+import {
+  _createProduct,
+  _updateProduct,
+} from "@/service/product/impl/product-write-service";
 import {
   _fetchAndFilter,
   _fetchPriceExtremes,
@@ -12,7 +15,8 @@ export class ProductService {
   public fetchAndFilter = _fetchAndFilter;
   public fetchPriceExtremes = _fetchPriceExtremes;
 
-  public save = _saveProduct;
+  public save = _updateProduct;
+  public create = _createProduct;
 
   private static _instance: ProductService | undefined;
 

@@ -2,6 +2,7 @@ import { DashboardHeader } from "@/app/dashboard/components/dashboard-header";
 import { Suspense } from "react";
 import { Loader } from "lucide-react";
 import { ProductTable } from "@/app/dashboard/(pages)/products/components/table/product-table";
+import { ProductHeader } from "./components/product-header";
 
 export default async function Page({
   searchParams,
@@ -26,7 +27,7 @@ export default async function Page({
       <div
         className={"relative flex flex-col gap-4 h-full w-full p-4 px-[20px]"}
       >
-        <DashboardHeader title={"Товари"} />
+        <ProductHeader />
 
         <Suspense
           key={
