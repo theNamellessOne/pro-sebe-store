@@ -20,9 +20,9 @@ export function Button({
 }: ButtonProps) {
   const baseStyle = "text-lg py-2 px-10 rounded-sm";
   const primaryStyle =
-    "transition-colors border border-primary bg-primary text-primary-foreground hover:bg-transparent hover:text-primary";
+    "transition-colors border border-black bg-black text-primary-foreground hover:bg-transparent hover:text-black";
   const secondaryStyle =
-    "transition-colors border border-primary text-primary hover:bg-primary hover:text-primary-foreground";
+    "transition-colors bg-black/10 text-black hover:bg-black hover:text-white";
   const disabledStyle =
     "disabled:border-secondary disabled:text-secondary-foreground disabled:bg-secondary";
 

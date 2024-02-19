@@ -58,20 +58,24 @@ export async function _fetchPossibleParents(id: number | undefined) {
 }
 
 export async function _fetchCategoryTree() {
-  const root = await prisma.category.findMany({
+  return prisma.category.findMany({
     where: {
       parentId: 0,
     },
     include: {
-      children: true,
+      children: {
+        include: {
+          children: {
+            include: {
+              children: {
+                include: { children: true },
+              },
+            },
+          },
+        },
+      },
     },
   });
-
-  for (let i = 0; i < root.length; i++) {
-    root[i].children = await _findChildren(root[i].id);
-  }
-
-  return root;
 }
 
 function _getWhere(query: string | undefined) {

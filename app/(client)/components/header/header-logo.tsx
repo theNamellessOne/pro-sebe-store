@@ -1,7 +1,31 @@
+import Image from "next/image";
+import Link from "next/link";
 import React from "react";
+import HeaderLogoImage from "@/public/images/logo-light.png";
 
 export function HeaderLogo() {
-  return <div className="items-center justify-center align-middle">
-    <img src="/images/logo.png" alt="Logo" className="w-1/3 h-max items-center"/>
-  </div>;
+  return (
+    <Link href={"/home"} className={"py-3"}>
+      <Image
+        className={"block sm:hidden"}
+        src={HeaderLogoImage}
+        alt={"logo"}
+        height={"40"}
+      />
+
+      <Image
+        className={"hidden sm:block lg:hidden"}
+        src={HeaderLogoImage}
+        alt={"logo"}
+        height={"50"}
+      />
+
+      <Image
+        className={"hidden lg:block"}
+        src={HeaderLogoImage}
+        alt={"logo"}
+        height={"60"}
+      />
+    </Link>
+  );
 }
