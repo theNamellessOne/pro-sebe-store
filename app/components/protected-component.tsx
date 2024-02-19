@@ -15,13 +15,12 @@ export function ClientProtectedComponent({
 }: ProtectedComponentProps) {
   const userRole = useCurrentRole();
 
-  if (!userRole) return null;
-  if (determine(minimumRequiredRole, userRole)) return children;
-
-  return null;
+  return determine(minimumRequiredRole, userRole) ? children : <></>;
 }
 
-function determine(minimumRequiredRole: Role, userRole: Role) {
+export function determine(minimumRequiredRole: Role, userRole?: Role) {
+  console.log(userRole);
+  if (!userRole) return false;
   if (userRole === Role.OWNER) return true;
   if (minimumRequiredRole === userRole) return true;
   if (userRole === Role.MODERATOR && minimumRequiredRole !== Role.OWNER)

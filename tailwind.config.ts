@@ -29,14 +29,15 @@ const config: Config = {
         light: {
           colors: {
             primary: {
-              DEFAULT: "#000",
+              DEFAULT: "#323232",
               foreground: "#e4e4e7",
             },
             secondary: {
               DEFAULT: "#e4e4e7",
-              foreground: "#000",
+              foreground: "#323232",
             },
             focus: "#000",
+            foreground: "#323232",
           },
         },
         dark: {
