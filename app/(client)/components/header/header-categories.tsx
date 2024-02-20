@@ -4,6 +4,7 @@ import { Category } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
+import { useCategoryFilter } from "../../catalogue/hooks/use-category-filter";
 
 export type CategoryWithChildren = Category & {
   children: CategoryWithChildren[];
@@ -15,6 +16,7 @@ export function HeaderCategories({
   categories: CategoryWithChildren[];
 }) {
   const [selected, setSelected] = useState<CategoryWithChildren | undefined>();
+  const { setFilter } = useCategoryFilter();
 
   return (
     <div
@@ -28,7 +30,7 @@ export function HeaderCategories({
           return (
             <div className={"uppercase relative"} key={category.id}>
               <Link
-                href={"/catalogue"}
+                href={`/catalogue?categoryFilter=[${category.id}]`}
                 onMouseOver={() => setSelected(category)}
               >
                 {category.name}
@@ -74,7 +76,7 @@ export function HeaderCategories({
                   key={child.id}
                 >
                   <Link
-                    href="catalogue"
+                    href={`/catalogue?categoryFilter=[${child.id}]`}
                     className="uppercase group relative w-fit"
                   >
                     {child.name}
@@ -87,7 +89,7 @@ export function HeaderCategories({
                   {child.children.map((child1) => {
                     return (
                       <Link
-                        href="catalogue"
+                        href={`/catalogue?categoryFilter=[${child1.id}]`}
                         className="uppercase group relative w-fit text-primary/80"
                         key={child1.id}
                       >

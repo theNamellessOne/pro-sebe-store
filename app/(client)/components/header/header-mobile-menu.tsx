@@ -49,7 +49,9 @@ export const HeaderMobileMenu = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setOpen(false)}
-            className={"inset-0 z-40 fixed grow backdrop-blur bg-black/20"}
+            className={
+              "inset-0 z-40 fixed h-[150vh] w-screen backdrop-blur bg-black/20"
+            }
           ></motion.div>
         )}
       </AnimatePresence>
@@ -59,7 +61,8 @@ export const HeaderMobileMenu = ({
           <motion.div
             layout
             className={
-              "min-w-[300px] w-1/2 z-50 h-full bg-background flex flex-col overflow-y-scroll fixed top-0 left-0 text-primary"
+              "min-w-[300px] w-1/2 z-50 h-screen bg-background flex flex-col " +
+              "overflow-y-scroll fixed top-0 bottom-0 left-0 text-primary"
             }
             initial={{ x: -300 }}
             animate={{ x: 0 }}
@@ -85,18 +88,27 @@ export const HeaderMobileMenu = ({
                   text={"Каталог"}
                   href={"/catalogue"}
                   className={"py-4"}
+                  onClick={() => {
+                    setOpen(false);
+                  }}
                 />
                 <Divider />
                 <HeaderLink
                   text={"Вiдгуки"}
                   href={"/catalogue"}
                   className={"py-4"}
+                  onClick={() => {
+                    setOpen(false);
+                  }}
                 />
                 <Divider />
                 <HeaderLink
                   text={"Про нас"}
                   href={"/catalogue"}
                   className={"py-4"}
+                  onClick={() => {
+                    setOpen(false);
+                  }}
                 />
                 <Divider />
               </div>
@@ -108,7 +120,16 @@ export const HeaderMobileMenu = ({
                       classNames={{ title: "uppercase text-md" }}
                       key={category.id}
                       aria-label={category.name}
-                      title={<Link href="/catalogue">{category.name}</Link>}
+                      title={
+                        <Link
+                          href={`/catalogue?categoryFilter=[${category.id}]`}
+                          onClick={() => {
+                            setOpen(false);
+                          }}
+                        >
+                          {category.name}
+                        </Link>
+                      }
                     >
                       <Accordion className={"-mt-4"}>
                         {category.children.map((category) => {
@@ -118,13 +139,26 @@ export const HeaderMobileMenu = ({
                               key={category.id}
                               aria-label={category.name}
                               title={
-                                <Link href="/catalogue">{category.name}</Link>
+                                <Link
+                                  href={`/catalogue?categoryFilter=[${category.id}]`}
+                                  onClick={() => {
+                                    setOpen(false);
+                                  }}
+                                >
+                                  {category.name}
+                                </Link>
                               }
                             >
                               <div className={"-mt-1 flex flex-col gap-4 pl-4"}>
                                 {category.children.map((category) => {
                                   return (
-                                    <Link href={"/catalogue"} key={category.id}>
+                                    <Link
+                                      href={`/catalogue?categoryFilter=[${category.id}]`}
+                                      onClick={() => {
+                                        setOpen(false);
+                                      }}
+                                      key={category.id}
+                                    >
                                       {category.name}
                                     </Link>
                                   );

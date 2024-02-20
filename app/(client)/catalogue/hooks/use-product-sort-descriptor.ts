@@ -1,6 +1,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SortDescriptor } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import { filterEventChannel } from "../components/filters/events/filter-event-channgel";
 
 export type NamedSortDescriptor = SortDescriptor & { name: string };
 
@@ -65,7 +66,7 @@ export function useProductSortDescriptor() {
     return JSON.parse(sortDescriptor) as NamedSortDescriptor;
   };
 
-  useEffect(() => {
+  const load = () => {
     const descriptor = readValue();
 
     if (descriptor) {
@@ -73,6 +74,14 @@ export function useProductSortDescriptor() {
     } else {
       setSelected(new Set(["Зa замовчуванням"]));
     }
+  };
+
+  useEffect(() => {
+    load();
+
+    const searchUnsub = filterEventChannel.on("onSearchChange", load);
+
+    return searchUnsub();
   }, []);
 
   const setSortDescriptor = (key: string) => {

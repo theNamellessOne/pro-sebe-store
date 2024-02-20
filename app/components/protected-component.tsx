@@ -19,7 +19,6 @@ export function ClientProtectedComponent({
 }
 
 export function determine(minimumRequiredRole: Role, userRole?: Role) {
-  console.log(userRole);
   if (!userRole) return false;
   if (userRole === Role.OWNER) return true;
   if (minimumRequiredRole === userRole) return true;

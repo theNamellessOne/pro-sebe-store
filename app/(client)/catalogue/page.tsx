@@ -2,6 +2,8 @@ import { Filters } from "@/app/(client)/catalogue/components/filters/filters";
 import { ProductList } from "@/app/(client)/catalogue/components/products/product-list";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
+import { Header } from "../components/header/header";
+import Footer from "../components/footer/footer";
 
 export default async function Page({
   searchParams,
@@ -11,6 +13,7 @@ export default async function Page({
     page?: string;
     sortDescriptor?: string;
     colorFilter?: string;
+    categoryFilter?: string;
     sizeFilter?: string;
     priceFilter?: string;
   };
@@ -22,6 +25,9 @@ export default async function Page({
     : null;
   const colorsFilter = searchParams?.colorFilter
     ? JSON.parse(searchParams?.colorFilter)
+    : null;
+  const categoryFilter = searchParams?.categoryFilter
+    ? JSON.parse(searchParams?.categoryFilter)
     : null;
   const sizeFilter = searchParams?.sizeFilter
     ? JSON.parse(searchParams?.sizeFilter)
@@ -43,7 +49,8 @@ export default async function Page({
           sortDescriptor?.direction +
           sortDescriptor?.column +
           priceFilter?.min +
-          priceFilter?.max
+          priceFilter?.max +
+          categoryFilter
         }
         fallback={<Loading />}
       >
@@ -54,6 +61,7 @@ export default async function Page({
           colors={colorsFilter}
           sizes={sizeFilter}
           price={priceFilter}
+          categories={categoryFilter}
         />
       </Suspense>
     </>
