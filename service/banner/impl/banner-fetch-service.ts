@@ -18,6 +18,14 @@ export async function _fetchBannerById(id: number) {
   };
 }
 
+export async function _fetchTopBanners() {
+  return prisma.banner.findMany({ where: { shouldBeOnTop: true } });
+}
+
+export async function _fetchBottomBanners() {
+  return prisma.banner.findMany({ where: { shouldBeOnTop: false } });
+}
+
 export async function _fetchAllBanners() {
   return prisma.banner.findMany();
 }

@@ -10,6 +10,10 @@ import { Button } from "@nextui-org/button";
 
 import { toast, Toaster } from "react-hot-toast";
 import { MiscService } from "@/service/misc/misc-service";
+import { FileUpload } from "@/app/dashboard/components/ui/file-upload";
+import { X } from "lucide-react";
+import { useState } from "react";
+import Image from "next/image";
 
 export function MiscForm({ value }: { value?: MiscSave }) {
   const form = useForm<MiscSave>({
@@ -17,6 +21,8 @@ export function MiscForm({ value }: { value?: MiscSave }) {
     resolver: zodResolver(miscSchema),
     defaultValues: value,
   });
+
+  const [redraw, setRedraw] = useState(1);
 
   const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
@@ -49,12 +55,12 @@ export function MiscForm({ value }: { value?: MiscSave }) {
         />
 
         <Input
-          {...form.register("avgDeliveryTime")}
+          {...form.register("shipmentsPerDay")}
           label={"Обiцяний час доставки"}
           disabled={isSubmitting}
-          isInvalid={!!errors.avgDeliveryTime}
-          defaultValue={value?.avgDeliveryTime?.toString()}
-          errorMessage={errors.avgDeliveryTime?.message}
+          isInvalid={!!errors.shipmentsPerDay}
+          defaultValue={value?.shipmentsPerDay}
+          errorMessage={errors.shipmentsPerDay?.message}
         />
 
         <Input
@@ -65,6 +71,36 @@ export function MiscForm({ value }: { value?: MiscSave }) {
           defaultValue={value?.secondOrderDiscount?.toString()}
           errorMessage={errors.secondOrderDiscount?.message}
         />
+
+        {!form.getValues("imageUrl") ? (
+          <FileUpload
+            endpoint={"bannerImage"}
+            onUploadComplete={(res) => {
+              if (!res) return;
+
+              form.setValue("imageUrl", res[0].url!);
+              setRedraw(redraw + 1);
+            }}
+          />
+        ) : (
+          <div
+            className={"relative aspect-[3/3] rounded-large overflow-hidden"}
+          >
+            <Button
+              className={"absolute top-2 right-2 z-50"}
+              color={"danger"}
+              variant={"light"}
+              isIconOnly
+              onClick={() => {
+                form.setValue("imageUrl", "");
+                setRedraw(redraw + 1);
+              }}
+            >
+              <X />
+            </Button>
+            <Image fill src={form.getValues("imageUrl")} alt={"upload"} />
+          </div>
+        )}
       </div>
 
       <Button

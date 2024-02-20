@@ -8,7 +8,7 @@ type CategoryTreeItemProps = {
 export function CategoryTreeItem({ value, depth = 0 }: CategoryTreeItemProps) {
   return (
     <>
-      <div style={{ marginLeft: depth * 10 }}>{value.name}</div>
+      <div style={{ marginLeft: depth * 15 }}>{value.name}</div>
 
       {value.children?.map((item) => {
         return (

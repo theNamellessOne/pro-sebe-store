@@ -13,7 +13,7 @@ export function SimilarProducts({ article }: { article: string }) {
   }, []);
 
   return (
-    <div>
+    <div className={"container mx-auto p-4"}>
       <h2 className={"text-xl md:text-2xl"}>Вам може сподобатись</h2>
 
       <div className={"mt-4 gap-4 flex flex-row overflow-y-scroll"}>
@@ -21,20 +21,17 @@ export function SimilarProducts({ article }: { article: string }) {
           return (
             <Link href={`/catalogue/${item.article}`}>
               <div key={item.article} className={"flex flex-col gap-2"}>
-                <div
-                  className={
-                    "relative h-[420px] w-[373px] mb-4 rounded-sm overflow-hidden"
-                  }
-                >
+                <div className={"mb-4 rounded-sm overflow-hidden"}>
                   <Image
                     alt={"media"}
-                    className={"aspect-373/420] object-cover"}
+                    className={"aspect-373/420] object-cover h-[420px]"}
                     src={
                       item.variants[0].mediaUrls[0]
                         ? item.variants[0].mediaUrls[0]?.url
                         : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
                     }
-                    fill
+                    height={420}
+                    width={373}
                   />
                 </div>
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
 import { ProductService } from "@/service/product/product-service";
+import { filterEventChannel } from "../components/filters/events/filter-event-channgel";
 
 export function usePriceFilter() {
   const [min, setMin] = useState(0);
@@ -32,7 +33,7 @@ export function usePriceFilter() {
     return JSON.parse(priceFilterParam) as PriceFilter;
   };
 
-  useEffect(() => {
+  const load = () => {
     ProductService.instance.fetchPriceExtremes().then((res) => {
       setMin(Number(res.min.toString()));
       setMax(Number(res.max.toString()));
@@ -45,6 +46,14 @@ export function usePriceFilter() {
 
       setValue([priceFilter.min, priceFilter.max]);
     });
+  };
+
+  useEffect(() => {
+    load();
+
+    const searchUnsub = filterEventChannel.on("onSearchChange", load);
+
+    return searchUnsub();
   }, []);
 
   return {

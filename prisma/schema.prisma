@@ -263,11 +263,12 @@ model Review {
   userId String
 
   content String       @db.VarChar(512)
-  rating  Float        @default(0)
+
+  rating  Float       @default(0)
   status  ReviewStatus @default(ON_MODERATION)
 
   createdAt DateTime @default(now())
-
+  
   @@index([userId])
   @@index([status])
   @@fulltext([content])
@@ -408,7 +409,7 @@ model Banner {
 
 model Misc {
   id Int @id @default(autoincrement())
-
+  
   freeDeliveryMinPrice Int    @default(1500)
   secondOrderDiscount  Int    @default(5)
   shipmentsPerDay      String @default("двічі")

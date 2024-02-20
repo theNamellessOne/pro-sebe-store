@@ -19,15 +19,17 @@ import {
 } from "@/schema/category/category-schema";
 import { FileUpload } from "@/app/dashboard/components/ui/file-upload";
 import { X } from "lucide-react";
+import { CategoryWithChildren } from "@/app/(client)/components/header/header-categories";
 
 const service = CategoryService.instance;
 
 export function CategoryForm({ value }: { value?: Category }) {
   const [possibleParents, setPossibleParents] = useState<Category[]>([]);
   const [redraw, setRedraw] = useState(1);
+  const [items, setItems] = useState<any[]>([]);
 
   function fetchParents() {
-    service.fetchPossibleParents(value?.id).then((res: Category[]) => {
+    service.fetchTree().then((res) => {
       const possibleParents: Category[] = [
         {
           id: 0,
@@ -41,6 +43,17 @@ export function CategoryForm({ value }: { value?: Category }) {
       setPossibleParents(possibleParents.concat(res));
     });
   }
+
+  useEffect(() => {
+    let nodes: any[] = [];
+
+    possibleParents.map((item) => {
+      //@ts-ignore
+      nodes = [...nodes, ...renderTreeNode(item, 0)];
+    });
+
+    setItems(nodes);
+  }, [possibleParents]);
 
   useEffect(() => {
     fetchParents();
@@ -118,11 +131,9 @@ export function CategoryForm({ value }: { value?: Category }) {
           isInvalid={!!errors.parentId}
           errorMessage={errors.parentId?.message}
         >
-          {(possibleParent) => (
-            <SelectItem key={possibleParent.id}>
-              {possibleParent.name}
-            </SelectItem>
-          )}
+          {items.map((node: any) => {
+            return node;
+          })}
         </Select>
       </div>
       <Button
@@ -139,3 +150,25 @@ export function CategoryForm({ value }: { value?: Category }) {
     </form>
   );
 }
+
+const renderTreeNode = (node: CategoryWithChildren, depth: number) => {
+  const items = [];
+
+  items.push(
+    <SelectItem
+      key={node.id}
+      value={node.id}
+      style={{ marginLeft: depth * 15 }}
+    >
+      {node.name}
+    </SelectItem>,
+  );
+
+  if (node.children) {
+    node.children.forEach((childNode) => {
+      items.push(renderTreeNode(childNode, depth + 1));
+    });
+  }
+
+  return items;
+};

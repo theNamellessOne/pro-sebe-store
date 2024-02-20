@@ -13,6 +13,7 @@ export type ProductFilter = {
 
   sizes: number[];
   colors: number[];
+  categories: number[];
   price: PriceFilter;
 };
 
@@ -32,6 +33,7 @@ export function useProductList(filter: ProductFilter) {
       sortDirection: filter.sortDescriptor?.direction ?? "ascending",
       sizes: filter.sizes ?? [],
       colors: filter.colors ?? [],
+      categories: filter.categories ?? [],
       price: filter.price ?? { min: -1, max: -1 },
     };
 

@@ -90,15 +90,25 @@ export default {
         session.user.role = token.role as Role;
       }
 
+      if (token.username && session.user) {
+        session.user.username = token.username as string;
+      }
+
       return session;
     },
     async jwt(props) {
       const token = props.token;
       if (!token.sub) return token;
 
+      if (props.trigger === "update") {
+        token.username = props.session.username;
+      }
+
       if (props.user) {
         //@ts-ignore
         token.role = props.user.role;
+        //@ts-ignore
+        token.username = props.user.username;
       }
 
       return token;

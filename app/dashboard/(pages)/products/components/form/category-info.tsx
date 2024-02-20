@@ -8,6 +8,7 @@ import Loading from "@/app/loading";
 import { Select, SelectItem } from "@nextui-org/react";
 import { CategoryService } from "@/service/category/category-service";
 import { Category } from "@prisma/client";
+import { CategoryWithChildren } from "@/app/(client)/components/header/header-categories";
 
 const service = CategoryService.instance;
 
@@ -18,6 +19,8 @@ export function CategoryInfo() {
 
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const [items, setItems] = useState<any[]>([]);
   const [selectedCategories, setSelectedCategories] = useState(
     form
       .getValues("productCategories")
@@ -25,10 +28,24 @@ export function CategoryInfo() {
   );
 
   useEffect(() => {
-    service.fetchAll().then((res: Category[]) => {
-      setCategories(res);
-      setLoading(false);
+    let nodes: any[] = [];
+
+    categories.map((item) => {
+      //@ts-ignore
+      nodes = [...nodes, ...renderTreeNode(item, 0)];
     });
+
+    setItems(nodes);
+  }, [categories]);
+
+  useEffect(() => {
+    setLoading(true);
+    service
+      .fetchTree()
+      .then((res: Category[]) => {
+        setCategories(res);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -42,6 +59,7 @@ export function CategoryInfo() {
 
       <Select
         label="Категорії"
+        isMultiline={true}
         isDisabled={isSubmitting}
         selectionMode={"multiple"}
         defaultSelectedKeys={selectedCategories}
@@ -57,12 +75,30 @@ export function CategoryInfo() {
           form.trigger();
         }}
       >
-        {categories?.map((category) => (
-          <SelectItem key={category.id.toString()} value={category.id}>
-            {category.name}
-          </SelectItem>
-        ))}
+        {items.map((item) => item)}
       </Select>
     </div>
   );
 }
+
+const renderTreeNode = (node: CategoryWithChildren, depth: number) => {
+  const items = [];
+
+  items.push(
+    <SelectItem
+      key={node.id}
+      value={node.id}
+      style={{ marginLeft: depth * 15 }}
+    >
+      {node.name}
+    </SelectItem>,
+  );
+
+  if (node.children) {
+    node.children.forEach((childNode) => {
+      items.push(renderTreeNode(childNode, depth + 1));
+    });
+  }
+
+  return items;
+};

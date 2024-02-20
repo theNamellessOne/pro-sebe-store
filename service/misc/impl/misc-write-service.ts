@@ -15,11 +15,13 @@ export async function _saveMisc(misc: MiscSave) {
 
   return {
     errMsg: null,
-    value: await prisma.misc.update({
+    value: await prisma.misc.upsert({
       where: { id },
-      data: {
+      create: {
         ...misc,
-        id: undefined,
+      },
+      update: {
+        ...misc,
       },
     }),
   };

@@ -47,10 +47,20 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <div
       className={
-        "flex gap-4 items-center flex-col w-[330px] h-[520px] bg-secondary rounded-sm py-[20px] text-secondary-foreground"
+        "flex gap-4 flex-col min-w-[330px] min-h-[520px] " +
+        "bg-secondary rounded-sm py-[20px] text-secondary-foreground relative"
       }
     >
-      <div className={"relative w-[290px] h-[329px]"}>
+      <Button
+        className={"absolute rounded-sm top-1 right-1 z-[2] text-3xl"}
+        variant={"light"}
+        color={"danger"}
+        isIconOnly
+      >
+        <AiOutlineHeart />
+      </Button>
+
+      <div className={"relative overflow-clip px-[20px] "}>
         <Image
           className={"aspect-[290/329] object-cover"}
           src={
@@ -58,73 +68,65 @@ export function ProductCard({ product }: ProductCardProps) {
               ? selected.mediaUrls[0]?.url
               : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
           }
-          fill
+          height={800}
+          width={800}
           alt={product.name}
         />
-
-        <Button
-          className={"absolute rounded-sm top-1 right-1 z-99 text-3xl"}
-          variant={"light"}
-          color={"primary"}
-          isIconOnly
-        >
-          <AiOutlineHeart />
-        </Button>
       </div>
 
-      <div className={"flex flex-col items-start w-[290px]"}>
+      <div className={"flex flex-col gap-2 px-[20px]"}>
         <Link href={url}>
-          <h2 className={"font-semibold"}>{product.name}</h2>
+          <h2 className={"font-semibold text-lg"}>{product.name}</h2>
         </Link>
-      </div>
 
-      <div className={"flex items-start justify-between gap-2 w-[290px] -mt-2"}>
-        <div className={"flex flex-col gap-2"}>
-          <h2 className={"font-semibold flex gap-2"}>
-            {product.compareAtPrice > product.price && (
-              <>
-                <p className={"text-zinc-600 line-through"}>
-                  {(Math.round(product.compareAtPrice * 100) / 100).toFixed(2)}
-                </p>
-              </>
-            )}
+        <div className={"flex items-start justify-between gap-2 -mt-1"}>
+          <div className={"flex flex-col gap-2"}>
+            <h2 className={"font-semibold flex gap-2"}>
+              {product.compareAtPrice > product.price && (
+                <>
+                  <p className={"text-zinc-600 line-through"}>
+                    {(Math.round(product.compareAtPrice * 100) / 100).toFixed(
+                      2,
+                    )}
+                  </p>
+                </>
+              )}
 
-            <> ₴{(Math.round(product.price * 100) / 100).toFixed(2)} UAH</>
-          </h2>
+              <> ₴{(Math.round(product.price * 100) / 100).toFixed(2)} UAH</>
+            </h2>
 
-          <div className={"flex gap-2"}>
-            {colors.map((color: any) => {
-              return (
-                <button
-                  key={color.id}
-                  onClick={() =>
-                    redirectToProductPage(`selectedColor=${color.id}`)
-                  }
-                  onMouseOver={() => {
-                    changeSelected(color.id);
-                  }}
-                >
-                  <Color
-                    hex={color.hexValue}
-                    className={`hover:scale-125 ${
-                      selected.colorId === color.id && "scale-125"
-                    } h-[30px] w-[30px] transition-all`}
-                  />
-                </button>
-              );
-            })}
+            <div className={"flex gap-2 mt-2"}>
+              {colors.map((color: any) => {
+                return (
+                  <Link
+                    key={color.id}
+                    href={`/catalogue/${product.article}?selectedColor=${color.id}`}
+                    onMouseOver={() => {
+                      changeSelected(color.id);
+                    }}
+                  >
+                    <Color
+                      hex={color.hexValue}
+                      className={`hover:scale-125 ${
+                        selected.colorId === color.id && "scale-125"
+                      } h-[30px] w-[30px] transition-all`}
+                    />
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        <Button
-          onClick={() => redirectToProductPage()}
-          variant={"light"}
-          className={"rounded-sm text-3xl"}
-          color={"primary"}
-          isIconOnly
-        >
-          {isInCart(selected.id) ? <BsBag /> : <BsBagCheck />}
-        </Button>
+          <Button
+            onClick={() => redirectToProductPage()}
+            variant={"light"}
+            className={"rounded-sm text-3xl"}
+            color={"primary"}
+            isIconOnly
+          >
+            {isInCart(selected.id) ? <BsBag /> : <BsBagCheck />}
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -1,24 +1,22 @@
-/* The Masonry Container */
-.masonry {
-  column-fill: initial;
+.gallery {
+  @apply flex;
 }
 
-.col-1 {
-  column-count: 1;
-}
-
-.col-2 {
-  column-count: 2;
-}
-
-/* The Masonry Brick */
-.item {
-  background: transparent;
-  margin: 0 0 1.5em;
-}
-
-@media screen and (max-width: 768px) {
-  .col-2 {
-    column-count: 1;
+@media screen and (min-width: 768px) {
+  .gallery {
+    @apply grid;
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    grid-gap: 10px;
   }
+}
+
+.gallery__item {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease-in-out;
+}
+
+.gallery__item:hover {
+  transform: scale(1.05);
 }

@@ -9,6 +9,19 @@ import { Key } from "react";
 
 const COLOR_PAGE_SIZE = 10;
 
+export async function _fetchLatest() {
+  return prisma.review.findMany({
+    where: { status: "APPROVED" },
+    orderBy: { createdAt: "desc" },
+    select: {
+      user: { select: { username: true } },
+      content: true,
+      rating: true,
+    },
+    take: 10,
+  });
+}
+
 export async function _fetchReviewById(id: number) {
   const review = await prisma.review.findUnique({ where: { id } });
 
@@ -19,7 +32,13 @@ export async function _fetchReviewById(id: number) {
 }
 
 export async function _fetchAllReview() {
-  return prisma.review.findMany();
+  return prisma.review.findMany({
+    select: {
+      user: { select: { username: true } },
+      content: true,
+      rating: true,
+    },
+  });
 }
 
 export async function _fetchReview({

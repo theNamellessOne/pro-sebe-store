@@ -33,9 +33,9 @@ export function ReviewTable({ query, page, sortDescriptor }: TableProps) {
 
   const columns = [
     { name: "Id", uid: "id" },
-    { name: "User name", uid: "username" },
     { name: "Content", uid: "content" },
     { name: "Status", uid: "status" },
+    { name: "Rating", uid: "rating" },
     { name: "Actions", uid: "actions" },
   ];
 

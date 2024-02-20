@@ -17,7 +17,6 @@ export function FileUpload({
 }: FileUploadProps) {
   return (
     <UploadDropzone
-      input={input}
       className={"rounded-large border-none shadow-small py-4"}
       endpoint={endpoint}
       onClientUploadComplete={onUploadComplete}

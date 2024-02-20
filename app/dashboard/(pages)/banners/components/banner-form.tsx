@@ -96,6 +96,7 @@ export function BannerForm({ value }: { value?: BannerSave }) {
           </div>
         )}
       </div>
+
       <Button
         className={"font-semibold"}
         color={"primary"}

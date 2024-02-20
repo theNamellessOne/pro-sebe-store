@@ -115,7 +115,7 @@ export function SubmitSection() {
         onClick={handleSubmit(onSubmit)}
       >
         {isSubmitting && <Spinner size={"sm"} color={"primary"} />}
-        оформити замовлення
+        замовити
       </Button>
       <Toaster />
     </div>
