@@ -4,7 +4,6 @@ import { Category } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
-import { useCategoryFilter } from "../../catalogue/hooks/use-category-filter";
 
 export type CategoryWithChildren = Category & {
   children: CategoryWithChildren[];
@@ -16,7 +15,6 @@ export function HeaderCategories({
   categories: CategoryWithChildren[];
 }) {
   const [selected, setSelected] = useState<CategoryWithChildren | undefined>();
-  const { setFilter } = useCategoryFilter();
 
   return (
     <div

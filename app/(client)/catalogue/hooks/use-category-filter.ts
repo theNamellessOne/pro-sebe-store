@@ -34,6 +34,7 @@ export function useCategoryFilter() {
   useEffect(() => {
     CategoryService.instance.fetchAll().then((res) => {
       const selectedIds = readFilter();
+
       if (selectedIds === "all") {
         setCategories(
           res.map((item) => {

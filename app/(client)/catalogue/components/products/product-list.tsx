@@ -6,6 +6,8 @@ import Loading from "@/app/loading";
 import { TableProps } from "@/app/dashboard/types/table-props";
 import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
 import { NamedSortDescriptor } from "@/app/(client)/catalogue/hooks/use-product-sort-descriptor";
+import { Filters } from "@/app/(client)/catalogue/components/filters/filters";
+import { CategoryBreadcrumbs } from "@/app/(client)/catalogue/components/category-breadcrumbs";
 
 type ProductListProps = TableProps & {
   sizes: number[];
@@ -24,6 +26,8 @@ export function ProductList(props: ProductListProps) {
 
   return (
     <>
+      <CategoryBreadcrumbs currentCategoryId={props.categories[0]} />
+      <Filters />
       <div
         className={
           "container mx-auto grid " +

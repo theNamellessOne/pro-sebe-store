@@ -33,10 +33,8 @@ export function useColorFilter() {
   };
 
   const load = () => {
-    console.log("suka");
     ColorService.instance.fetchAll().then((res) => {
       const selectedIds = readFilter();
-      console.log(selectedIds);
 
       if (selectedIds === "all") {
         setColors([

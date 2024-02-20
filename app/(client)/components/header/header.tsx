@@ -5,12 +5,12 @@ import { HeaderLinks } from "./header-links";
 import { HeaderLogo } from "./header-logo";
 import { HeaderCategories } from "./header-categories";
 import { HeaderSearch } from "./header-search";
-import { CategoryService } from "@/service/category/category-service";
 import { useEffect, useRef, useState } from "react";
 import { headerEventChannel } from "./events/header-event-channel";
+import { useCategoryTree } from "@/app/(client)/hooks/use-category-tree";
 
 export function Header() {
-  const [categories, setCategories] = useState<any>([]);
+  const { categories } = useCategoryTree()!;
 
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -39,10 +39,6 @@ export function Header() {
       setHeight(elementHeight);
     }
   }, [categories]);
-
-  useEffect(() => {
-    CategoryService.instance.fetchTree().then(setCategories);
-  }, []);
 
   return (
     <>
