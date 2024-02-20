@@ -1,7 +1,9 @@
 import Loading from "@/app/loading";
 import { CartService } from "@/service/cart/cart-service";
+import Link from "next/link";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { Button } from "../../components/ui/button";
 
 export const CartContext = createContext<CartContext | undefined>(undefined);
 
@@ -34,7 +36,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
       .addToCart(cart.id, id, 1)
       .then((res) => {
         if (res.errMsg) toast.error(res.errMsg);
-        if (!res.errMsg) setCart(res.value);
+        if (!res.errMsg) {
+          toast(() => {
+            return (
+              <div className={"flex flex-col"}>
+                <p className={"text-lg"}>Товар додано до корзини</p>
+                <Link href={"/cart"}>
+                  <Button type={"primary"}>перейти</Button>
+                </Link>
+              </div>
+            );
+          });
+          setCart(res.value);
+        }
       })
       .finally(() => setIsLoading(false));
   };

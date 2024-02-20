@@ -17,11 +17,11 @@ export function CartOrder() {
         <span>{cart?.subtotal} UAH</span>
       </h2>
 
-      <Button type="primary" className="uppercase">
-        <Link href="/checkout" className="text-center">
-          перейти до оформлення
-        </Link>
-      </Button>
+      <Link href="/checkout" className="text-center">
+        <Button type="primary" className="uppercase w-full">
+          до оформлення
+        </Button>
+      </Link>
     </div>
   );
 }
