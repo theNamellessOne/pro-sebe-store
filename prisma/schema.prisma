@@ -49,8 +49,7 @@ model Product {
 // PRODUCT VARIANTS INFO
 
 model Variant {
-
-  id String @id 
+  id String @id
 
   name String
 
@@ -264,7 +263,10 @@ model Review {
   userId String
 
   content String       @db.VarChar(512)
+  rating  Float        @default(0)
   status  ReviewStatus @default(ON_MODERATION)
+
+  createdAt DateTime @default(now())
 
   @@index([userId])
   @@index([status])
@@ -284,7 +286,7 @@ model Cart {
 model CartItem {
   id Int @id @default(autoincrement())
 
-  variant   Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  variant Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
   variantId String
 
@@ -407,7 +409,13 @@ model Banner {
 model Misc {
   id Int @id @default(autoincrement())
 
-  freeDeliveryMinPrice Int
-  secondOrderDiscount  Int
-  avgDeliveryTime      Int
+  freeDeliveryMinPrice Int    @default(1500)
+  secondOrderDiscount  Int    @default(5)
+  shipmentsPerDay      String @default("двічі")
+  imageUrl             String @default("")
+}
+
+model tfidf {
+  id    Int  @id @default(autoincrement())
+  tfidf Json
 }
