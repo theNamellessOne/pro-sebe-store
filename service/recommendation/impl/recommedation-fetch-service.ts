@@ -71,9 +71,21 @@ async function _storeTfIdf(tfidf: TfIdf) {
     tfidf.listTerms(i).forEach((item) => data.push(item));
   }
 
-  const jsonData = JSON.stringify(data);
-  fs.writeFileSync(TFIDF_FILE_PATH, jsonData);
+  // @ts-ignore
+  await prisma.tfidf.upsert({
+    where:{
+      id: 1
+    },
+    update: {
+      tfidf: JSON.parse(JSON.stringify(data)),
+    },
+    create: {
+      tfidf: JSON.parse(JSON.stringify(data)),
+    },
+  }
+  );
 }
+
 
 export async function _precomputeTfIdf() {
   const tfIdf = await _calculateTfIdf();
@@ -81,8 +93,9 @@ export async function _precomputeTfIdf() {
 }
 
 async function _readTfIdf() {
-  const jsonData = fs.readFileSync(TFIDF_FILE_PATH, "utf8");
-  return JSON.parse(jsonData);
+  const jsonData = await prisma.tfidf.findUnique({where:{id:1}});
+  // @ts-ignore
+  return jsonData.tfidf as TfIdfTerm[];
 }
 
 function _calculateCosineSimilarity(
