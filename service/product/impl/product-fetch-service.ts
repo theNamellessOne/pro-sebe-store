@@ -31,10 +31,12 @@ async function _getWhereClause({
   price,
   sizes,
   colors,
+  categories,
 }: {
   query: string;
   sizes: number[];
   colors: number[];
+  categories: number[];
   price: PriceFilter;
 }) {
   let priceFilter: { price: { lte: number; gte: number } } | {};
@@ -54,17 +56,30 @@ async function _getWhereClause({
   let nameFilter: { name: { search: string } } | {} = {};
   if (query && query.length > 0) nameFilter = { name: { search: `${query}*` } };
 
-  let descriptionFilter: { name: { search: string } } | {} = {};
+  let articleFilter: { article: { search: string } } | {} = {};
+  if (query && query.length > 0)
+    articleFilter = { article: { search: `${query}*` } };
+
+  let descriptionFilter: { description: { search: string } } | {} = {};
   if (query && query.length > 0)
     descriptionFilter = { description: { search: `${query}*` } };
 
-  const OR = [{ ...nameFilter }, { ...descriptionFilter }].filter(
-    (x) => Object.keys(x).length > 0,
-  );
+  let categoryFilter: { categoryId: { in: number[] } } | {} = {};
+  if (categories.length > 0)
+    categoryFilter = { categoryId: { in: categories } };
+
+  const OR = [
+    { ...nameFilter },
+    { ...descriptionFilter },
+    { ...articleFilter },
+  ].filter((x) => Object.keys(x).length > 0);
 
   return {
     OR: OR.length > 0 ? OR : undefined,
     status: { equals: ProductStatus.ACTIVE },
+    productCategories: {
+      some: { ...categoryFilter },
+    },
     variants: {
       some: {
         quantity: { gt: 0 },
@@ -81,6 +96,7 @@ export async function _fetchAndFilter(
     sizes: number[];
     colors: number[];
     price: PriceFilter;
+    categories: number[];
   },
 ) {
   const whereClause = await _getWhereClause({ ...props });

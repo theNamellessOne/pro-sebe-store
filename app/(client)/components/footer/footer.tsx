@@ -5,10 +5,10 @@ import { FooterLogo } from "./footer-logo";
 
 export function Footer() {
   return (
-    <footer className={"bg-primary py-8 px-4 md:px-8"}>
+    <footer className={"bg-secondary py-8 px-4 md:px-8"}>
       <div
         className={
-          "container flex flex-col md:flex-row items-center justify-between gap-4"
+          "container mx-auto flex flex-col md:flex-row items-center justify-between gap-4"
         }
       >
         <FooterLogo />

@@ -11,6 +11,7 @@ type ProductListProps = TableProps & {
   sizes: number[];
   colors: number[];
   price: PriceFilter;
+  categories: number[];
   sortDescriptor: NamedSortDescriptor;
 };
 
@@ -22,10 +23,12 @@ export function ProductList(props: ProductListProps) {
   }
 
   return (
-    <div>
+    <>
       <div
         className={
-          "container mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 w-fit py-4"
+          "container mx-auto grid " +
+          "grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 " +
+          "gap-4 w-full px-6 py-4"
         }
       >
         {list.items.map((item) => {
@@ -33,6 +36,6 @@ export function ProductList(props: ProductListProps) {
         })}
       </div>
       {paginator}
-    </div>
+    </>
   );
 }

@@ -35,15 +35,18 @@ export const HeaderLink = ({
   text,
   href,
   className = "",
+  onClick = () => {},
 }: {
   text: string;
   href: string;
   className?: string;
+  onClick?: () => void;
 }) => {
   return (
     <Link
       href={href}
       className={"hover:text-primary relative group " + className}
+      onClick={onClick}
     >
       {text}
       <span

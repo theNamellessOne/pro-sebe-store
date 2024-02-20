@@ -2,6 +2,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Size } from "@prisma/client";
 import { SizeService } from "@/service/size/size-service";
+import { filterEventChannel } from "../components/filters/events/filter-event-channgel";
 
 export type SelectedSize = Size & { isSelected: boolean };
 
@@ -31,27 +32,35 @@ export function useSizeFilter() {
     return JSON.parse(sizeFilterParam) as number[];
   };
 
-  useEffect(() => {
+  const load = () => {
     SizeService.instance.fetchAll().then((res) => {
       const selectedIds = readFilter();
       if (selectedIds === "all") {
-        setSizes(
-          res.map((item) => {
-            return { isSelected: true, ...item };
+        setSizes([
+          ...res.map((item) => {
+            return { isSelected: false, ...item };
           }),
-        );
+        ]);
         return;
       }
 
-      setSizes(
-        res.map((item) => {
+      setSizes([
+        ...res.map((item) => {
           return {
             isSelected: selectedIds.includes(item.id),
             ...item,
           };
         }),
-      );
+      ]);
     });
+  };
+
+  useEffect(() => {
+    load();
+
+    const searchUnsub = filterEventChannel.on("onSearchChange", load);
+
+    return searchUnsub();
   }, []);
 
   const toggleSelection = (idx: number) => {
