@@ -1,4 +1,3 @@
-import { Filters } from "@/app/(client)/catalogue/components/filters/filters";
 import { ProductList } from "@/app/(client)/catalogue/components/products/product-list";
 import { Suspense } from "react";
 import Loading from "@/app/loading";

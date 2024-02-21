@@ -55,17 +55,5 @@ export function useCategoryFilter() {
     });
   }, []);
 
-  const toggleSelection = (idx: number) => {
-    categories[idx].isSelected = !categories[idx].isSelected;
-    setCategories([...categories]);
-  };
-
-  const filterCategories = () => {
-    const filteredCategorys = categories
-      .filter((item) => item.isSelected)
-      .map((item) => item.id);
-    setFilter(filteredCategorys);
-  };
-
   return { setFilter };
 }

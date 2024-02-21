@@ -12,6 +12,7 @@ export function CategoryBreadcrumbs({
   const reconstructPath = (
     tree: CategoryWithChildren[],
   ): CategoryWithChildren[] => {
+    if (currentCategoryId === 0) return [];
     if (!tree || tree.length === 0) return [];
 
     for (const category of tree) {

@@ -26,7 +26,9 @@ export function ProductList(props: ProductListProps) {
 
   return (
     <>
-      <CategoryBreadcrumbs currentCategoryId={props.categories[0]} />
+      <CategoryBreadcrumbs
+        currentCategoryId={props.categories ? props.categories[0] : 0}
+      />
       <Filters />
       <div
         className={
@@ -35,6 +37,11 @@ export function ProductList(props: ProductListProps) {
           "gap-4 w-full px-6 py-4"
         }
       >
+        {list.items.length === 0 && (
+          <h2 className={"uppercase col-span-9"}>
+            за вашими критеріями нічого не знайдено 😞
+          </h2>
+        )}
         {list.items.map((item) => {
           return <ProductCard key={item.article} product={item} />;
         })}
