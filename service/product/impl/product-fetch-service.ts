@@ -212,6 +212,7 @@ export async function _fetchProductById(article: string) {
   const product = await prisma.product.findUnique({
     where: { article },
     include: {
+      sizeMeasures: true,
       productCategories: true,
       variants: {
         include: {

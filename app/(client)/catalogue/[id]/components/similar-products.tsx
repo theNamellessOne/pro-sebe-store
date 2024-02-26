@@ -19,7 +19,10 @@ export function SimilarProducts({ article }: { article: string }) {
       <div className={"mt-4 gap-4 flex flex-row overflow-y-scroll"}>
         {similar?.map((item) => {
           return (
-            <Link href={`/catalogue/${item.article}`}>
+            <Link
+              href={`/catalogue/${item.article}`}
+              className={"max-w-full shrink-0"}
+            >
               <div key={item.article} className={"flex flex-col gap-2"}>
                 <div className={"mb-4 rounded-sm overflow-hidden"}>
                   <Image

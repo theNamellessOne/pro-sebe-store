@@ -16,8 +16,6 @@ export function ViewOrderModal({ order }: { order: any }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState(false);
 
-  console.log(order);
-
   return (
     <>
       <Button variant={"light"} onPress={onOpen}>

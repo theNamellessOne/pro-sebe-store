@@ -17,7 +17,10 @@ export function FileUpload({
 }: FileUploadProps) {
   return (
     <UploadDropzone
-      className={"rounded-large border-none shadow-small py-4"}
+      className={"rounded-large border-none shadow-small py-6"}
+      appearance={{
+        button: "bg-primary px-4",
+      }}
       endpoint={endpoint}
       onClientUploadComplete={onUploadComplete}
       onUploadBegin={onUploadBegin}

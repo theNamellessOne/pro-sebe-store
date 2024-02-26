@@ -19,10 +19,20 @@ export async function _updateProduct(product: ProductSave) {
 
   await prisma.$transaction(
     async (prisma) => {
-      await Promise.all([_clearProductCategories(article)]);
+      await Promise.all([
+        _clearProductSizeMeasurements(article),
+        _clearProductCategories(article),
+      ]);
+
       const categoriesPromise = prisma.productCategory.createMany({
         data: rest.productCategories.map((category) => {
           return { categoryId: category.id, productArticle: article };
+        }),
+      });
+
+      const sizeMeasuresPromise = prisma.sizeMeasure.createMany({
+        data: rest.sizeMeasures.map((sizeMeasure) => {
+          return { ...sizeMeasure, productArticle: article };
         }),
       });
 
@@ -32,12 +42,14 @@ export async function _updateProduct(product: ProductSave) {
           ...rest,
           variants: undefined,
           productCategories: undefined,
+          sizeMeasures: undefined,
         },
       });
 
       await Promise.all([
         productPromise,
         categoriesPromise,
+        sizeMeasuresPromise,
         _handleVariantsChange(product),
         RecommendationService.instance.precomputeTfIdf(),
       ]);
@@ -137,6 +149,12 @@ async function _handleVariantsChange({
   });
 
   await Promise.all([createMediaUrlPromise, ...variantsUpdatePromises]);
+}
+
+async function _clearProductSizeMeasurements(productArticle: string) {
+  return prisma.sizeMeasure.deleteMany({
+    where: { product: { article: productArticle } },
+  });
 }
 
 async function _clearProductCategories(productArticle: string) {

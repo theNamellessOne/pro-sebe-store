@@ -4,6 +4,7 @@ import { SizeList } from "./size-list";
 import { Button } from "@/app/(client)/components/ui/button";
 import { Ruler } from "lucide-react";
 import { useCart } from "@/app/(client)/cart/hooks/use-cart";
+import { SizeTableModal } from "../modals/size-table-modal";
 
 export function ProductInfo({
   product,
@@ -77,10 +78,7 @@ export function ProductInfo({
 
       <h3>{getQuantityMessage()}</h3>
 
-      <Link href={"/"} className={"flex gap-2 font-semibold"}>
-        <Ruler />
-        Перевір свій розмір.
-      </Link>
+      <SizeTableModal sizeMeasures={product.sizeMeasures} />
 
       <Button
         disabled={!isInCart(selectedVariant.id)}

@@ -3,7 +3,7 @@ import { SizeForm } from "@/app/dashboard/(pages)/sizes/components/size-form";
 import { SizeService } from "@/service/size/size-service";
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const { errMsg, value } = await SizeService.instance.fetchById(+params.id);
+  const { value } = await SizeService.instance.fetchById(+params.id);
 
   return (
     <div className={"p-4 px-[20px]"}>

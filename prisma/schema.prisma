@@ -34,6 +34,8 @@ model Product {
   variants          Variant[]
   productCategories ProductCategory[]
 
+  sizeMeasures   SizeMeasure[]
+
   @@index([price])
   @@index([status])
   @@index([article])
@@ -44,6 +46,21 @@ model Product {
   @@index([status, article])
   @@index([status, article, price])
   @@fulltext([name, description, article])
+}
+
+model SizeMeasure {
+  id Int @default(autoincrement()) @id
+
+  sizeName String
+
+  chestSize Int
+  waistSize Int
+  thighSize Int
+
+  product        Product @relation(fields: [productArticle], references: [article])
+  productArticle String
+
+  @@index([productArticle])
 }
 
 // PRODUCT VARIANTS INFO
@@ -96,10 +113,6 @@ model Color {
 
 model Size {
   id Int @id @default(autoincrement())
-
-  chestSize Int
-  waistSize Int
-  thighSize Int
 
   name    String
   variant Variant[]
