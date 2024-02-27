@@ -33,7 +33,7 @@ export function ProductList(props: ProductListProps) {
       <div
         className={
           "container mx-auto grid " +
-          "grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 " +
+          "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 " +
           "gap-4 w-full px-6 py-4"
         }
       >

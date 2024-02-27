@@ -15,13 +15,12 @@ export function useCategoryTableCell() {
         case "imageUrl":
           if (category.imageUrl) {
             return (
-              <div
-                className={
-                  "relative aspect-[4/3] h-64 rounded-large overflow-hidden"
-                }
-              >
-                <Image fill src={category.imageUrl} alt={"banner image"} />
-              </div>
+              <Image
+                src={category.imageUrl}
+                alt={"banner image"}
+                height={100}
+                width={100}
+              />
             );
           }
 

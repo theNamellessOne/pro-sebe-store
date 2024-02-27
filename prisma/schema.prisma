@@ -51,11 +51,8 @@ model Product {
 model SizeMeasure {
   id Int @default(autoincrement()) @id
 
-  sizeName String
-
-  chestSize Int
-  waistSize Int
-  thighSize Int
+  sizeName    String
+  sizeMeasure String
 
   product        Product @relation(fields: [productArticle], references: [article])
   productArticle String

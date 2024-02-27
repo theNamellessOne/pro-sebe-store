@@ -88,32 +88,6 @@ export function CategoryForm({ value }: { value?: Category }) {
       }
       onSubmit={form.handleSubmit(handleSubmit)}
     >
-      {!form.getValues("imageUrl") ? (
-        <FileUpload
-          endpoint={"bannerImage"}
-          onUploadComplete={(res) => {
-            form.setValue("imageUrl", res[0].url!);
-            setRedraw(redraw + 1);
-          }}
-        />
-      ) : (
-        <div className={"relative aspect-[4/3] rounded-large overflow-hidden"}>
-          <Button
-            className={"absolute top-2 right-2 z-50"}
-            color={"danger"}
-            variant={"light"}
-            isIconOnly
-            onClick={() => {
-              form.setValue("imageUrl", "");
-              setRedraw(redraw + 1);
-            }}
-          >
-            <X />
-          </Button>
-          <Image fill src={form.getValues("imageUrl")!} alt={"upload"} />
-        </div>
-      )}
-
       <div className={"flex flex-col md:flex-row gap-2"}>
         <Input
           {...form.register("name")}
@@ -136,6 +110,38 @@ export function CategoryForm({ value }: { value?: Category }) {
           })}
         </Select>
       </div>
+
+      {!form.getValues("imageUrl") ? (
+        <FileUpload
+          endpoint={"bannerImage"}
+          onUploadComplete={(res) => {
+            form.setValue("imageUrl", res[0].url!);
+            setRedraw(redraw + 1);
+          }}
+        />
+      ) : (
+        <div className={"relative"}>
+          <Button
+            className={"absolute top-2 right-2 z-50"}
+            color={"danger"}
+            variant={"light"}
+            isIconOnly
+            onClick={() => {
+              form.setValue("imageUrl", "", { shouldValidate: true });
+              setRedraw(redraw + 1);
+            }}
+          >
+            <X />
+          </Button>
+          <Image
+            src={form.getValues("imageUrl")!}
+            alt={"upload"}
+            height={426}
+            width={600}
+          />
+        </div>
+      )}
+
       <Button
         className={"font-semibold"}
         color={"primary"}

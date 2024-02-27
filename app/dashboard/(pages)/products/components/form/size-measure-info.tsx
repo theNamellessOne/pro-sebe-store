@@ -22,8 +22,7 @@ export function SizeMeasureInfo() {
   function handleOptionsChange(payload: Options) {
     const newMeasures: SizeMeasurementSave[] = [];
     for (const size of payload.sizes) {
-      //@ts-ignore
-      newMeasures.push({ sizeName: size.name });
+      newMeasures.push({ sizeName: size.name, sizeMeasure: "" });
     }
 
     for (let i = 0; i < newMeasures.length; i++) {
@@ -50,17 +49,11 @@ export function SizeMeasureInfo() {
     };
   }, []);
 
-  const setMeasures = (
-    sizeName: string,
-    column: keyof SizeMeasurementSave,
-    value: number,
-  ) => {
+  const setMeasures = (sizeName: string, value: string) => {
     const measures = form.getValues("sizeMeasures") ?? [];
 
     for (let i = 0; i < measures.length; i++) {
-      if (measures[i].sizeName === sizeName)
-        //@ts-ignore
-        measures[i][column] = value;
+      if (measures[i].sizeName === sizeName) measures[i].sizeMeasure = value;
     }
 
     return measures;
@@ -75,52 +68,22 @@ export function SizeMeasureInfo() {
 
       {sizeMeasures.map((measure) => {
         return (
-          <div className={"flex flex-col md:flex-row gap-4 md:items-center"}>
+          <div className={"grid grid-cols-1 md:grid-cols-2 gap-4"}>
             <p>{measure.sizeName}</p>
 
             <Input
-              label={"Обахват грудей (см)"}
+              label={"Мірки"}
               onValueChange={(value) => {
                 form.setValue(
                   "sizeMeasures",
-                  setMeasures(measure.sizeName, "chestSize", parseInt(value)),
+                  setMeasures(measure.sizeName, value),
                 );
                 form.trigger();
               }}
               isDisabled={isSubmitting}
               isInvalid={!!errors.article}
-              defaultValue={measure.chestSize.toString()}
-              errorMessage={errors.article?.message}
-            />
-
-            <Input
-              label={"Обхват талії (см)"}
-              onValueChange={(value) => {
-                form.setValue(
-                  "sizeMeasures",
-                  setMeasures(measure.sizeName, "waistSize", parseInt(value)),
-                );
-                form.trigger();
-              }}
-              isDisabled={isSubmitting}
-              isInvalid={!!errors.article}
-              defaultValue={measure.waistSize.toString()}
-              errorMessage={errors.article?.message}
-            />
-
-            <Input
-              label={"Обхват бедер (см)"}
-              onValueChange={(value) => {
-                form.setValue(
-                  "sizeMeasures",
-                  setMeasures(measure.sizeName, "thighSize", parseInt(value)),
-                );
-                form.trigger();
-              }}
-              isDisabled={isSubmitting}
-              isInvalid={!!errors.article}
-              defaultValue={measure.thighSize.toString()}
-              errorMessage={errors.article?.message}
+              defaultValue={measure.sizeMeasure.toString()}
+              errorMessage={errors.sizeMeasures?.message}
             />
           </div>
         );

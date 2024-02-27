@@ -13,10 +13,7 @@ import {
   TableRow,
   useDisclosure,
 } from "@nextui-org/react";
-import { useState } from "react";
-import Loading from "@/app/loading";
-import { OrderDeliveryType, SizeMeasure } from "@prisma/client";
-import Image from "next/image";
+import { SizeMeasure } from "@prisma/client";
 import { Ruler } from "lucide-react";
 
 export function SizeTableModal({
@@ -58,9 +55,7 @@ export function SizeTableModal({
                 >
                   <TableHeader>
                     <TableColumn>РОЗМІР</TableColumn>
-                    <TableColumn>ГРУДИ</TableColumn>
-                    <TableColumn>ТАЛІЯ</TableColumn>
-                    <TableColumn>БЕДРА</TableColumn>
+                    <TableColumn>МІРКИ</TableColumn>
                   </TableHeader>
 
                   <TableBody>
@@ -68,9 +63,7 @@ export function SizeTableModal({
                       return (
                         <TableRow key={measure.id}>
                           <TableCell>{measure.sizeName}</TableCell>
-                          <TableCell>{measure.chestSize}</TableCell>
-                          <TableCell>{measure.waistSize}</TableCell>
-                          <TableCell>{measure.thighSize}</TableCell>
+                          <TableCell>{measure.sizeMeasure}</TableCell>
                         </TableRow>
                       );
                     })}
