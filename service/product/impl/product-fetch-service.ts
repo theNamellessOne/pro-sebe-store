@@ -32,12 +32,14 @@ async function _getWhereClause({
   sizes,
   colors,
   categories,
+  isDiscounted,
 }: {
   query: string;
+  price: PriceFilter;
   sizes: number[];
   colors: number[];
   categories: number[];
-  price: PriceFilter;
+  isDiscounted: boolean;
 }) {
   let priceFilter: { price: { lte: number; gte: number } } | {};
   priceFilter = {
@@ -77,6 +79,7 @@ async function _getWhereClause({
   return {
     OR: OR.length > 0 ? OR : undefined,
     status: { equals: ProductStatus.ACTIVE },
+    isDiscounted: isDiscounted,
     productCategories: {
       some: { ...categoryFilter },
     },
@@ -97,6 +100,7 @@ export async function _fetchAndFilter(
     colors: number[];
     price: PriceFilter;
     categories: number[];
+    isDiscounted: boolean;
   },
 ) {
   const whereClause = await _getWhereClause({ ...props });

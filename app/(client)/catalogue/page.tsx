@@ -13,6 +13,7 @@ export default async function Page({
     categoryFilter?: string;
     sizeFilter?: string;
     priceFilter?: string;
+    onlyDiscounts?: boolean;
   };
 }) {
   const query = searchParams?.query || "";
@@ -32,6 +33,7 @@ export default async function Page({
   const priceFilter = searchParams?.priceFilter
     ? JSON.parse(searchParams?.priceFilter)
     : null;
+  const discountFilter = searchParams?.onlyDiscounts?.valueOf();
 
   return (
     <>
@@ -46,7 +48,8 @@ export default async function Page({
           sortDescriptor?.column +
           priceFilter?.min +
           priceFilter?.max +
-          categoryFilter
+          categoryFilter +
+          discountFilter
         }
         fallback={<Loading />}
       >
@@ -58,6 +61,7 @@ export default async function Page({
           sizes={sizeFilter}
           price={priceFilter}
           categories={categoryFilter}
+          onlyDiscounts={!!discountFilter}
         />
       </Suspense>
     </>

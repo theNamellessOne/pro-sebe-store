@@ -16,10 +16,14 @@ type ProductListProps = TableProps & {
   price: PriceFilter;
   categories: number[];
   sortDescriptor: NamedSortDescriptor;
+  onlyDiscounts: boolean;
 };
 
 export function ProductList(props: ProductListProps) {
-  const { list, loading, paginator } = useProductList(props);
+  const { list, loading, paginator } = useProductList({
+    ...props,
+    isDiscounted: props.onlyDiscounts,
+  });
 
   if (loading) {
     return <Loading />;

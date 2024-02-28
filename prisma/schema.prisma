@@ -31,6 +31,8 @@ model Product {
   price          Decimal
   compareAtPrice Decimal
 
+  isDiscounted Boolean @default(false)
+
   variants          Variant[]
   productCategories ProductCategory[]
 

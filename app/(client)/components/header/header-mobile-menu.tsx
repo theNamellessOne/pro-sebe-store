@@ -163,8 +163,18 @@ export const HeaderMobileMenu = ({
                     </Accordion>
                   </AccordionItem>
                 </Accordion>
-
                 <Divider />
+
+                <HeaderLink
+                  text={"Знижки"}
+                  href={"/catalogue?onlyDiscounts=true"}
+                  className={"py-4 pl-2"}
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                />
+                <Divider />
+
                 <HeaderLink
                   text={"Вiдгуки"}
                   href={"/catalogue"}
@@ -174,6 +184,7 @@ export const HeaderMobileMenu = ({
                   }}
                 />
                 <Divider />
+
                 <HeaderLink
                   text={"Про нас"}
                   href={"/catalogue"}

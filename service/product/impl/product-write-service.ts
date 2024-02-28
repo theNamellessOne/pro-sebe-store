@@ -40,6 +40,7 @@ export async function _updateProduct(product: ProductSave) {
         where: { article: article },
         data: {
           ...rest,
+          isDiscounted: rest.price < rest.compareAtPrice,
           variants: undefined,
           productCategories: undefined,
           sizeMeasures: undefined,
