@@ -7,7 +7,8 @@ import { TableProps } from "@/app/dashboard/types/table-props";
 import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
 import { NamedSortDescriptor } from "@/app/(client)/catalogue/hooks/use-product-sort-descriptor";
 import { Filters } from "@/app/(client)/catalogue/components/filters/filters";
-import { CategoryBreadcrumbs } from "@/app/(client)/catalogue/components/category-breadcrumbs";
+import { CategoryBreadcrumbs } from "../categories/category-breadcrumbs";
+import { CategorySwiper } from "../categories/category-swiper";
 
 type ProductListProps = TableProps & {
   sizes: number[];
@@ -29,6 +30,11 @@ export function ProductList(props: ProductListProps) {
       <CategoryBreadcrumbs
         currentCategoryId={props.categories ? props.categories[0] : 0}
       />
+
+      <CategorySwiper
+        currentCategoryId={props.categories ? props.categories[0] : 0}
+      />
+
       <Filters />
       <div
         className={

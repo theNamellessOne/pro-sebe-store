@@ -1,6 +1,6 @@
-import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
-import { useCategoryTree } from "@/app/(client)/hooks/use-category-tree";
 import { CategoryWithChildren } from "@/app/(client)/components/header/header-categories";
+import { useCategoryTree } from "@/app/(client)/hooks/use-category-tree";
+import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
 
 export function CategoryBreadcrumbs({
   currentCategoryId,
