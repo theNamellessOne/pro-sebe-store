@@ -177,7 +177,7 @@ export const HeaderMobileMenu = ({
 
                 <HeaderLink
                   text={"Вiдгуки"}
-                  href={"/catalogue"}
+                  href={"/reviews"}
                   className={"py-4 pl-2"}
                   onClick={() => {
                     setOpen(false);

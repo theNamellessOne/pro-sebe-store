@@ -49,6 +49,20 @@ export function HeaderCategories({
             </div>
           );
         })}
+
+        <div className={"uppercase relative group"}>
+          <Link
+            href={`/catalogue?onlyDiscounts=true`}
+            onMouseOver={() => setSelected(undefined)}
+          >
+            Знижки
+          </Link>
+          <span
+            className={
+              "absolute bg-primary -bottom-1 left-0 h-px w-0 group-hover:w-full transition-size"
+            }
+          ></span>
+        </div>
       </div>
 
       <AnimatePresence>

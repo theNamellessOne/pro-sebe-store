@@ -1,8 +1,9 @@
 import {
-  _fetchAllReview,
+  _fetchAllReviews,
   _fetchReview,
   _fetchReviewById,
   _fetchLatest,
+  _fetchApprovedReviews,
 } from "@/service/review/impl/review-fetch-service";
 import {
   _saveReview,
@@ -18,8 +19,9 @@ import {
 
 export class ReviewService {
   public fetch = _fetchReview;
-  public fetchAll = _fetchAllReview;
+  public fetchAll = _fetchAllReviews;
   public fetchById = _fetchReviewById;
+  public fetchApproved = _fetchApprovedReviews;
   public fetchReviews = _fetchReview;
   public deleteManyByIds = _deleteManyInIds;
   public fetchLatest = _fetchLatest;

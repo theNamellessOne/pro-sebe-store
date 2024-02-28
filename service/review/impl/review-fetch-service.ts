@@ -6,8 +6,9 @@ import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter"
 import { SortDirection } from "@react-types/shared";
 
 import { Key } from "react";
+import { ReviewStatus } from "@prisma/client";
 
-const COLOR_PAGE_SIZE = 10;
+const REVIEW_PAGE_SIZE = 10;
 
 export async function _fetchLatest() {
   return prisma.review.findMany({
@@ -31,14 +32,58 @@ export async function _fetchReviewById(id: number) {
   };
 }
 
-export async function _fetchAllReview() {
+export async function _fetchAllReviews() {
   return prisma.review.findMany({
     select: {
       user: { select: { username: true } },
       content: true,
       rating: true,
+      createdAt: true,
+    },
+    where: {
+      status: "APPROVED",
     },
   });
+}
+
+export async function _fetchApprovedReviews({
+  page,
+  sortColumn,
+  sortDirection,
+}: FetchFunctionProps) {
+  const pageSize = 3;
+
+  const pages = await _countPages(_getWhere("", "APPROVED"), pageSize);
+  if (page < 0 || page > pages) {
+    return {
+      items: [],
+      pages,
+    };
+  }
+
+  const sortDir = convertSortDescriptorToPrisma(sortDirection);
+  const orderBy = {};
+  // @ts-ignore
+  orderBy[sortColumn] = sortDir;
+
+  const items = await prisma.review.findMany({
+    orderBy,
+    take: pageSize,
+    skip: (page - 1) * pageSize,
+    select: {
+      user: { select: { username: true } },
+      content: true,
+      rating: true,
+      createdAt: true,
+    },
+
+    where: _getWhere("", "APPROVED"),
+  });
+
+  return {
+    items,
+    pages,
+  };
 }
 
 export async function _fetchReview({
@@ -47,7 +92,7 @@ export async function _fetchReview({
   sortColumn,
   sortDirection,
 }: FetchFunctionProps) {
-  const pages = await _countPages(query);
+  const pages = await _countPages(_getWhere(query), REVIEW_PAGE_SIZE);
   if (page < 0 || page > pages) {
     return {
       items: [],
@@ -55,7 +100,12 @@ export async function _fetchReview({
     };
   }
 
-  const items = await _findReview(query, page, sortColumn, sortDirection);
+  const items = await _findReview(
+    _getWhere(query),
+    page,
+    sortColumn,
+    sortDirection,
+  );
 
   return {
     items,
@@ -63,22 +113,27 @@ export async function _fetchReview({
   };
 }
 
-function _getWhere(query: string | undefined) {
+function _getWhere(query: string | undefined, status?: ReviewStatus) {
   let search: { search: string } | undefined;
   if (query && query.length > 0) search = { search: `${query}*` };
 
-  return { content: { ...search } };
+  let statusFilter: {} | undefined;
+  if (status) {
+    statusFilter = { status };
+  }
+
+  return { content: { ...search }, ...statusFilter };
 }
 
-async function _countPages(query: string) {
+async function _countPages(where: {}, size: number) {
   const count = await prisma.review.count({
-    where: _getWhere(query),
+    where,
   });
-  return Math.ceil(count / COLOR_PAGE_SIZE);
+  return Math.ceil(count / size);
 }
 
 async function _findReview(
-  query: string,
+  where: {},
   page: number,
   sortColumn: Key,
   sortDirection: SortDirection,
@@ -90,8 +145,8 @@ async function _findReview(
 
   return prisma.review.findMany({
     orderBy,
-    take: COLOR_PAGE_SIZE,
-    skip: (page - 1) * COLOR_PAGE_SIZE,
-    where: _getWhere(query),
+    take: REVIEW_PAGE_SIZE,
+    skip: (page - 1) * REVIEW_PAGE_SIZE,
+    where: where,
   });
 }
