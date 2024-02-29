@@ -26,7 +26,7 @@ export function PaymentMethodSelect() {
     " data-[selected=true]:border-primary";
 
   return (
-    <div className="flex flex-col gap-2 p-4">
+    <div className="flex flex-col gap-4 p-4">
       <h2 className={"font-semibold text-2xl flex items-center gap-4"}>
         <p
           className={
@@ -35,7 +35,7 @@ export function PaymentMethodSelect() {
         >
           3
         </p>
-        метод оплати
+        Метод оплати
       </h2>
 
       <RadioGroup

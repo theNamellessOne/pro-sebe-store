@@ -1,11 +1,14 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 
-import { Sidebar } from "./sidebar";
+import { Sidebar, dashboardMenuItems } from "./sidebar";
 import { useState } from "react";
 import { Button } from "@nextui-org/button";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { ClientProtectedComponent } from "@/app/components/protected-component";
+import { SidebarItem } from "./sidebar-item";
+import { AuthService } from "@/service/auth/auth-service";
 
 export const SidebarMobile = () => {
   const [open, setOpen] = useState(false);
@@ -54,7 +57,38 @@ export const SidebarMobile = () => {
             transition={{ ease: "easeOut" }}
           >
             <div className="h-full shadow-small rounded-r-large w-[250px] p-0 bg-background">
-              <Sidebar />
+              <aside
+                className={
+                  "flex flex-col h-full top-0 overflow-y-auto fixed py-6 w-[250px] border-r border-r-secondary border-r-0.5"
+                }
+              >
+                <h2 className={"text-4xl pl-6 mb-6"}>/logan</h2>
+
+                {dashboardMenuItems.map((item, idx) => {
+                  return (
+                    <ClientProtectedComponent
+                      key={idx}
+                      minimumRequiredRole={item.role}
+                    >
+                      <span onClick={() => setOpen(false)}>
+                        <SidebarItem {...item} />
+                      </span>
+                    </ClientProtectedComponent>
+                  );
+                })}
+
+                <div className={"bottom-0 w-full mt-auto ml-2"}>
+                  <Button
+                    color={"danger"}
+                    variant={"light"}
+                    onClick={() => {
+                      AuthService.instance.logout();
+                    }}
+                  >
+                    <LogOut /> Logout
+                  </Button>
+                </div>
+              </aside>
             </div>
           </motion.div>
         )}

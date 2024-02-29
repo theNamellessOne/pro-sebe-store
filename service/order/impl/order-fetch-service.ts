@@ -78,7 +78,6 @@ async function _countPages(query: string, status: string) {
   const count = await prisma.order.count({
     where: _getWhere(query, status),
   });
-  console.log(count);
   return Math.ceil(count / ORDER_PAGE_SIZE);
 }
 

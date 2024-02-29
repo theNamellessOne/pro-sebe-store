@@ -9,11 +9,14 @@ import { useFormContext } from "react-hook-form";
 
 export function SettlementAutocomplete() {
   const [isLoading, setIsLoading] = useState(false);
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<
+    { Present: string; DeliveryCity: String }[]
+  >([]);
 
   const { setValue, register, watch, unregister } =
     useFormContext<OrderInput>();
   const settlementRef = watch("deliveryInfo.settlementRef");
+  const settlementDescription = watch("deliveryInfo.settlementDescription");
 
   useEffect(() => {
     register("deliveryInfo.settlementRef");
@@ -47,10 +50,19 @@ export function SettlementAutocomplete() {
         popoverContent: "rounded-sm",
       }}
       onSelectionChange={(selection) => {
-        if (selection)
-          setValue("deliveryInfo.settlementRef", selection.toString(), {
-            shouldValidate: true,
-          });
+        if (!selection) return;
+
+        setValue("deliveryInfo.settlementRef", selection.toString(), {
+          shouldValidate: true,
+        });
+
+        const description = items.find(
+          (item) => item.DeliveryCity === selection.toString(),
+        )?.Present;
+
+        setValue("deliveryInfo.settlementDescription", description!, {
+          shouldValidate: true,
+        });
       }}
     >
       {(item: any) => (

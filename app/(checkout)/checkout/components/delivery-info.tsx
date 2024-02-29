@@ -6,7 +6,6 @@ import { OrderDeliveryType } from "@prisma/client";
 import { useFormContext } from "react-hook-form";
 import { CourierDeliveryForm } from "./courier-delivery-form";
 import { WarehouseDeliveryForm } from "./warehouse-delivery-form";
-import { useEffect } from "react";
 
 export function DeliveryInfo() {
   const {

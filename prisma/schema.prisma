@@ -366,7 +366,8 @@ model Order {
 
   orderDeliveryType OrderDeliveryType
 
-  settlementRef String
+  settlementRef         String
+  settlementDescription String
 
   street       String?
   houseNo      String?

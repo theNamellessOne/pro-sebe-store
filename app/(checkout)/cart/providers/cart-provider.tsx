@@ -3,7 +3,7 @@ import { CartService } from "@/service/cart/cart-service";
 import Link from "next/link";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { Button } from "../../components/ui/button";
+import {Button} from "@/app/(client)/components/ui/button";
 
 export const CartContext = createContext<CartContext | undefined>(undefined);
 

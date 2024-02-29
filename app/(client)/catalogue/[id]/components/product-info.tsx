@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { ColorList } from "./color-list";
 import { SizeList } from "./size-list";
 import { Button } from "@/app/(client)/components/ui/button";
-import { Ruler } from "lucide-react";
-import { useCart } from "@/app/(client)/cart/hooks/use-cart";
 import { SizeTableModal } from "../modals/size-table-modal";
+import { useCart } from "@/app/(checkout)/cart/hooks/use-cart";
 
 export function ProductInfo({
   product,

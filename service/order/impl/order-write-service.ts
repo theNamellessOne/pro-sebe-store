@@ -143,6 +143,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
             orderDeliveryType: order.deliveryInfo.deliveryType,
 
             settlementRef: order.deliveryInfo.settlementRef,
+            settlementDescription: order.deliveryInfo.settlementDescription,
 
             street: order.deliveryInfo.addressParts?.street,
             houseNo: order.deliveryInfo.addressParts?.houseNo,

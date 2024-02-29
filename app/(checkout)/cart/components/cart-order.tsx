@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Button } from "../../components/ui/button";
+
 import { useCart } from "../hooks/use-cart";
+import {Button} from "@/app/(client)/components/ui/button";
 
 export function CartOrder() {
   const { cart } = useCart()!;
@@ -8,8 +9,8 @@ export function CartOrder() {
   return (
     <div
       className={
-        "bg-secondary h-full py-8 px-8 lg:pt-40 flex flex-col gap-12 " +
-        "lg:fixed lg:bottom-0 lg:top-0 lg:right-0 lg:w-2/5"
+        "bg-secondary grow py-8 px-8 lg:pt-40 flex flex-col gap-12 " +
+        "lg:sticky lg:right-0 lg:w-2/5"
       }
     >
       <h2 className="lg:text-lg uppercase flex justify-between">

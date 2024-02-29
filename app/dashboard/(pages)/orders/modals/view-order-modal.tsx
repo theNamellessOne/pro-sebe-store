@@ -82,6 +82,8 @@ export function ViewOrderModal({ order }: { order: any }) {
 
                   <p>Реф поселення</p>
                   <p>{order.settlementRef}</p>
+                  <p>Опис поселення</p>
+                  <p>{order.settlementDescription}</p>
 
                   {order.orderItems.map((item: any) => (
                     <>

@@ -8,7 +8,7 @@ import { Color } from "@/app/(client)/catalogue/components/color";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useCart } from "@/app/(client)/cart/hooks/use-cart";
+import { useCart } from "@/app/(checkout)/cart/hooks/use-cart";
 
 type ProductCardProps = {
   product: any;

@@ -7,7 +7,7 @@ import { OrderDeliveryType, OrderPaymentType } from "@prisma/client";
 import { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useCart } from "../../cart/hooks/use-cart";
-import { Button } from "../../components/ui/button";
+import { Button } from "@/app/(client)/components/ui/button";
 import { OrderService } from "@/service/order/order-service";
 import { Spinner } from "@nextui-org/react";
 import { redirect, useRouter } from "next/navigation";
@@ -110,7 +110,7 @@ export function SubmitSection() {
 
       <Button
         type="primary"
-        className="uppercase"
+        className="uppercase flex items-center gap-4"
         disabled={!isValid || isSubmitting}
         onClick={handleSubmit(onSubmit)}
       >
