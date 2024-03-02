@@ -196,6 +196,19 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
   if (redirectUrl !== "") redirect(redirectUrl);
 }
 
+export async function _setStatus(orderId: string, status: OrderStatus) {
+  try {
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status },
+    });
+
+    return { success: "статус оновлено" };
+  } catch {
+    return { error: "шось пішло не так" };
+  }
+}
+
 async function _fetchCartById(cartId: string) {
   return prisma.cart.findUnique({
     where: { id: cartId },

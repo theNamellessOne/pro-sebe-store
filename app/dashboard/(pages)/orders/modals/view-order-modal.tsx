@@ -9,12 +9,25 @@ import {
 } from "@nextui-org/react";
 import { useState } from "react";
 import Loading from "@/app/loading";
-import { OrderDeliveryType } from "@prisma/client";
+import { OrderDeliveryType, OrderStatus } from "@prisma/client";
 import Image from "next/image";
+import { OrderService } from "@/service/order/order-service";
+import toast, { Toaster } from "react-hot-toast";
 
 export function ViewOrderModal({ order }: { order: any }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState(false);
+
+  const handleStatusUpdate = (status: OrderStatus) => {
+    setLoading(true);
+    OrderService.instance
+      .updateStatus(order.id, status)
+      .then((res) => {
+        if (res.error) toast.error(res.error);
+        if (res.success) toast.success(res.success);
+      })
+      .finally(() => setLoading(false));
+  };
 
   return (
     <>
@@ -100,13 +113,37 @@ export function ViewOrderModal({ order }: { order: any }) {
                       {item.quantity}
                       <div
                         className={
-                          "col-span-2 my-2 relative min-h-[400px] overflow-hidden rounded-small"
+                          "col-span-2 my-2 overflow-hidden rounded-small"
                         }
                       >
-                        <Image src={item.variantImgUrl} alt={"картинка"} fill />
+                        <Image
+                          src={item.variantImgUrl}
+                          alt={"картинка"}
+                          height={600}
+                          width={600}
+                        />
                       </div>
                     </>
                   ))}
+
+                  <p className={"col-span-2 text-center my-2"}></p>
+                  <p>Встановити статус</p>
+                  <Button
+                    color="default"
+                    variant="flat"
+                    onPress={() => handleStatusUpdate(OrderStatus.PACKED)}
+                  >
+                    Запаковано
+                  </Button>
+
+                  <p></p>
+                  <Button
+                    color="primary"
+                    variant="flat"
+                    onPress={() => handleStatusUpdate(OrderStatus.DELIVERED)}
+                  >
+                    Доставлено
+                  </Button>
                 </div>
               </ModalBody>
 
@@ -118,6 +155,7 @@ export function ViewOrderModal({ order }: { order: any }) {
             </>
           )}
         </ModalContent>
+        <Toaster />
       </Modal>
     </>
   );

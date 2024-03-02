@@ -34,12 +34,16 @@ export function useOrderTableCell() {
         let color = "red";
 
         switch (order.status) {
+          case "DELIVERED":
           case "PACKED":
-            return "green";
+            color = "green";
+            break;
           case "PAID":
-            return "blue";
+            color = "blue";
+            break;
           case "CREATED":
-            return "yellow";
+            color = "yellow";
+            break;
         }
 
         return (

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Home,
   LayoutDashboard,
   ListTree,
   LogOut,
@@ -20,6 +21,12 @@ import { Button } from "@nextui-org/button";
 import { AuthService } from "@/service/auth/auth-service";
 
 export const dashboardMenuItems = [
+  {
+    icon: <Home />,
+    name: "Головна",
+    href: "/home",
+    role: Role.USER,
+  },
   {
     icon: <Tag />,
     name: "Товари",

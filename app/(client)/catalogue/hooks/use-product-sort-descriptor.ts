@@ -8,13 +8,6 @@ export type NamedSortDescriptor = SortDescriptor & { name: string };
 export function useProductSortDescriptor() {
   const options = [
     {
-      name: "За популярністтю",
-      value: {
-        column: "article",
-        direction: "ascending",
-      },
-    },
-    {
       name: "Зa замовчуванням",
       value: {
         column: "article",
@@ -22,14 +15,21 @@ export function useProductSortDescriptor() {
       },
     },
     {
-      name: "Від дешевих до дорогих",
+      name: "Спочатку нові",
+      value: {
+        column: "createdAt",
+        direction: "descending",
+      },
+    },
+    {
+      name: "Спочатку дешевші",
       value: {
         column: "price",
         direction: "ascending",
       },
     },
     {
-      name: "Від дорогих до дешевих",
+      name: "Спочатку дорожчі",
       value: {
         column: "price",
         direction: "descending",

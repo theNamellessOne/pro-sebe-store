@@ -18,6 +18,7 @@ export async function _fetchLatest() {
       user: { select: { username: true } },
       content: true,
       rating: true,
+      createdAt: true,
     },
     take: 10,
   });
