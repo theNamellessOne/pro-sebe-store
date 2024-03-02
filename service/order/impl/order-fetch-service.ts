@@ -103,3 +103,18 @@ async function _findOrders(
     },
   });
 }
+
+async function _countOrdersByEmail(email: string) {
+  return prisma.order.count({
+    where: {
+      email,
+      status: { notIn: ["CREATED", "CANCELED"] },
+    },
+  });
+}
+
+export async function _hasDiscount(email: string) {
+  const count = await _countOrdersByEmail(email);
+
+  return count % 2 === 1;
+}

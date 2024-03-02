@@ -4,40 +4,68 @@ import { OrderInput } from "@/schema/order/order-schema";
 import { MiscService } from "@/service/misc/misc-service";
 import { NovaPostService } from "@/service/novapost/novapost-service";
 import { OrderDeliveryType, OrderPaymentType } from "@prisma/client";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useCart } from "../../cart/hooks/use-cart";
 import { Button } from "@/app/(client)/components/ui/button";
 import { OrderService } from "@/service/order/order-service";
 import { Spinner } from "@nextui-org/react";
 import toast, { Toaster } from "react-hot-toast";
+import { debounce } from "@/util/debounce";
+
+function calculatePercentage(part: number, whole: number) {
+  if (whole === 0) {
+    return 0;
+  }
+
+  return (part / 100) * whole;
+}
 
 export function SubmitSection() {
   const { cart } = useCart()!;
 
+  const [hasDiscount, setHasDiscout] = useState(false);
+  const [secondOrderDiscount, setSecondOrderDiscount] = useState(0);
   const [freeDeliveryMinPrice, setFreeDeliverMinPrice] = useState(0);
   const [deliveryCost, setDeliveryCost] = useState("0");
 
   const {
     handleSubmit,
     watch,
-    formState: { isValid, isSubmitting, errors },
+    formState: { isValid, isSubmitting },
   } = useFormContext<OrderInput>();
 
   const settlementRef = watch("deliveryInfo.settlementRef");
   const deliveryType = watch("deliveryInfo.deliveryType");
   const paymentType = watch("paymentType");
+  const email = watch("contactInfo.email");
 
   useEffect(() => {
-    MiscService.instance.fetch().then((res) => {
-      // todo: handle error case
-      if (!res) {
-        return;
-      }
+    const loadMisc = async () => {
+      const data = await MiscService.instance.fetch();
 
+      return {
+        freeDeliveryMinPrice: data ? data?.freeDeliveryMinPrice : 99999999999,
+        secondOrderDiscount: data ? data.secondOrderDiscount : 0,
+      };
+    };
+
+    loadMisc().then((res) => {
+      setSecondOrderDiscount(res.secondOrderDiscount);
       setFreeDeliverMinPrice(res.freeDeliveryMinPrice);
     });
   }, []);
+
+  const checkDiscount = useCallback(
+    debounce((email: string) => {
+      OrderService.instance.hasDiscount(email).then(setHasDiscout);
+    }, 1000),
+    [],
+  );
+
+  useEffect(() => {
+    checkDiscount(email);
+  }, [email]);
 
   useEffect(() => {
     if (!cart) return;
@@ -76,8 +104,12 @@ export function SubmitSection() {
 
     if (paymentType === OrderPaymentType.POSTPAID) return 150;
 
-    return cart?.subtotal;
-  }, [deliveryCost, cart, paymentType]);
+    const discount = hasDiscount
+      ? calculatePercentage(secondOrderDiscount, cart.subtotal)
+      : 0;
+
+    return cart?.subtotal - discount;
+  }, [deliveryCost, cart, paymentType, hasDiscount]);
 
   const onSubmit = async (data: OrderInput) => {
     const response = await OrderService.instance.placeOrder(cart.id, data);
@@ -111,6 +143,23 @@ export function SubmitSection() {
               : deliveryCost + " UAH"}
           </span>
         </p>
+
+        {hasDiscount && (
+          <p className="lg:text-lg uppercase flex justify-between">
+            <span>знижка</span>
+            <span>
+              {" "}
+              {cart
+                ? Math.round(
+                    (calculatePercentage(secondOrderDiscount, cart.subtotal) *
+                      100) /
+                      100,
+                  ).toFixed(2)
+                : "0"}
+              {" UAH"}
+            </span>
+          </p>
+        )}
 
         <h2 className="lg:text-lg uppercase flex justify-between mt-8">
           <span>до сплати</span>

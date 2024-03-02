@@ -2,15 +2,20 @@
 
 import prisma from "@/lib/prisma";
 import { OrderInput } from "@/schema/order/order-schema";
-import {
-  Order,
-  OrderPaymentType,
-  OrderStatus,
-  ProductStatus,
-} from "@prisma/client";
+import { OrderPaymentType, OrderStatus, ProductStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { redirect } from "next/navigation";
 import { exit } from "process";
+import { OrderService } from "../order-service";
+import { MiscService } from "@/service/misc/misc-service";
+
+function calculatePercentage(part: number, whole: number) {
+  if (whole === 0) {
+    return 0;
+  }
+
+  return (part / whole) * 100;
+}
 
 const MONOBANK_API_KEY = process.env.MONOBANK_API_KEY;
 
@@ -29,6 +34,11 @@ type MonobankRequest = {
       icon: string;
       unit: string;
       code: string;
+      discounts: {
+        type: "DISCOUNT" | "EXTRA_CHARGE";
+        mode: "PERCENT" | "VALUE";
+        value: number;
+      }[];
     }[];
   };
   redirectUrl: string;
@@ -48,6 +58,13 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
   try {
     let value: any = undefined;
+
+    const misc = await MiscService.instance.fetch();
+    if (!misc) throw "error";
+
+    const hasDiscount = await OrderService.instance.hasDiscount(
+      order.contactInfo.email,
+    );
 
     const mono: MonobankRequest = {
       amount: 0,
@@ -105,6 +122,15 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
                 : "no",
             unit: "банан",
             code: item.variant.productArticle,
+            discounts: hasDiscount
+              ? [
+                  {
+                    type: "DISCOUNT",
+                    mode: "PERCENT",
+                    value: misc.secondOrderDiscount,
+                  },
+                ]
+              : [],
           });
 
           orderItems.push({
@@ -136,6 +162,10 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
         promises.push(prisma.cart.delete({ where: { id: cart.id } }));
         await Promise.all(promises);
 
+        const discount = hasDiscount
+          ? calculatePercentage(misc?.secondOrderDiscount, total.toNumber())
+          : 0;
+
         value = await prisma.order.create({
           data: {
             ...order.contactInfo,
@@ -153,7 +183,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
             paymentType: order.paymentType,
 
-            total: total,
+            total: total.minus(new Decimal(discount)),
 
             orderItems: {
               createMany: { data: orderItems },
