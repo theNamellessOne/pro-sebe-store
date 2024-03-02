@@ -14,38 +14,51 @@ export function CartPosition({ item }: any) {
     <div className={"flex gap-4 relative"}>
       <div
         className={
-          "hidden sm:block relative sm:h-[300px] sm:w-[200px] shrink-0 overflow-hidden rounded-sm"
+          "hidden sm:block relative shrink-0 overflow-hidden rounded-sm"
         }
       >
         <Image
-          className={"aspect-[200/300] object-cover"}
+          className={"object-cover h-[200px] w-[200px]"}
+          width={300}
+          height={300}
           src={
             itemVariant.mediaUrls[0]
               ? itemVariant.mediaUrls[0]?.url
               : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
           }
           alt={"media"}
-          fill
         />
       </div>
 
       <div className={"flex flex-col gap-2 grow"}>
-        <div className="flex items-start gap-2 justify-between">
-          <h3 className={"font-semibold max-w-[300px]"}>
-            {itemVariant.product.name}
-          </h3>
+        <div className={"relative"}>
+          <Image
+            className={"block sm:hidden object-cover"}
+            height={600}
+            width={600}
+            src={
+              itemVariant.mediaUrls[0]
+                ? itemVariant.mediaUrls[0]?.url
+                : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
+            }
+            alt={"media"}
+          />
 
           <Button
             size="sm"
             variant="light"
             color="primary"
             onClick={() => removeFromCart(itemVariant.id)}
-            className={"rounded-sm text-xl z-40"}
+            className={"rounded-sm text-xl z-40 absolute -top-2 right-0"}
             isIconOnly
           >
             <RxCross1 />
           </Button>
         </div>
+
+        <h3 className={"font-semibold max-w-[300px]"}>
+          {itemVariant.product.name}
+        </h3>
 
         <p className={"text-[#808080]"}>Колір: {colorName}</p>
         <p className={"text-[#808080]"}>Розмір {sizeName}</p>

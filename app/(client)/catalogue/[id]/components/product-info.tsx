@@ -82,7 +82,15 @@ export function ProductInfo({
         disabled={!isInCart(selectedVariant.id)}
         type="primary"
         className={"font-semibold w-fit"}
-        onClick={() => addToCart(selectedVariant.id)}
+        onClick={() =>
+          addToCart(selectedVariant.id, {
+            imgUrl: selectedVariant.mediaUrls[0]
+              ? selectedVariant.mediaUrls[0]?.url
+              : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png",
+            name: product.name,
+            priceText: `${(Math.round(product.price * 100) / 100).toFixed(2)} UAH`,
+          })
+        }
       >
         {!isInCart(selectedVariant.id) ? "ВЖЕ У КОШИКУ" : "ДОДАТИ У КОШИК"}
       </Button>

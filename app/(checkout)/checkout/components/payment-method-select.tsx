@@ -58,7 +58,7 @@ export function PaymentMethodSelect() {
       >
         <Radio
           classNames={{ base: radioButtonClassNames }}
-          description="monobank"
+          description="Карткою онлайн"
           value={OrderPaymentType.PREPAID}
         >
           За ревізитами

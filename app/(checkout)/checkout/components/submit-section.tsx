@@ -16,7 +16,7 @@ export function SubmitSection() {
   const { cart } = useCart()!;
 
   const [freeDeliveryMinPrice, setFreeDeliverMinPrice] = useState(0);
-  const [deliveryCost, setDeliveryCost] = useState(0);
+  const [deliveryCost, setDeliveryCost] = useState("0");
 
   const {
     handleSubmit,
@@ -49,18 +49,24 @@ export function SubmitSection() {
         : "WarehouseWarehouse";
 
     NovaPostService.instance
-      .approximateCost(cart.total, settlementRef, deliveryMethod)
+      .approximateCost(cart.subtotal, settlementRef, deliveryMethod)
       .then((res) => {
         // todo: handle possible error
         if (!res.success) return;
 
         if (paymentType === OrderPaymentType.PREPAID) {
-          setDeliveryCost(res.data[0].Cost);
+          const formatted = (Math.round(res.data[0].Cost * 100) / 100).toFixed(
+            2,
+          );
+          setDeliveryCost(formatted);
         }
 
         if (paymentType === OrderPaymentType.POSTPAID) {
           const data = res.data[0];
-          setDeliveryCost(data.Cost + data.CostRedelivery);
+          const formatted = (
+            Math.round((data.Cost + data.CostRedelivery) * 100) / 100
+          ).toFixed(2);
+          setDeliveryCost(formatted);
         }
       });
   }, [settlementRef, paymentType]);
@@ -88,11 +94,17 @@ export function SubmitSection() {
       <div className="flex flex-col gap-2">
         <p className="lg:text-lg uppercase flex justify-between">
           <span>ціна товарів</span>
-          <span>{cart ? cart.subtotal : 0} UAH</span>
+          <span>
+            {cart ? (Math.round(cart.subtotal * 100) / 100).toFixed(2) : "0.00"}{" "}
+            UAH
+          </span>
         </p>
 
         <p className="lg:text-lg uppercase flex justify-between">
-          <span>доставка</span>
+          <span>
+            доставка
+            {cart?.subtotal < freeDeliveryMinPrice && "*"}
+          </span>
           <span>
             {cart?.subtotal >= freeDeliveryMinPrice
               ? "безкоштовно"
@@ -102,7 +114,7 @@ export function SubmitSection() {
 
         <h2 className="lg:text-lg uppercase flex justify-between mt-8">
           <span>до сплати</span>
-          <span>{total} UAH</span>
+          <span>{Math.round((total * 100) / 100).toFixed(2)} UAH</span>
         </h2>
       </div>
 
@@ -115,6 +127,12 @@ export function SubmitSection() {
         {isSubmitting && <Spinner size={"sm"} color={"primary"} />}
         замовити
       </Button>
+
+      {cart?.subtotal < freeDeliveryMinPrice && (
+        <p className={"text-sm text-primary/75 mt-auto"}>
+          *сума приблизна та може відрізнятись від реальної
+        </p>
+      )}
       <Toaster />
     </div>
   );
