@@ -50,7 +50,7 @@ export function Header() {
         }
       >
         <div className={"container mx-auto relative"}>
-          <header className="px-2 md:px-4 lg:px-8 border-b">
+          <header className="px-2 md:px-4 lg:px-8 border-b border-primary/10">
             <div className="flex items-center justify-center">
               <HeaderLinks categories={categories} />
 

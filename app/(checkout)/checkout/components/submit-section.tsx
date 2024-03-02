@@ -10,12 +10,10 @@ import { useCart } from "../../cart/hooks/use-cart";
 import { Button } from "@/app/(client)/components/ui/button";
 import { OrderService } from "@/service/order/order-service";
 import { Spinner } from "@nextui-org/react";
-import { redirect, useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
 export function SubmitSection() {
   const { cart } = useCart()!;
-  const router = useRouter();
 
   const [freeDeliveryMinPrice, setFreeDeliverMinPrice] = useState(0);
   const [deliveryCost, setDeliveryCost] = useState(0);
@@ -110,7 +108,7 @@ export function SubmitSection() {
 
       <Button
         type="primary"
-        className="uppercase flex items-center gap-4"
+        className="uppercase flex items-center justify-center gap-4"
         disabled={!isValid || isSubmitting}
         onClick={handleSubmit(onSubmit)}
       >
