@@ -1,4 +1,3 @@
-import "./../masonry.css";
 import { MediaUrl } from "@prisma/client";
 import Image from "next/image";
 
@@ -6,20 +5,21 @@ export function ProductImg({ selectedVariant }: { selectedVariant: any }) {
   return (
     <div
       className={
-        `gallery gap-4 ` +
-        "max-h-[400px] h-[50vh] lg:h-auto lg:max-h-[680px] overflow-scroll snap-x"
+        `flex md:block ${selectedVariant.mediaUrls.length > 1 && "md:columns-2"} ` +
+        `gap-2 overflow-x-auto h-[50vh] md:h-auto`
       }
     >
       {selectedVariant.mediaUrls.map((media: MediaUrl) => {
         return (
           <Image
-            src={media.url}
             key={media.id}
+            src={media.url}
             alt={"media image"}
-            height={600}
-            width={600}
+            height={800}
+            width={800}
             className={
-              "gallery-item max-h-[600px] min-w-full md:shrink object-cover rounded-sm"
+              "h-full md:h-auto object-cover " +
+              "mb-2 min-w-full md:min-w-auto md:max-w-full object-cover max-h-[720px] rounded-sm overflow-hidden"
             }
           />
         );

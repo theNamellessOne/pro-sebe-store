@@ -56,7 +56,7 @@ export function ProductList(props: ProductListProps) {
           return <ProductCard key={item.article} product={item} />;
         })}
       </div>
-      {paginator}
+      <div className={"pt-2 pb-8"}>{paginator}</div>
     </>
   );
 }

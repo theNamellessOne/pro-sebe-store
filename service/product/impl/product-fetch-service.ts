@@ -8,7 +8,7 @@ import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter"
 import { ProductStatus } from "@prisma/client";
 import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
 
-const PRODUCT_PAGE_SIZE = 10;
+const PRODUCT_PAGE_SIZE = 12;
 
 export async function _fetchAllProducts() {
   return prisma.product.findMany();
