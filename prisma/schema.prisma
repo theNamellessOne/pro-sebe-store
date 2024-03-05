@@ -200,9 +200,10 @@ model User {
   accounts Account[]
   sessions Session[]
 
-  name     String?
-  surname  String?
-  username String? @unique
+  name       String?
+  surname    String?
+  patronymic String?
+  username   String? @unique
 
   email         String?   @unique
   emailVerified DateTime?

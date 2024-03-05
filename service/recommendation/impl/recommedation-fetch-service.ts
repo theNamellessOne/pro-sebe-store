@@ -26,6 +26,8 @@ export async function _fetchSimilar(article: string) {
     },
   });
 
+  console.log(articles);
+
   console.log("time :", Date.now() - start);
 
   return products;
