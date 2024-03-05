@@ -8,7 +8,6 @@ import {
 } from "@/schema/product/product-schema";
 import { v4 as uuidv4 } from "uuid";
 import prisma from "@/lib/prisma";
-import { RecommendationService } from "@/service/recommendation/recommendation-service";
 import { VariantSave } from "@/schema/product/variant-schema";
 
 export async function _updateProduct(product: ProductSave) {
@@ -52,7 +51,6 @@ export async function _updateProduct(product: ProductSave) {
         categoriesPromise,
         sizeMeasuresPromise,
         _handleVariantsChange(product),
-        RecommendationService.instance.precomputeTfIdf(),
       ]);
     },
     { timeout: 10000 },
