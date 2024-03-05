@@ -70,12 +70,16 @@ async function _handleVariantsChange({
   const dbVariantsMap = new Map();
   dbVariants.forEach((variant) => {
     const key = `${variant.colorId}-${variant.sizeId}`;
-    dbVariantsMap.set(key, variant);
+    const mediaUrlJson = JSON.stringify(variant.mediaUrls);
+    // @ts-ignore
+    dbVariantsMap.set(key, {mediaUrls: mediaUrlJson, ...variant});
   });
   const uiVariantsMap = new Map();
   uiVariants.forEach((variant) => {
     const key = `${variant.colorId}-${variant.sizeId}`;
-    uiVariantsMap.set(key, variant);
+    const mediaUrlJson = JSON.stringify(variant.mediaUrls);
+    // @ts-ignore
+    uiVariantsMap.set(key, {mediaUrls: mediaUrlJson, ...variant});
   });
 
   const variantsWithId: VariantSave[] = [];
@@ -130,7 +134,7 @@ async function _handleVariantsChange({
   const variantsUpdatePromises = variantsToUpdate.map((variant) => {
     return prisma.variant.update({
       where: { id: variant.id },
-      data: { quantity: variant.quantity },
+      data: { quantity: variant.quantity, mediaUrls: variant.mediaUrls },
     });
   });
 
