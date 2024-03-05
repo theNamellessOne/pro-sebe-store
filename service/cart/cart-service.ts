@@ -22,9 +22,7 @@ export const CartIncludes = {
               price: true,
             },
           },
-          mediaUrls: {
-            select: { url: true },
-          },
+          mediaUrls: true,
         },
       },
     },

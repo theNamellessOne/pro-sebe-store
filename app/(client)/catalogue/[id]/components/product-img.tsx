@@ -1,4 +1,3 @@
-import { MediaUrl } from "@prisma/client";
 import Image from "next/image";
 
 export function ProductImg({ selectedVariant }: { selectedVariant: any }) {
@@ -9,10 +8,10 @@ export function ProductImg({ selectedVariant }: { selectedVariant: any }) {
         `gap-2 overflow-x-auto h-[50vh] md:h-auto`
       }
     >
-      {selectedVariant.mediaUrls.map((media: MediaUrl) => {
+      {selectedVariant.mediaUrls.map((media: { url: string }, idx: number) => {
         return (
           <Image
-            key={media.id}
+            key={idx}
             src={media.url}
             alt={"media image"}
             height={800}

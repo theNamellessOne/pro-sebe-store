@@ -107,12 +107,6 @@ async function _handleVariantsChange({
   });
 
   await Promise.all([
-    prisma.mediaUrl.deleteMany({
-      where: {
-        variantId: { in: variantsWithId.map((variant) => variant.id!) },
-      },
-    }),
-
     prisma.variant.deleteMany({
       where: {
         id: { in: variantsToRemove.map((variant) => variant.id!) },
@@ -129,6 +123,7 @@ async function _handleVariantsChange({
           reserved: 0,
           colorId: variant.colorId,
           sizeId: variant.sizeId,
+          mediaUrls: variant.mediaUrls,
         };
       }),
     }),
@@ -141,15 +136,7 @@ async function _handleVariantsChange({
     });
   });
 
-  const createMediaUrlPromise = prisma.mediaUrl.createMany({
-    data: variantsWithId.flatMap((variant) => {
-      return variant.mediaUrls.map((media) => {
-        return { variantId: variant.id as string, url: media.url };
-      });
-    }),
-  });
-
-  await Promise.all([createMediaUrlPromise, ...variantsUpdatePromises]);
+  await Promise.all(variantsUpdatePromises);
 }
 
 async function _clearProductSizeMeasurements(productArticle: string) {

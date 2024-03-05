@@ -151,10 +151,10 @@ export function SubmitSection() {
               {" "}
               {cart
                 ? Math.round(
-                    (calculatePercentage(secondOrderDiscount, cart.subtotal) *
-                      100) /
-                      100,
-                  ).toFixed(2)
+                  (calculatePercentage(secondOrderDiscount, cart.subtotal) *
+                    100) /
+                  100,
+                ).toFixed(2)
                 : "0"}
               {" UAH"}
             </span>

@@ -1,6 +1,6 @@
 export function ColorMessage(props: {
   text: string;
-  color: "green" | "blue" | "red" | "yellow";
+  color: "green" | "blue" | "red" | "yellow" | "dark";
   classNames?: {
     inner?: string;
     wrapper?: string;
@@ -23,8 +23,12 @@ export function ColorMessage(props: {
       innerClassName += "text-red-600";
       break;
     case "yellow":
-      wrapperClassName = "bg-yellow-200/80";
-      innerClassName += "text-yellow-600";
+      wrapperClassName = "bg-amber-200/80";
+      innerClassName += "text-amber-600";
+      break;
+    case "dark":
+      wrapperClassName = "bg-zinc-200/80";
+      innerClassName += "text-zinc-600";
       break;
   }
 

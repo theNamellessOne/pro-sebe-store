@@ -30,6 +30,7 @@ export function ProductTable({ query, page, sortDescriptor }: TableProps) {
     { name: "Назва", uid: "name" },
     { name: "Статус", uid: "status" },
     { name: "Цiна", uid: "price" },
+    { name: "Скидка", uid: "isDiscounted" },
   ];
 
   return (

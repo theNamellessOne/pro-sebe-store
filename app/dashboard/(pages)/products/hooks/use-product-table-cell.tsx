@@ -35,8 +35,32 @@ export function useProductTableCell() {
           />
         );
 
+      case "isDiscounted":
+        return (
+          <ColorMessage
+            text={String(product.isDiscounted)}
+            color={product.isDiscounted ? "blue" : "dark"}
+            classNames={{
+              wrapper: "p-3 rounded-medium",
+              inner: "font-semibold",
+            }}
+          />
+        );
+
       case "price":
-        return product.price.toString();
+        //@ts-ignore
+        const price = (Math.round(product.price * 100) / 100).toFixed(2);
+
+        return (
+          <ColorMessage
+            text={price + " UAH"}
+            color={product.isDiscounted ? "blue" : "dark"}
+            classNames={{
+              wrapper: "p-3 rounded-medium",
+              inner: "font-semibold",
+            }}
+          />
+        );
     }
   }, []);
 }

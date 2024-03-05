@@ -60,7 +60,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
     let value: any = undefined;
 
     const misc = await MiscService.instance.fetch();
-    if (!misc) throw "error";
+    if (!misc) throw "misc is undefined";
 
     const hasDiscount = await OrderService.instance.hasDiscount(
       order.contactInfo.email,
@@ -111,25 +111,23 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
             throw new Error(`product not found - ${item.variant.product.name}`);
           }
 
+          const mediaUrls = item.variant.mediaUrls as { url: string }[];
           total = total.add(item.variant.product.price.mul(item.quantity));
           mono.merchantPaymInfo.basketOrder.push({
             name: item.variant.product.name,
             qty: item.quantity,
             sum: item.variant.product.price.mul(100).toNumber(),
-            icon:
-              item.variant.mediaUrls.length > 0
-                ? item.variant.mediaUrls[0].url
-                : "no",
+            icon: mediaUrls.length > 0 ? mediaUrls[0].url : "no",
             unit: "банан",
             code: item.variant.productArticle,
             discounts: hasDiscount
               ? [
-                  {
-                    type: "DISCOUNT",
-                    mode: "PERCENT",
-                    value: misc.secondOrderDiscount,
-                  },
-                ]
+                {
+                  type: "DISCOUNT",
+                  mode: "PERCENT",
+                  value: misc.secondOrderDiscount,
+                },
+              ]
               : [],
           });
 
@@ -138,10 +136,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
             productArticle: item.variant.productArticle,
 
             variantName: item.variant.name,
-            variantImgUrl:
-              item.variant.mediaUrls.length > 0
-                ? item.variant.mediaUrls[0].url
-                : "",
+            variantImgUrl: mediaUrls.length > 0 ? mediaUrls[0].url : "",
             variantSellingPrice: item.variant.product.price,
 
             quantity: item.quantity,
@@ -250,7 +245,6 @@ async function _fetchCartById(cartId: string) {
               size: true,
               color: true,
               product: true,
-              mediaUrls: true,
             },
           },
         },

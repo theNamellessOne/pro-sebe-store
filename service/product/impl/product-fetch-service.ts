@@ -130,7 +130,6 @@ export async function _fetchAndFilter(
       variants: {
         include: {
           color: true,
-          mediaUrls: true,
         },
       },
     },
@@ -222,7 +221,6 @@ export async function _fetchProductById(article: string) {
         include: {
           color: true,
           size: true,
-          mediaUrls: true,
         },
       },
     },
