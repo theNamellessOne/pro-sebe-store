@@ -79,7 +79,7 @@ async function _getWhereClause({
   return {
     OR: OR.length > 0 ? OR : undefined,
     status: { equals: ProductStatus.ACTIVE },
-    isDiscounted: isDiscounted,
+    isDiscounted: isDiscounted ? true : undefined,
     productCategories: {
       some: { ...categoryFilter },
     },
