@@ -6,19 +6,18 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { useRef } from "react";
 import { ReviewItem } from "./review-item";
+import { ReviewService } from "@/service/review/review-service";
+import { useState, useEffect } from 'react';
 
-export function ReviewSwiper({
-  reviews,
-}: {
-  reviews: {
-    user: { username: string | null };
-    content: string;
-    rating: number;
-    createdAt: any;
-  }[];
-}) {
+
+export function ReviewSwiper() {
   const swiperRef = useRef<any>();
+  const [reviews, setReviews] = useState<any[]>([]);
 
+  useEffect(() => {
+    ReviewService.instance.fetchLatest().then(setReviews);
+  }, []);
+  
   return (
     <div>
       <Swiper
