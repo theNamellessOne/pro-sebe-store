@@ -199,9 +199,10 @@ model User {
   image    String?
   accounts Account[]
   sessions Session[]
-
-  name     String?
-  surname  String?
+ 
+  name       String?
+  surname    String?
+  patronymic String?
   username String? @unique
 
   email         String?   @unique
