@@ -14,6 +14,7 @@ export function ReviewSwiper({
     user: { username: string | null };
     content: string;
     rating: number;
+    createdAt: any;
   }[];
 }) {
   const swiperRef = useRef<any>();
