@@ -2,14 +2,15 @@
 
 import prisma from "@/lib/prisma";
 import { ProductStatus } from "@prisma/client";
+//@ts-ignore
+import recommender from "@/recommender.node";
 
 export async function _fetchSimilar(article: string) {
   let start = Date.now();
-  const articles: string =
-    await require("./../../../native/recommendation").recommend(
-      process.env.DATABASE_URL,
-      article,
-    );
+  const articles: string = await recommender.recommend(
+    process.env.DATABASE_URL,
+    article,
+  );
 
   const products = await prisma.product.findMany({
     where: {
@@ -27,7 +28,6 @@ export async function _fetchSimilar(article: string) {
   });
 
   console.log(articles);
-
   console.log("time :", Date.now() - start);
 
   return products;
