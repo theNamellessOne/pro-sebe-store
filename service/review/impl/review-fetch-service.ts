@@ -11,6 +11,7 @@ import { ReviewStatus } from "@prisma/client";
 const REVIEW_PAGE_SIZE = 10;
 
 export async function _fetchLatest() {
+  console.log("called");
   return prisma.review.findMany({
     where: { status: "APPROVED" },
     orderBy: { createdAt: "desc" },
