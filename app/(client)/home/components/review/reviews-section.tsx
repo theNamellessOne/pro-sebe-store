@@ -12,6 +12,8 @@ export async function ReviewSection() {
   const misc = await MiscService.instance.fetch();
   const reviews = await ReviewService.instance.fetchLatest();
 
+  console.log(reviews);
+
   return (
     <div className={"container my-16 mx-auto flex flex-col lg:flex-row gap-4"}>
       <div
