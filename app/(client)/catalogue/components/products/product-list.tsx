@@ -7,7 +7,8 @@ import { TableProps } from "@/app/dashboard/types/table-props";
 import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
 import { NamedSortDescriptor } from "@/app/(client)/catalogue/hooks/use-product-sort-descriptor";
 import { Filters } from "@/app/(client)/catalogue/components/filters/filters";
-import { CategoryBreadcrumbs } from "@/app/(client)/catalogue/components/category-breadcrumbs";
+import { CategoryBreadcrumbs } from "../categories/category-breadcrumbs";
+import { CategorySwiper } from "../categories/category-swiper";
 
 type ProductListProps = TableProps & {
   sizes: number[];
@@ -15,10 +16,14 @@ type ProductListProps = TableProps & {
   price: PriceFilter;
   categories: number[];
   sortDescriptor: NamedSortDescriptor;
+  onlyDiscounts: boolean;
 };
 
 export function ProductList(props: ProductListProps) {
-  const { list, loading, paginator } = useProductList(props);
+  const { list, loading, paginator } = useProductList({
+    ...props,
+    isDiscounted: props.onlyDiscounts,
+  });
 
   if (loading) {
     return <Loading />;
@@ -29,11 +34,16 @@ export function ProductList(props: ProductListProps) {
       <CategoryBreadcrumbs
         currentCategoryId={props.categories ? props.categories[0] : 0}
       />
+
+      <CategorySwiper
+        currentCategoryId={props.categories ? props.categories[0] : 0}
+      />
+
       <Filters />
       <div
         className={
           "container mx-auto grid " +
-          "grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 " +
+          "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 " +
           "gap-4 w-full px-6 py-4"
         }
       >
@@ -46,7 +56,7 @@ export function ProductList(props: ProductListProps) {
           return <ProductCard key={item.article} product={item} />;
         })}
       </div>
-      {paginator}
+      <div className={"pt-2 pb-8"}>{paginator}</div>
     </>
   );
 }

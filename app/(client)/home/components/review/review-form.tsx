@@ -80,9 +80,9 @@ export function ReviewForm() {
                     }}
                   >
                     {form.watch("rating") >= item ? (
-                      <GoStarFill className={"w-5 h-5"} />
+                      <GoStarFill key={item} className={"w-5 h-5"} />
                     ) : (
-                      <GoStar className={"w-5 h-5"} />
+                      <GoStar key={item} className={"w-5 h-5"} />
                     )}
                   </button>
                 );

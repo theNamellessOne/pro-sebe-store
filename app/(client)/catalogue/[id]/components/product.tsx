@@ -1,7 +1,5 @@
 "use client";
 
-import "./../masonry.css";
-
 import { useProduct } from "../hooks/use-product";
 import { ProductImg } from "./product-img";
 import { ProductInfo } from "./product-info";

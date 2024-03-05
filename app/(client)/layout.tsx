@@ -1,10 +1,10 @@
 "use client";
 
 import { ReactNode } from "react";
-import { CartProvider } from "./cart/providers/cart-provider";
 import Footer from "./components/footer/footer";
 import { Header } from "./components/header/header";
 import { CategoryTreeProvider } from "@/app/(client)/providers/category-tree-provider";
+import {CartProvider} from "@/app/(checkout)/cart/providers/cart-provider";
 
 export default function ({ children }: { children: ReactNode }) {
   return (

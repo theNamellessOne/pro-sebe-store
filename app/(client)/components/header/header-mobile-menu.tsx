@@ -1,11 +1,9 @@
 "use client";
 
 import { Accordion, AccordionItem, Button, Divider } from "@nextui-org/react";
-import { CiFacebook } from "react-icons/ci";
 import { CgClose } from "react-icons/cg";
-import { FaFacebookF } from "react-icons/fa";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { Cross, Facebook, Menu, PhoneIcon } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { CgInstagram } from "react-icons/cg";
@@ -84,94 +82,119 @@ export const HeaderMobileMenu = ({
               </div>
 
               <div className={"flex flex-col pl-2"}>
+                <Accordion>
+                  <AccordionItem
+                    classNames={{ title: "uppercase text-md" }}
+                    key={"catalogue"}
+                    aria-label={"catalogue"}
+                    title={
+                      <HeaderLink
+                        text={"Каталог"}
+                        href={"/catalogue"}
+                        className={"py-4"}
+                        onClick={() => {
+                          setOpen(false);
+                        }}
+                      />
+                    }
+                  >
+                    <Accordion className={"-mt-4"}>
+                      {categories.map((category) => {
+                        return (
+                          <AccordionItem
+                            classNames={{ title: "uppercase text-md" }}
+                            key={category.id}
+                            aria-label={category.name}
+                            title={
+                              <Link
+                                href={`/catalogue?categoryFilter=[${category.id}]`}
+                                onClick={() => {
+                                  setOpen(false);
+                                }}
+                              >
+                                {category.name}
+                              </Link>
+                            }
+                          >
+                            <Accordion className={"-mt-4"}>
+                              {category.children.map((category) => {
+                                return (
+                                  <AccordionItem
+                                    classNames={{ title: "uppercase text-md" }}
+                                    key={category.id}
+                                    aria-label={category.name}
+                                    title={
+                                      <Link
+                                        href={`/catalogue?categoryFilter=[${category.id}]`}
+                                        onClick={() => {
+                                          setOpen(false);
+                                        }}
+                                      >
+                                        {category.name}
+                                      </Link>
+                                    }
+                                  >
+                                    <div
+                                      className={
+                                        "-mt-1 flex flex-col gap-4 pl-4"
+                                      }
+                                    >
+                                      {category.children.map((category) => {
+                                        return (
+                                          <Link
+                                            href={`/catalogue?categoryFilter=[${category.id}]`}
+                                            onClick={() => {
+                                              setOpen(false);
+                                            }}
+                                            key={category.id}
+                                          >
+                                            {category.name}
+                                          </Link>
+                                        );
+                                      })}
+                                    </div>
+                                  </AccordionItem>
+                                );
+                              })}
+                            </Accordion>
+                          </AccordionItem>
+                        );
+                      })}
+                    </Accordion>
+                  </AccordionItem>
+                </Accordion>
+                <Divider />
+
                 <HeaderLink
-                  text={"Каталог"}
-                  href={"/catalogue"}
-                  className={"py-4"}
+                  text={"Знижки"}
+                  href={"/catalogue?onlyDiscounts=true"}
+                  className={"py-4 pl-2"}
                   onClick={() => {
                     setOpen(false);
                   }}
                 />
                 <Divider />
+
                 <HeaderLink
                   text={"Вiдгуки"}
-                  href={"/catalogue"}
-                  className={"py-4"}
+                  href={"/reviews"}
+                  className={"py-4 pl-2"}
                   onClick={() => {
                     setOpen(false);
                   }}
                 />
                 <Divider />
+
                 <HeaderLink
                   text={"Про нас"}
                   href={"/catalogue"}
-                  className={"py-4"}
+                  className={"py-4 pl-2"}
                   onClick={() => {
                     setOpen(false);
                   }}
                 />
                 <Divider />
               </div>
-
-              <Accordion>
-                {categories.map((category) => {
-                  return (
-                    <AccordionItem
-                      classNames={{ title: "uppercase text-md" }}
-                      key={category.id}
-                      aria-label={category.name}
-                      title={
-                        <Link
-                          href={`/catalogue?categoryFilter=[${category.id}]`}
-                          onClick={() => {
-                            setOpen(false);
-                          }}
-                        >
-                          {category.name}
-                        </Link>
-                      }
-                    >
-                      <Accordion className={"-mt-4"}>
-                        {category.children.map((category) => {
-                          return (
-                            <AccordionItem
-                              classNames={{ title: "uppercase text-md" }}
-                              key={category.id}
-                              aria-label={category.name}
-                              title={
-                                <Link
-                                  href={`/catalogue?categoryFilter=[${category.id}]`}
-                                  onClick={() => {
-                                    setOpen(false);
-                                  }}
-                                >
-                                  {category.name}
-                                </Link>
-                              }
-                            >
-                              <div className={"-mt-1 flex flex-col gap-4 pl-4"}>
-                                {category.children.map((category) => {
-                                  return (
-                                    <Link
-                                      href={`/catalogue?categoryFilter=[${category.id}]`}
-                                      onClick={() => {
-                                        setOpen(false);
-                                      }}
-                                      key={category.id}
-                                    >
-                                      {category.name}
-                                    </Link>
-                                  );
-                                })}
-                              </div>
-                            </AccordionItem>
-                          );
-                        })}
-                      </Accordion>
-                    </AccordionItem>
-                  );
-                })}
-              </Accordion>
             </div>
 
             <div className={"flex gap-4 p-2 mt-auto"}>

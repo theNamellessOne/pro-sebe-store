@@ -6,7 +6,7 @@ import { FooterLogo } from "./footer-logo";
 export function Footer() {
   return (
     <footer
-      className={"bg-secondary py-8 px-4 md:px-8 border-1 border-t-primary/60"}
+      className={"bg-secondary border-1 border-primary/10 py-8 px-4 md:px-8"}
     >
       <div
         className={

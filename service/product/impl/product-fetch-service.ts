@@ -8,7 +8,7 @@ import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter"
 import { ProductStatus } from "@prisma/client";
 import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
 
-const PRODUCT_PAGE_SIZE = 10;
+const PRODUCT_PAGE_SIZE = 12;
 
 export async function _fetchAllProducts() {
   return prisma.product.findMany();
@@ -32,12 +32,14 @@ async function _getWhereClause({
   sizes,
   colors,
   categories,
+  isDiscounted,
 }: {
   query: string;
+  price: PriceFilter;
   sizes: number[];
   colors: number[];
   categories: number[];
-  price: PriceFilter;
+  isDiscounted: boolean;
 }) {
   let priceFilter: { price: { lte: number; gte: number } } | {};
   priceFilter = {
@@ -77,6 +79,7 @@ async function _getWhereClause({
   return {
     OR: OR.length > 0 ? OR : undefined,
     status: { equals: ProductStatus.ACTIVE },
+    isDiscounted: isDiscounted,
     productCategories: {
       some: { ...categoryFilter },
     },
@@ -97,6 +100,7 @@ export async function _fetchAndFilter(
     colors: number[];
     price: PriceFilter;
     categories: number[];
+    isDiscounted: boolean;
   },
 ) {
   const whereClause = await _getWhereClause({ ...props });
@@ -126,7 +130,6 @@ export async function _fetchAndFilter(
       variants: {
         include: {
           color: true,
-          mediaUrls: true,
         },
       },
     },
@@ -212,12 +215,12 @@ export async function _fetchProductById(article: string) {
   const product = await prisma.product.findUnique({
     where: { article },
     include: {
+      sizeMeasures: true,
       productCategories: true,
       variants: {
         include: {
           color: true,
           size: true,
-          mediaUrls: true,
         },
       },
     },

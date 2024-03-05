@@ -19,7 +19,7 @@ export function SortBy() {
       classNames={{
         selectorIcon: "text-foreground",
         trigger:
-          "h-[40px] fill-foreground min-h-0 py-0 text-white border border-foreground rounded",
+          "h-[40px] w-[200px] fill-foreground min-h-0 py-0 text-white border border-foreground rounded",
         innerWrapper: "py-0!",
         value: "text-foreground",
         popoverContent: "rounded-sm",

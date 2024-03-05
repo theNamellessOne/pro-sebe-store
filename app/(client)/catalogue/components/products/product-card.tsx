@@ -8,7 +8,7 @@ import { Color } from "@/app/(client)/catalogue/components/color";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useCart } from "@/app/(client)/cart/hooks/use-cart";
+import { useCart } from "@/app/(checkout)/cart/hooks/use-cart";
 
 type ProductCardProps = {
   product: any;
@@ -47,7 +47,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <div
       className={
-        "flex gap-4 flex-col min-w-[330px] min-h-[520px] " +
+        "flex gap-4 flex-col " +
         "bg-secondary rounded-sm py-[20px] text-secondary-foreground relative"
       }
     >
@@ -68,8 +68,9 @@ export function ProductCard({ product }: ProductCardProps) {
               ? selected.mediaUrls[0]?.url
               : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
           }
-          height={800}
-          width={800}
+          quality={100}
+          height={550}
+          width={550}
           alt={product.name}
         />
       </div>

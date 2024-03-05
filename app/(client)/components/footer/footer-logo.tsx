@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import FooterLogoImage from "@/public/images/logo-light.png";
+import FooterLogoImage from "@/public/images/logo.png";
 
 export function FooterLogo() {
   return (

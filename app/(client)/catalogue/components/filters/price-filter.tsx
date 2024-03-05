@@ -6,7 +6,6 @@ import {
   PopoverTrigger,
   Slider,
 } from "@nextui-org/react";
-import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@nextui-org/button";
 import { usePriceFilter } from "@/app/(client)/catalogue/hooks/use-price-filter";
 import { debounce } from "@/util/debounce";

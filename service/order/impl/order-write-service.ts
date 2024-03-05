@@ -2,15 +2,20 @@
 
 import prisma from "@/lib/prisma";
 import { OrderInput } from "@/schema/order/order-schema";
-import {
-  Order,
-  OrderPaymentType,
-  OrderStatus,
-  ProductStatus,
-} from "@prisma/client";
+import { OrderPaymentType, OrderStatus, ProductStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { redirect } from "next/navigation";
 import { exit } from "process";
+import { OrderService } from "../order-service";
+import { MiscService } from "@/service/misc/misc-service";
+
+function calculatePercentage(part: number, whole: number) {
+  if (whole === 0) {
+    return 0;
+  }
+
+  return (part / whole) * 100;
+}
 
 const MONOBANK_API_KEY = process.env.MONOBANK_API_KEY;
 
@@ -29,6 +34,11 @@ type MonobankRequest = {
       icon: string;
       unit: string;
       code: string;
+      discounts: {
+        type: "DISCOUNT" | "EXTRA_CHARGE";
+        mode: "PERCENT" | "VALUE";
+        value: number;
+      }[];
     }[];
   };
   redirectUrl: string;
@@ -48,6 +58,13 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
   try {
     let value: any = undefined;
+
+    const misc = await MiscService.instance.fetch();
+    if (!misc) throw "misc is undefined";
+
+    const hasDiscount = await OrderService.instance.hasDiscount(
+      order.contactInfo.email,
+    );
 
     const mono: MonobankRequest = {
       amount: 0,
@@ -94,17 +111,24 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
             throw new Error(`product not found - ${item.variant.product.name}`);
           }
 
+          const mediaUrls = item.variant.mediaUrls as { url: string }[];
           total = total.add(item.variant.product.price.mul(item.quantity));
           mono.merchantPaymInfo.basketOrder.push({
             name: item.variant.product.name,
             qty: item.quantity,
             sum: item.variant.product.price.mul(100).toNumber(),
-            icon:
-              item.variant.mediaUrls.length > 0
-                ? item.variant.mediaUrls[0].url
-                : "no",
+            icon: mediaUrls.length > 0 ? mediaUrls[0].url : "no",
             unit: "банан",
             code: item.variant.productArticle,
+            discounts: hasDiscount
+              ? [
+                {
+                  type: "DISCOUNT",
+                  mode: "PERCENT",
+                  value: misc.secondOrderDiscount,
+                },
+              ]
+              : [],
           });
 
           orderItems.push({
@@ -112,10 +136,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
             productArticle: item.variant.productArticle,
 
             variantName: item.variant.name,
-            variantImgUrl:
-              item.variant.mediaUrls.length > 0
-                ? item.variant.mediaUrls[0].url
-                : "",
+            variantImgUrl: mediaUrls.length > 0 ? mediaUrls[0].url : "",
             variantSellingPrice: item.variant.product.price,
 
             quantity: item.quantity,
@@ -136,6 +157,10 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
         promises.push(prisma.cart.delete({ where: { id: cart.id } }));
         await Promise.all(promises);
 
+        const discount = hasDiscount
+          ? calculatePercentage(misc?.secondOrderDiscount, total.toNumber())
+          : 0;
+
         value = await prisma.order.create({
           data: {
             ...order.contactInfo,
@@ -143,6 +168,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
             orderDeliveryType: order.deliveryInfo.deliveryType,
 
             settlementRef: order.deliveryInfo.settlementRef,
+            settlementDescription: order.deliveryInfo.settlementDescription,
 
             street: order.deliveryInfo.addressParts?.street,
             houseNo: order.deliveryInfo.addressParts?.houseNo,
@@ -152,7 +178,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
             paymentType: order.paymentType,
 
-            total: total,
+            total: total.minus(new Decimal(discount)),
 
             orderItems: {
               createMany: { data: orderItems },
@@ -195,6 +221,19 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
   if (redirectUrl !== "") redirect(redirectUrl);
 }
 
+export async function _setStatus(orderId: string, status: OrderStatus) {
+  try {
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status },
+    });
+
+    return { success: "статус оновлено" };
+  } catch {
+    return { error: "шось пішло не так" };
+  }
+}
+
 async function _fetchCartById(cartId: string) {
   return prisma.cart.findUnique({
     where: { id: cartId },
@@ -206,7 +245,6 @@ async function _fetchCartById(cartId: string) {
               size: true,
               color: true,
               product: true,
-              mediaUrls: true,
             },
           },
         },
