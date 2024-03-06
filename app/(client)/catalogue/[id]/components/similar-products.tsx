@@ -13,10 +13,9 @@ export function SimilarProducts({ article }: { article: string }) {
 
   useEffect(() => {
     setIsLoading(true);
-    RecommendationService.instance
-      .fetchSimilar(article)
-      .then(setSimilar)
-      .finally(() => setIsLoading(false));
+    fetch(`/api/recommender/${article}`).then((res) => {
+      res.json().then(setSimilar);
+    }).finally(() => setIsLoading(false));
   }, []);
 
   return (

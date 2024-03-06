@@ -8,6 +8,7 @@ const { auth } = NextAuth(authConfig);
 export default auth(async (req) => {
   const pathname = req.nextUrl.pathname;
 
+  if (pathname.startsWith("/api/recommender")) return;
   if (pathname.startsWith("/api/mail")) return;
   if (pathname.startsWith("/api/uploadthing")) return;
 
