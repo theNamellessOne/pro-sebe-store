@@ -4,7 +4,7 @@
   "description": "",
   "main": "../../app/api/recommender/recommender.node",
   "scripts": {
-    "build": "cargo-cp-artifact -nc ../../service/recommendation/impl/recommender.node -- cargo build --message-format=json-render-diagnostics",
+    "build": "cargo-cp-artifact -nc ../../app/api/recommender/[article]/recommender.node -- cargo build --message-format=json-render-diagnostics",
     "build-debug": "npm run build --",
     "build-release": "npm run build -- --release",
     "install": "npm run build-release",

@@ -1,5 +1,7 @@
 cwd=$(pwd)
 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
 cd ./native/recommendation
 npm i
 cd $cwd
