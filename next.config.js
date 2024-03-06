@@ -12,7 +12,7 @@ const nextConfig = {
           options: {
             flags: os.constants.dlopen.RTLD_NOW,
             outputPath: config.output.path,
-            includeWebpackPublicPath: false,
+            includeWebpackPublicPath: true,
           },
         },
       ],
