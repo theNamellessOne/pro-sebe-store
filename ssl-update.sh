@@ -1,6 +1,16 @@
 cwd=$(pwd)
 
+# Get the euid-obtained home directory
+EUID_HOME=$(su -c 'echo $HOME' root)
+
+# Set $HOME to the euid-obtained home directory
+export HOME=$EUID_HOME
+
+# Install Rust toolchain
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
+
+# Source the Rust environment
+source $HOME/.cargo/env
 
 
 cd ./native/recommendation
