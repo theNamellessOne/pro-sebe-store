@@ -1,7 +1,4 @@
-import {NextRequest} from "next/server";
-import prisma from "@/lib/prisma";
-import {ProductStatus} from "@prisma/client";
-
+import { NextRequest } from "next/server";
 
 const recommender = require("./recommender.node");
 
@@ -14,25 +11,6 @@ export async function GET(_: NextRequest, { params }: Slug) {
         params.article,
     );
 
-    const products = await prisma.product.findMany({
-        where: {
-            status: ProductStatus.ACTIVE,
-            variants: {
-                some: { quantity: { gt: 0 } },
-            },
-            article: {
-                in: articles.split(" "),
-            },
-        },
-        include: {
-            variants: true,
-        },
-    });
 
-    console.log(articles);
-    console.log("time :", Date.now() - start);
-
-    console.log(products);
-
-    return Response.json(products);
+    return Response.json(articles);
 }
