@@ -1,5 +1,7 @@
-const { constants } = require("os");
 /** @types {import('next').NextConfig} */
+
+const os = require("os");
+
 const nextConfig = {
   webpack: (config, { dev, isServer, webpack, nextRuntime }) => {
     config.module.rules.push({
@@ -8,8 +10,9 @@ const nextConfig = {
         {
           loader: "nextjs-node-loader",
           options: {
-            flags: constants.dlopen.RTLD_NOW,
+            flags: os.constants.dlopen.RTLD_NOW,
             outputPath: config.output.path,
+            includeWebpackPublicPath: false,
           },
         },
       ],
