@@ -1,6 +1,6 @@
 cwd=$(pwd)
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -y | sh
 
 
 cd ./native/recommendation
