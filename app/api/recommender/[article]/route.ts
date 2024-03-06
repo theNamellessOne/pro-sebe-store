@@ -35,5 +35,5 @@ export async function GET(_: NextRequest, { params }: Slug) {
 
     console.log(products);
 
-    return products;
+    return Response.json(products);
 }
