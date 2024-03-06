@@ -25,13 +25,13 @@ function loader(content) {
     context: rootContext,
     content
   });
-  console.log("----> loader:", name);
-  console.log("----> loader:", content);
   emitFile(name, content);
   console.log(`----> loader: ${JSON.stringify(outputPath || _compiler.options.output.path)} + ${require("path").sep} + ${JSON.stringify(name)}`);
+
   return `
 try {
-  process.dlopen(module, ${JSON.stringify(outputPath || _compiler.options.output.path)} + ${require("path").sep} + ${JSON.stringify(name)});
+  console.log(this);
+  process.dlopen(module, ${JSON.stringify(outputPath || _compiler.options.output.path)} + require("path").sep + ${JSON.stringify(name)});
 } catch (error) {
   throw new Error('my-node-loader:\\n' + error);
 }

@@ -2,11 +2,11 @@
 
 import prisma from "@/lib/prisma";
 import { ProductStatus } from "@prisma/client";
-//@ts-ignore
-import recommender from "./recommender.node";
+
 
 export async function _fetchSimilar(article: string) {
   let start = Date.now();
+  //@ts-ignore
   const articles: string = await recommender.recommend(
     process.env.DATABASE_URL,
     article,
