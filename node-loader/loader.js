@@ -18,7 +18,6 @@ function loader(content) {
   } = this;
   const options = getOptions(schema);
   const {
-    flags,
     outputPath,
   } = options;
   const name = interpolateName(this, "[name].[ext]", {
@@ -30,8 +29,7 @@ function loader(content) {
 
   return `
 try {
-  console.log(this);
-  process.dlopen(module, ${JSON.stringify(outputPath || _compiler.options.output.path)} + require("path").sep + ${JSON.stringify(name)});
+  process.dlopen(module, require('node:path').join(${JSON.stringify(outputPath || _compiler.options.output.path)}, require("path").sep, ${JSON.stringify(name)}), require('node:os').constants.dlopen.RTLD_NOW);
 } catch (error) {
   throw new Error('my-node-loader:\\n' + error);
 }
