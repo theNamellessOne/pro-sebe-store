@@ -13,7 +13,7 @@ export async function CategorySwiper() {
     >
       {categories.map((category) => (
         <Link
-          key={category.id}
+          key={category.id + category.name}
           href={`/catalogue?categoryFilter=[${category.id}]`}
           className={
             "group shrink-0 w-fit flex flex-col items-center " +

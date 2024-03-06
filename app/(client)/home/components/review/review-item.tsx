@@ -29,10 +29,17 @@ export function ReviewItem({
           <div className={"flex items-center"}>
             {[1, 2, 3, 4, 5].map((item) => {
               if (review.rating >= item) {
-                return <GoStarFill key={item} className={"w-5 h-5"} />;
+                return (
+                  <GoStarFill
+                    key={review.createdAt + item}
+                    className={"w-5 h-5"}
+                  />
+                );
               }
 
-              return <GoStar key={item} className={"w-5 h-5"} />;
+              return (
+                <GoStar key={review.createdAt + item} className={"w-5 h-5"} />
+              );
             })}
           </div>
         </h4>

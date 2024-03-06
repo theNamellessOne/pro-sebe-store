@@ -1,15 +1,21 @@
 "use client";
 
 import { RecommendationService } from "@/service/recommendation/recommendation-service";
+import { Skeleton } from "@nextui-org/react";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export function SimilarProducts({ article }: { article: string }) {
   const [similar, setSimilar] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    RecommendationService.instance.fetchSimilar(article).then(setSimilar);
+    setIsLoading(true);
+    fetch(`/api/recommender/${article}`).then((res) => {
+      res.json().then(setSimilar);
+    }).finally(() => setIsLoading(false));
   }, []);
 
   return (
@@ -17,43 +23,83 @@ export function SimilarProducts({ article }: { article: string }) {
       <h2 className={"text-xl md:text-2xl"}>Вам може сподобатись</h2>
 
       <div className={"mt-4 gap-4 flex flex-row overflow-y-scroll"}>
-        {similar?.map((item) => {
-          return (
-            <Link
-              href={`/catalogue/${item.article}`}
-              className={"max-w-full shrink-0"}
-            >
-              <div key={item.article} className={"flex flex-col gap-2"}>
-                <div className={"mb-4 rounded-sm overflow-hidden"}>
-                  <Image
-                    alt={"media"}
-                    className={"aspect-373/420] object-cover h-[420px]"}
-                    src={
-                      item.variants[0].mediaUrls[0]
-                        ? item.variants[0].mediaUrls[0]?.url
-                        : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
-                    }
-                    height={420}
-                    width={373}
-                  />
-                </div>
+        <AnimatePresence>
+          {isLoading ? (
+            <Loader />
+          ) : (
+            similar?.map((item) => {
+              return (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className={"max-w-full shrink-0"}
+                >
+                  <Link href={`/catalogue/${item.article}`}>
+                    <div key={item.article} className={"flex flex-col gap-2"}>
+                      <div className={"mb-4 rounded-sm overflow-hidden"}>
+                        <Image
+                          alt={"media"}
+                          className={"aspect-373/420] object-cover h-[420px]"}
+                          placeholder={"blur"}
+                          blurDataURL={
+                            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkeAoAAOsA57RxdOQAAAAASUVORK5CYII="
+                          }
+                          src={
+                            item.variants[0].mediaUrls[0]
+                              ? item.variants[0].mediaUrls[0]?.url
+                              : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
+                          }
+                          height={420}
+                          width={373}
+                        />
+                      </div>
 
-                <p>{item.name}</p>
+                      <p>{item.name}</p>
 
-                {item.compareAtPrice > item.price && (
-                  <>
-                    <p className={"text-zinc-600 line-through"}>
-                      {(Math.round(item.compareAtPrice * 100) / 100).toFixed(2)}
-                    </p>
-                  </>
-                )}
+                      {item.compareAtPrice > item.price && (
+                        <>
+                          <p className={"text-zinc-600 line-through"}>
+                            {(
+                              Math.round(item.compareAtPrice * 100) / 100
+                            ).toFixed(2)}
+                          </p>
+                        </>
+                      )}
 
-                <> {(Math.round(item.price * 100) / 100).toFixed(2)} UAH</>
-              </div>
-            </Link>
-          );
-        })}
+                      <>
+                        {" "}
+                        {(Math.round(item.price * 100) / 100).toFixed(2)} UAH
+                      </>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
 }
+
+const Loader = () =>
+  [1, 2, 3, 4, 5, 6, 7, 8].map((item) => {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className={"min-w-[373px] shrink-0 flex flex-col gap-2 h-[500px]"}
+        key={item}
+      >
+        <Skeleton className="rounded-sm mb-4 h-[420px]"></Skeleton>
+        <Skeleton className="rounded-sm">
+          <p>{"sample text"}</p>
+        </Skeleton>
+        <Skeleton className="rounded-sm">
+          <p>{"sample text"}</p>
+        </Skeleton>
+      </motion.div>
+    );
+  });
