@@ -2,7 +2,7 @@ cwd=$(pwd)
 
 openssl version
 cd /usr/src
-curl -O https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz
+curl -O https://www.openssl.org/source/openssl-3.0.0.tar.gz
 tar -zxf openssl-3.0.0.tar.gz
 rm openssl-3.0.0.tar.gz
 cd /usr/src/openssl-3.0.0
