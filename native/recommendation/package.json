@@ -2,11 +2,11 @@
   "name": "recommendation",
   "version": "0.1.0",
   "description": "",
-  "main": "../../service/recommendation/impl/recommender.node",
+  "main": "../../app/api/recommender/recommender.node",
   "scripts": {
     "build": "cargo-cp-artifact -nc ../../service/recommendation/impl/recommender.node -- cargo build --message-format=json-render-diagnostics",
     "build-debug": "npm run build --",
-    "build-release": "npm run build -- --release",
+    "build-release": "npm run build -- --release --target x86_64-unknown-linux-musl",
     "install": "npm run build-release",
     "test": "cargo test"
   },

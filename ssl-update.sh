@@ -1,5 +1,10 @@
 cwd=$(pwd)
 
+cd ./native/recommendation
+npm i
+cd $cwd
+
+
 yum install perl-IPC-Cmd perl-Test-Simple
 
 openssl version
