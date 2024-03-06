@@ -1,4 +1,4 @@
-const {constants} = require("os");
+const { constants } = require("os");
 /** @types {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config, { dev, isServer, webpack, nextRuntime }) => {

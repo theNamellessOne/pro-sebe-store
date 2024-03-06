@@ -7,8 +7,7 @@ import "swiper/css/navigation";
 import { useRef } from "react";
 import { ReviewItem } from "./review-item";
 import { ReviewService } from "@/service/review/review-service";
-import { useState, useEffect } from 'react';
-
+import { useState, useEffect } from "react";
 
 export function ReviewSwiper() {
   const swiperRef = useRef<any>();
@@ -17,7 +16,7 @@ export function ReviewSwiper() {
   useEffect(() => {
     ReviewService.instance.fetchLatest().then(setReviews);
   }, []);
-  
+
   return (
     <div>
       <Swiper
@@ -30,8 +29,8 @@ export function ReviewSwiper() {
         autoplay={{ delay: 5000, pauseOnMouseEnter: true }}
         loop
       >
-        {reviews.map((review, idx) => (
-          <SwiperSlide key={idx} className={"flex items-center"}>
+        {reviews.map((review) => (
+          <SwiperSlide key={review.createdAt} className={"flex items-center"}>
             <ReviewItem review={review} />
           </SwiperSlide>
         ))}

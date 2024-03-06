@@ -68,6 +68,11 @@ export function ProductCard({ product }: ProductCardProps) {
               ? selected.mediaUrls[0]?.url
               : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
           }
+          priority={true}
+          placeholder={"blur"}
+          blurDataURL={
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkeAoAAOsA57RxdOQAAAAASUVORK5CYII="
+          }
           quality={100}
           height={550}
           width={550}

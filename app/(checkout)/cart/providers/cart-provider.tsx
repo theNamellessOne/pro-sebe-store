@@ -3,7 +3,6 @@ import { CartService } from "@/service/cart/cart-service";
 import Link from "next/link";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { Button } from "@/app/(client)/components/ui/button";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -53,7 +52,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
             () => {
               return (
                 <div className={"flex flex-col gap-4"}>
-                  <Image src={data.imgUrl} alt={""} height={300} width={300} />
+                  <Image
+                    src={data.imgUrl}
+                    priority={true}
+                    placeholder={"blur"}
+                    blurDataURL={
+                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkeAoAAOsA57RxdOQAAAAASUVORK5CYII="
+                    }
+                    alt={""}
+                    height={300}
+                    width={300}
+                  />
 
                   <div className={"flex items-center justify-between"}>
                     <p className={"uppercase"}>{data.name}</p>
