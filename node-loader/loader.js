@@ -29,9 +29,11 @@ function loader(content) {
 
   return `
 try {
+  console.log(module);
   process.dlopen(module, require('node:path').join(${JSON.stringify(outputPath || _compiler.options.output.path)}, require("path").sep, ${JSON.stringify(name)}), require('node:os').constants.dlopen.RTLD_NOW);
+  console.log(module);
 } catch (error) {
-  throw new Error('my-node-loader:\\n' + error);
+  throw new Error('node-loader:\\n' + error);
 }
 `;
 }
