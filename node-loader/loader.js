@@ -28,7 +28,7 @@ function loader(content) {
     content
   });
   emitFile(name, content);
-  console.log(`${JSON.stringify(outputPath || _compiler.options.output.path)} + require("path").sep + ${isWebpackPathIncluded ? '__webpack_public_path__' : '""'} + ${JSON.stringify(name)}${typeof flags !== "undefined" ? `, ${JSON.stringify(options.flags)}` : ""}`);
+  console.log(`----> loader: ${JSON.stringify(outputPath || _compiler.options.output.path)} + require("path").sep + ${isWebpackPathIncluded ? '__webpack_public_path__' : '""'} + ${JSON.stringify(name)}${typeof flags !== "undefined" ? `, ${JSON.stringify(options.flags)}` : ""}`);
   return `
 try {
   process.dlopen(module, ${JSON.stringify(outputPath || _compiler.options.output.path)} + require("path").sep + ${isWebpackPathIncluded ? '__webpack_public_path__' : '""'} + ${JSON.stringify(name)}${typeof flags !== "undefined" ? `, ${JSON.stringify(options.flags)}` : ""});
