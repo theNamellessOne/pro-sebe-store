@@ -12,7 +12,6 @@ const nextConfig = {
         {
           loader: path.resolve(__dirname, 'node-loader/loader.js'),
           options: {
-            flags: os.constants.dlopen.RTLD_NOW,
             outputPath: config.output.path,
           },
         },
