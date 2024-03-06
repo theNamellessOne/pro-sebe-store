@@ -1,5 +1,7 @@
 cwd=$(pwd)
 
+yum install perl-IPC-Cmd perl-Test-Simple
+
 openssl version
 cd /usr/src
 curl -O https://www.openssl.org/source/openssl-3.0.0.tar.gz
