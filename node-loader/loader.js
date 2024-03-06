@@ -20,18 +20,18 @@ function loader(content) {
   const {
     flags,
     outputPath,
-    includeWebpackPublicPath
   } = options;
-  const isWebpackPathIncluded = includeWebpackPublicPath || false;
   const name = interpolateName(this, "[name].[ext]", {
     context: rootContext,
     content
   });
+  console.log("----> loader:", name);
+  console.log("----> loader:", content);
   emitFile(name, content);
-  console.log(`----> loader: ${JSON.stringify(outputPath || _compiler.options.output.path)} + ${require("path").sep} + ${isWebpackPathIncluded ? '__webpack_public_path__' : '""'} + ${JSON.stringify(name)}${typeof flags !== "undefined" ? `, ${JSON.stringify(options.flags)}` : ""}`);
+  console.log(`----> loader: ${JSON.stringify(outputPath || _compiler.options.output.path)} + ${require("path").sep} + ${JSON.stringify(name)}`);
   return `
 try {
-  process.dlopen(module, ${JSON.stringify(outputPath || _compiler.options.output.path)} + require("path").sep + ${isWebpackPathIncluded ? '__webpack_public_path__' : '""'} + ${JSON.stringify(name)}${typeof flags !== "undefined" ? `, ${JSON.stringify(options.flags)}` : ""});
+  process.dlopen(module, ${JSON.stringify(outputPath || _compiler.options.output.path)} + ${require("path").sep} + ${JSON.stringify(name)});
 } catch (error) {
   throw new Error('my-node-loader:\\n' + error);
 }
