@@ -5,7 +5,7 @@ const os = require("os");
 const nextConfig = {
   webpack: (config, { dev, isServer, webpack, nextRuntime }) => {
     config.module.rules.push({
-      test: /\.node$/,
+      test: /recommender.node/,
       use: [
         {
           loader: "nextjs-node-loader",
