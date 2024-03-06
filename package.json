@@ -39,6 +39,7 @@
     "react-hook-form": "^7.49.2",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.0.1",
+    "sharp": "^0.33.2",
     "swiper": "^11.0.6",
     "uploadthing": "^6.3.4",
     "uuid": "^9.0.1",
