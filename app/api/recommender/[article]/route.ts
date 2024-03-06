@@ -1,5 +1,4 @@
 import {NextRequest} from "next/server";
-import {RecommendationService} from "@/service/recommendation/recommendation-service";
 import prisma from "@/lib/prisma";
 import {ProductStatus} from "@prisma/client";
 
