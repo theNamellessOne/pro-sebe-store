@@ -1,5 +1,10 @@
 use std::collections::HashMap;
 
+use rayon::{
+    iter::{IntoParallelRefIterator, ParallelIterator},
+    slice::ParallelSliceMut,
+};
+
 #[derive(Debug)]
 pub struct Product {
     pub article: String,
@@ -44,24 +49,22 @@ fn find_most_similar(
     target: &ProductWithTfIdf,
     products: &[ProductWithTfIdf],
 ) -> Vec<ProductWithSimilarity> {
-    let mut similarities = Vec::new();
-    for product in products.iter() {
-        if target.article == product.article {
-            similarities.push(ProductWithSimilarity {
+    let mut similarities = products
+        .par_iter()
+        .map(|product| {
+            let similarity = match target.article == product.article {
+                true => 10.0,
+                false => cosine_similarity(&target.tfidf, &product.tfidf),
+            };
+
+            ProductWithSimilarity {
                 article: product.article.clone(),
-                similarity: 10.0,
-            });
-            continue;
-        }
+                similarity,
+            }
+        })
+        .collect::<Vec<_>>();
 
-        let similarity = cosine_similarity(&target.tfidf, &product.tfidf);
-        similarities.push(ProductWithSimilarity {
-            article: product.article.clone(),
-            similarity,
-        });
-    }
-
-    similarities.sort_by(|a, b| a.similarity.total_cmp(&b.similarity).reverse());
+    similarities.par_sort_by(|a, b| a.similarity.total_cmp(&b.similarity).reverse());
     similarities.remove(0);
     similarities.truncate(8);
 
@@ -70,26 +73,26 @@ fn find_most_similar(
 
 pub fn recommend(products: Vec<Product>, target_article: String) -> Vec<String> {
     let products_with_tokens = products
-        .iter()
-        .map(|product| {
-            let str = &format!("{} {}", &product.name, &product.description);
-            ProductWithTokens {
-                article: product.article.clone(),
-                tokens: tfidf_summarizer::tokenize(str),
-            }
+        .par_iter()
+        .map(|product| ProductWithTokens {
+            article: product.article.clone(),
+            tokens: tfidf_summarizer::tokenize(&format!(
+                "{} {}",
+                &product.name, &product.description
+            )),
         })
         .collect::<Vec<_>>();
 
     let df = tfidf_summarizer::document_frequency(
         &products_with_tokens
-            .iter()
+            .par_iter()
             .map(|product| product.tokens.clone())
             .collect::<Vec<_>>(),
     );
     let idf = tfidf_summarizer::inverse_document_frequency(&df, products.len());
 
     let products_with_tfidf = products_with_tokens
-        .iter()
+        .par_iter()
         .map(|product| ProductWithTfIdf {
             article: product.article.clone(),
             tfidf: tfidf_summarizer::tf_idf(product.tokens.clone(), &idf),
@@ -97,8 +100,8 @@ pub fn recommend(products: Vec<Product>, target_article: String) -> Vec<String> 
         .collect::<Vec<_>>();
 
     let target = products_with_tfidf
-        .iter()
-        .find(|&product| product.article == target_article)
+        .par_iter()
+        .find_any(|&product| product.article == target_article)
         .unwrap();
 
     find_most_similar(target, &products_with_tfidf)
