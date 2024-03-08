@@ -45,6 +45,8 @@ async function _updateUser(user: UserSave) {
   };
 }
 
+
+
 export async function _setRole(userId: string, role: Role) {
   return prisma.user.update({
     where: { id: userId },

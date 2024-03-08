@@ -30,11 +30,7 @@ export function UserPageSidebar() {
 
     return (
         <>
-            <aside
-                className={
-                    "flex flex-col overflow-y-auto fixed py-5 mx-[7%] w-[190px]"
-                }
-            >
+            <aside>
                 {items.map((item, idx) => {
                     return (
                         <UserPageSidebarItem {...item}/>

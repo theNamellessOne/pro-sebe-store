@@ -94,8 +94,13 @@ export default {
         session.user.username = token.username as string;
       }
 
+      if (token.surname && session.user) {
+        session.user.surname = token.surname as string;
+      }
+
       return session;
     },
+
     async jwt(props) {
       const token = props.token;
       if (!token.sub) return token;
@@ -109,6 +114,8 @@ export default {
         token.role = props.user.role;
         //@ts-ignore
         token.username = props.user.username;
+        //@ts-ignore
+        token.surname = props.user.surname;
       }
 
       return token;

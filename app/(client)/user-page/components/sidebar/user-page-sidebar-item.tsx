@@ -15,7 +15,7 @@ export function UserPageSidebarItem({name, href}: UserPageSidebarItemProps) {
     return (
         <Link href={href}>
             <div
-                className={`flex items-center transition-colors ${
+                className={` items-center transition-colors ${
                     isActive && "font-semibold text-secondary-foreground underline"
                 } hover: py-1 pr-4 relative `}
             >
