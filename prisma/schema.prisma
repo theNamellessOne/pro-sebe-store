@@ -157,9 +157,9 @@ model Favorites {
   product        Product @relation(references: [article], fields: [productArticle])
   productArticle String
 
+  @@unique([userId, productArticle])
   @@index([userId])
   @@index([productArticle])
-  @@unique([userId, productArticle])
 }
 
 // USER INFO
@@ -236,6 +236,7 @@ model User {
 
   cart      Cart?
   favorites Favorites[]
+  Order     Order[]
 }
 
 model PasswordResetToken {
@@ -374,6 +375,9 @@ model Order {
   phone String
   email String
 
+  user   User?   @relation(references: [id], fields: [userId])
+  userId String?
+
   orderDeliveryType OrderDeliveryType
 
   settlementRef         String
@@ -394,6 +398,7 @@ model Order {
 
   @@index([status])
   @@index([status, createdAt])
+  @@index([userId])
   @@fulltext([name, surname, middlename, email, phone])
 }
 

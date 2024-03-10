@@ -10,7 +10,6 @@ import { WarehouseDeliveryForm } from "./warehouse-delivery-form";
 export function DeliveryInfo() {
   const {
     watch,
-    register,
     setValue,
     formState: { isSubmitting },
   } = useFormContext<OrderInput>();

@@ -29,6 +29,7 @@ export function ContactInfo() {
             {...form.register("contactInfo.name")}
             variant={"underlined"}
             label={"Iм'я"}
+            defaultValue={form.getValues("contactInfo.name")}
             disabled={isSubmitting}
             isInvalid={!!errors.contactInfo?.name}
             errorMessage={errors.contactInfo?.name?.message}
@@ -38,6 +39,7 @@ export function ContactInfo() {
             {...form.register("contactInfo.surname")}
             variant={"underlined"}
             label={"Прізвище"}
+            defaultValue={form.getValues("contactInfo.surname")}
             disabled={isSubmitting}
             isInvalid={!!errors.contactInfo?.surname}
             errorMessage={errors.contactInfo?.surname?.message}
@@ -49,6 +51,7 @@ export function ContactInfo() {
           variant={"underlined"}
           label={"отчество"}
           disabled={isSubmitting}
+          defaultValue={form.getValues("contactInfo.middlename")}
           isInvalid={!!errors.contactInfo?.middlename}
           errorMessage={errors.contactInfo?.middlename?.message}
         />
@@ -58,6 +61,7 @@ export function ContactInfo() {
           variant={"underlined"}
           label={"Електронна пошта"}
           disabled={isSubmitting}
+          defaultValue={form.getValues("contactInfo.email")}
           isInvalid={!!errors.contactInfo?.email}
           errorMessage={errors.contactInfo?.email?.message}
         />
@@ -67,6 +71,7 @@ export function ContactInfo() {
           variant={"underlined"}
           label={"Номер телефону"}
           disabled={isSubmitting}
+          defaultValue={form.getValues("contactInfo.phone")}
           isInvalid={!!errors.contactInfo?.phone}
           errorMessage={errors.contactInfo?.phone?.message}
         />

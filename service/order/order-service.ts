@@ -1,4 +1,8 @@
-import { _fetchOrders, _hasDiscount } from "./impl/order-fetch-service";
+import {
+  _fetchCurrentUserOrders,
+  _fetchOrders,
+  _hasDiscount,
+} from "./impl/order-fetch-service";
 import {
   _confirmOrder,
   _placeOrder,
@@ -11,6 +15,7 @@ export class OrderService {
   public updateStatus = _setStatus;
   public confirmOrder = _confirmOrder;
   public hasDiscount = _hasDiscount;
+  public fetchUserOrders = _fetchCurrentUserOrders;
 
   private static _instance: OrderService | undefined;
 

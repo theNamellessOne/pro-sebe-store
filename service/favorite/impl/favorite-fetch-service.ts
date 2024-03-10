@@ -1,4 +1,4 @@
-"use service";
+"use server";
 
 import { auth } from "@/auth/auth";
 import prisma from "@/lib/prisma";
@@ -22,7 +22,7 @@ export async function _getFullFavorites() {
 
   if (!session?.user.id) return { errMsg: "unauthorized" };
 
-  return prisma.favorites.findMany({
+  const value = await prisma.favorites.findMany({
     where: {
       userId: session.user.id,
     },
@@ -32,4 +32,8 @@ export async function _getFullFavorites() {
       },
     },
   });
+
+  return {
+    value,
+  };
 }

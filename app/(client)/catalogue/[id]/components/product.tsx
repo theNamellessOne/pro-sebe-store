@@ -1,13 +1,12 @@
 "use client";
 
-import { QueryClientProvider, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useProduct } from "../hooks/use-product";
 import { ProductImg } from "./product-img";
 import { ProductInfo } from "./product-info";
 import { SimilarProducts } from "./similar-products";
 import { ProductService } from "@/service/product/product-service";
 import { useRouter } from "next/router";
-import { getQueryClient } from "@/app/(client)/query-client";
 
 export function Product(props: { article: string }) {
   const query = useQuery({
@@ -41,9 +40,7 @@ export function Product(props: { article: string }) {
         </div>
       </div>
 
-      <QueryClientProvider client={getQueryClient()}>
-        <SimilarProducts article={product.article} />
-      </QueryClientProvider>
+      <SimilarProducts article={product.article} />
     </div>
   );
 }

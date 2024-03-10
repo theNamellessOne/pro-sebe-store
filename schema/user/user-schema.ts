@@ -19,20 +19,24 @@ const phoneRegEx = new RegExp(/[0-9]{8,15}$/);
 export const userUpdateFormSchema = z.object({
   id: z.coerce.string().optional(),
   name: z.string().min(2).max(100),
+  surname: z.string().min(2).max(100),
   username: usernameSchema,
+  patronymic: z.string().min(2).max(100),
   phone: z.string().regex(phoneRegEx, "Invalid!"),
   email: z.string().email(),
 });
 
 export type UserUpdate = z.infer<typeof userUpdateFormSchema>;
 
-export const userChangePassword = z.object({
-  password: z.string().min(6),
-  confirmPassword: z.string(),
-}).refine((data)=> data.password === data.confirmPassword, {
-  message: "Паролі не збігаються",
-  path: ['confirmPassword'],
-});
+export const userChangePassword = z
+  .object({
+    password: z.string().min(6),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Паролі не збігаються",
+    path: ["confirmPassword"],
+  });
 
 export type UserChangePassword = z.infer<typeof userChangePassword>;
 
