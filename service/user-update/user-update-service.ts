@@ -1,7 +1,9 @@
-import { _updateUsername } from "@/service/user-update/impl/user-update-impl";
+import {_changePassword, _updateCurrentUser, _updateUsername} from "@/service/user-update/impl/user-update-impl";
 
 export class UserUpdateService {
   public setUsername = _updateUsername;
+  public updateCurrentUser = _updateCurrentUser;
+  public changePassword = _changePassword;
 
   private static _instance: UserUpdateService | undefined;
 
