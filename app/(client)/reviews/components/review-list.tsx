@@ -43,7 +43,7 @@ export function ReviewList(props: {
   return (
     <>
       {isLoading && <Loading />}
-      <div className={"container mx-auto my-4"}>
+      <div className={"container mx-auto my-4 px-4"}>
         <ReviewForm />
         {reviews.map((review) => (
           <ReviewItem key={review.createdAt} review={review} />

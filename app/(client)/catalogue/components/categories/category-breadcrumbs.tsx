@@ -10,7 +10,7 @@ export function CategoryBreadcrumbs({
 }: {
   currentCategoryId: number;
 }) {
-  const { categories } = useCategoryTree()!;
+  const { categories, loading } = useCategoryTree()!;
 
   const reconstructPath = (
     tree: CategoryWithChildren[],
@@ -18,7 +18,6 @@ export function CategoryBreadcrumbs({
     if (currentCategoryId === 0 || !tree || tree.length === 0) return [];
 
     for (const category of tree) {
-      console.log(category.name, category.id);
       if (category.id === currentCategoryId) {
         return [category];
       }
@@ -32,7 +31,10 @@ export function CategoryBreadcrumbs({
     return [];
   };
 
-  const path = useMemo(() => reconstructPath(categories), [currentCategoryId]);
+  const path = useMemo(
+    () => reconstructPath(categories),
+    [currentCategoryId, loading],
+  );
 
   return (
     <div className={"container mx-auto px-7 pt-4 pb-1"}>

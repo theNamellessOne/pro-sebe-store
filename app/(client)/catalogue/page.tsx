@@ -1,6 +1,18 @@
 import { ProductList } from "@/app/(client)/catalogue/components/products/product-list";
-import { Suspense } from "react";
-import Loading from "@/app/loading";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
+import { ProductService } from "@/service/product/product-service";
+import { ColorService } from "@/service/colors/color-service";
+import { SizeService } from "@/service/size/size-service";
+import { Filters } from "./components/filters/filters";
+import { CategoryBreadcrumbs } from "./components/categories/category-breadcrumbs";
+import { CategorySwiper } from "./components/categories/category-swiper";
+import { CategoryService } from "@/service/category/category-service";
+import { getQueryClient } from "../query-client";
+import { FavoriteService } from "@/service/favorite/favorite-service";
 
 export default async function Page({
   searchParams,
@@ -16,6 +28,8 @@ export default async function Page({
     onlyDiscounts?: boolean;
   };
 }) {
+  const queryClient = getQueryClient();
+
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const sortDescriptor = searchParams?.sortDescriptor
@@ -35,35 +49,86 @@ export default async function Page({
     : null;
   const discountFilter = searchParams?.onlyDiscounts?.valueOf();
 
+  const props = {
+    query: query,
+    page: currentPage,
+    sizes: sizeFilter ?? [],
+    colors: colorsFilter ?? [],
+    price: priceFilter ?? { min: -1, max: -1 },
+    categories: categoryFilter ?? [],
+    sortColumn: sortDescriptor?.value.column ?? "article",
+    sortDirection: sortDescriptor?.value.direction ?? "ascending",
+    isDiscounted: !!discountFilter,
+  };
+
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["colors"],
+      queryFn: () => ColorService.instance.fetchAll(),
+    }),
+
+    queryClient.prefetchQuery({
+      queryKey: ["price-extremes"],
+      queryFn: () => ProductService.instance.fetchPriceExtremes(),
+    }),
+
+    queryClient.prefetchQuery({
+      queryKey: ["sizes"],
+      queryFn: () => SizeService.instance.fetchAll(),
+    }),
+
+    queryClient.prefetchQuery({
+      queryKey: ["favorites"],
+      queryFn: () => FavoriteService.instance.getAll(),
+    }),
+
+    queryClient.prefetchQuery({
+      queryKey: ["categories"],
+      queryFn: () => CategoryService.instance.fetchTree(),
+    }),
+
+    queryClient.prefetchQuery({
+      queryKey: [
+        "catalogue",
+        props.sortDirection,
+        props.sortColumn,
+        props.isDiscounted,
+        props.price.min,
+        props.price.max,
+        props.page,
+        props.query,
+        ...props.categories,
+        ...props.sizes,
+        ...props.colors,
+      ],
+      queryFn: () => ProductService.instance.fetchAndFilter(props),
+    }),
+  ]);
+
   return (
     <>
-      <Suspense
-        key={
-          query +
-          currentPage +
-          colorsFilter +
-          sizeFilter +
-          sortDescriptor?.name +
-          sortDescriptor?.direction +
-          sortDescriptor?.column +
-          priceFilter?.min +
-          priceFilter?.max +
-          categoryFilter +
-          discountFilter
-        }
-        fallback={<Loading />}
-      >
-        <ProductList
-          query={query}
-          page={currentPage}
-          sortDescriptor={sortDescriptor?.value}
-          colors={colorsFilter}
-          sizes={sizeFilter}
-          price={priceFilter}
-          categories={categoryFilter}
-          onlyDiscounts={!!discountFilter}
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <CategoryBreadcrumbs
+          currentCategoryId={props.categories ? props.categories[0] : 0}
         />
-      </Suspense>
+
+        <CategorySwiper
+          currentCategoryId={props.categories ? props.categories[0] : 0}
+        />
+
+        <Filters />
+        <ProductList
+          query={props.query}
+          page={props.page}
+          sortColumn={props.sortColumn}
+          sortDirection={props.sortDirection}
+          colors={props.colors}
+          sizes={props.sizes}
+          price={props.price}
+          categories={props.categories}
+          isDiscounted={props.isDiscounted}
+        />
+      </HydrationBoundary>
     </>
   );
 }

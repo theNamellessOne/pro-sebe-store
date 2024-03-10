@@ -1,12 +1,19 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import NProgress from "nprogress";
 import { useEffect, useState } from "react";
 import { ColorService } from "@/service/colors/color-service";
 import { Color } from "@prisma/client";
 import { filterEventChannel } from "../components/filters/events/filter-event-channgel";
+import { useQuery } from "@tanstack/react-query";
 
 export type SelectedColor = Color & { isSelected: boolean };
 
 export function useColorFilter() {
+  const queryClient = useQuery({
+    queryKey: ["colors"],
+    queryFn: () => ColorService.instance.fetchAll(),
+  });
+
   const [colors, setColors] = useState<SelectedColor[]>([]);
 
   const searchParams = useSearchParams();
@@ -14,6 +21,7 @@ export function useColorFilter() {
   const { replace } = useRouter();
 
   const setFilter = (colorIds: number[]) => {
+    NProgress.start();
     const params = new URLSearchParams(searchParams);
     if (colorIds) {
       params.set("colorFilter", JSON.stringify(colorIds));
@@ -33,28 +41,31 @@ export function useColorFilter() {
   };
 
   const load = () => {
-    ColorService.instance.fetchAll().then((res) => {
-      const selectedIds = readFilter();
+    const res = queryClient.data;
+    if (!res) return;
 
-      if (selectedIds === "all") {
-        setColors([
-          ...res.map((item) => {
-            return { isSelected: false, ...item };
-          }),
-        ]);
-        return;
-      }
+    const selectedIds = readFilter();
 
+    if (selectedIds === "all") {
       setColors([
         ...res.map((item) => {
-          return {
-            isSelected: selectedIds.includes(item.id),
-            ...item,
-          };
+          return { isSelected: false, ...item };
         }),
       ]);
-    });
+      return;
+    }
+
+    setColors([
+      ...res.map((item) => {
+        return {
+          isSelected: selectedIds.includes(item.id),
+          ...item,
+        };
+      }),
+    ]);
   };
+
+  useEffect(load, [queryClient.isFetched]);
 
   useEffect(() => {
     load();
@@ -78,5 +89,10 @@ export function useColorFilter() {
     setFilter(filteredColors);
   };
 
-  return { colors, toggleSelection, filterColors };
+  return {
+    loading: queryClient.isLoading,
+    colors,
+    toggleSelection,
+    filterColors,
+  };
 }

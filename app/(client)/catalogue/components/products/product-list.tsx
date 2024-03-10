@@ -1,45 +1,48 @@
 "use client";
 
-import { useProductList } from "@/app/(client)/catalogue/hooks/use-product-list";
 import { ProductCard } from "@/app/(client)/catalogue/components/products/product-card";
-import Loading from "@/app/loading";
-import { TableProps } from "@/app/dashboard/types/table-props";
 import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
-import { NamedSortDescriptor } from "@/app/(client)/catalogue/hooks/use-product-sort-descriptor";
-import { Filters } from "@/app/(client)/catalogue/components/filters/filters";
-import { CategoryBreadcrumbs } from "../categories/category-breadcrumbs";
-import { CategorySwiper } from "../categories/category-swiper";
+import NProgress from "nprogress";
+import { useQuery } from "@tanstack/react-query";
+import { ProductService } from "@/service/product/product-service";
+import { usePaginator } from "@/hooks/use-paginator";
 
-type ProductListProps = TableProps & {
+type ProductListProps = {
+  query: string;
+  page: number;
   sizes: number[];
   colors: number[];
   price: PriceFilter;
   categories: number[];
-  sortDescriptor: NamedSortDescriptor;
-  onlyDiscounts: boolean;
+  sortColumn: string;
+  sortDirection: "ascending" | "descending";
+  isDiscounted: boolean;
 };
 
 export function ProductList(props: ProductListProps) {
-  const { list, loading, paginator } = useProductList({
-    ...props,
-    isDiscounted: props.onlyDiscounts,
+  const query = useQuery({
+    queryKey: [
+      "catalogue",
+      props.sortDirection,
+      props.sortColumn,
+      props.isDiscounted,
+      props.price.min,
+      props.price.max,
+      props.page,
+      props.query,
+      ...props.categories,
+      ...props.sizes,
+      ...props.colors,
+    ],
+    queryFn: () => ProductService.instance.fetchAndFilter(props),
   });
+  const { data } = query;
+  const paginator = usePaginator(data?.pages || 0, props.page);
 
-  if (loading) {
-    return <Loading />;
-  }
+  NProgress.done();
 
   return (
     <>
-      <CategoryBreadcrumbs
-        currentCategoryId={props.categories ? props.categories[0] : 0}
-      />
-
-      <CategorySwiper
-        currentCategoryId={props.categories ? props.categories[0] : 0}
-      />
-
-      <Filters />
       <div
         className={
           "container mx-auto grid " +
@@ -47,12 +50,13 @@ export function ProductList(props: ProductListProps) {
           "gap-4 w-full px-6 py-4"
         }
       >
-        {list.items.length === 0 && (
-          <h2 className={"uppercase col-span-9"}>
-            за вашими критеріями нічого не знайдено 😞
-          </h2>
-        )}
-        {list.items.map((item) => {
+        {!data?.items ||
+          (data.items.length === 0 && (
+            <h2 className={"uppercase col-span-9"}>
+              за вашими критеріями нічого не знайдено 😞
+            </h2>
+          ))}
+        {data?.items.map((item) => {
           return <ProductCard key={item.article} product={item} />;
         })}
       </div>

@@ -22,7 +22,7 @@ export function ReviewItem({
       >
         <h4
           className={
-            "text-lg font-semibold flex flex-wrap items-center justify-between pb-6"
+            "text-lg font-semibold flex flex-wrap items-center justify-between pb-4"
           }
         >
           @{review.user.username ? review.user.username : "user"}
@@ -44,11 +44,11 @@ export function ReviewItem({
           </div>
         </h4>
 
-        <p className={"absolute bottom-0.5 right-0.5 text-sm"}>
+        <p className={"absolute bottom-0.5 right-0.5 text-sm p-2"}>
           {review.createdAt.toLocaleString()}
         </p>
 
-        <p className={"min-h-[200px]"}>{review.content}</p>
+        <p className={"min-h-[200px] mb-6"}>{review.content}</p>
       </div>
     </div>
   );

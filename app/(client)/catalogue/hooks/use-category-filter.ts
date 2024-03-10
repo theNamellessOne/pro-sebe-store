@@ -1,4 +1,5 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import NProgress from "nprogress";
 import { useEffect, useState } from "react";
 import { CategoryService } from "@/service/category/category-service";
 import { Category } from "@prisma/client";
@@ -13,6 +14,7 @@ export function useCategoryFilter() {
   const { replace } = useRouter();
 
   const setFilter = (categoryIds: number[]) => {
+    NProgress.start();
     const params = new URLSearchParams(searchParams);
     if (categoryIds) {
       params.set("categoryFilter", JSON.stringify(categoryIds));

@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button, Input } from "@nextui-org/react";
 import { Search } from "lucide-react";
 import { headerEventChannel } from "./events/header-event-channel";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { filterEventChannel } from "../../catalogue/components/filters/events/filter-event-channgel";
 
 export function HeaderSearch() {
@@ -15,8 +15,7 @@ export function HeaderSearch() {
   const inputContainerRef = createRef<HTMLDivElement>();
 
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
+  const router = useRouter();
 
   function handleSearch() {
     const params = new URLSearchParams();
@@ -27,7 +26,7 @@ export function HeaderSearch() {
     }
     setShowSearch(false);
     filterEventChannel.emit("onSearchChange");
-    replace(`/catalogue?${params.toString()}`);
+    router.push(`/catalogue?${params.toString()}`);
   }
 
   function readSearch() {

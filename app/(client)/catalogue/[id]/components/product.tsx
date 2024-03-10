@@ -1,11 +1,26 @@
 "use client";
 
+import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { useProduct } from "../hooks/use-product";
 import { ProductImg } from "./product-img";
 import { ProductInfo } from "./product-info";
 import { SimilarProducts } from "./similar-products";
+import { ProductService } from "@/service/product/product-service";
+import { useRouter } from "next/router";
+import { getQueryClient } from "@/app/(client)/query-client";
 
-export function Product({ product }: { product: any }) {
+export function Product(props: { article: string }) {
+  const query = useQuery({
+    queryKey: ["product", props.article],
+    queryFn: () => ProductService.instance.fetchById(props.article),
+  });
+
+  const product = query.data?.value;
+
+  if (!product) {
+    return useRouter().replace("/catalogue");
+  }
+
   const { selectedVariant, setSelectedColor, setSelectedSize } =
     useProduct(product);
 
@@ -26,7 +41,9 @@ export function Product({ product }: { product: any }) {
         </div>
       </div>
 
-      <SimilarProducts article={product.article} />
+      <QueryClientProvider client={getQueryClient()}>
+        <SimilarProducts article={product.article} />
+      </QueryClientProvider>
     </div>
   );
 }

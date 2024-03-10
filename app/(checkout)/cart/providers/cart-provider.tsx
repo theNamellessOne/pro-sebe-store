@@ -5,6 +5,8 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { Button } from "@nextui-org/react";
+import { RxCross1 } from "react-icons/rx";
 
 export const CartContext = createContext<CartContext | undefined>(undefined);
 
@@ -49,9 +51,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (res.errMsg) toast.error(res.errMsg);
         if (!res.errMsg) {
           toast(
-            () => {
+            (t) => {
               return (
-                <div className={"flex flex-col gap-4"}>
+                <div className={"flex flex-col gap-4 relative"}>
+                  <Button
+                    size="sm"
+                    variant="solid"
+                    color="secondary"
+                    onClick={() => toast.dismiss(t.id)}
+                    className={"rounded-sm text-xl z-40 absolute top-0 right-0"}
+                    isIconOnly
+                  >
+                    <RxCross1 />
+                  </Button>
+
                   <Image
                     src={data.imgUrl}
                     priority={true}
@@ -79,15 +92,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
                       <motion.span
                         initial={{ x: 0 }}
                         animate={{ x: "-100%" }}
-                        transition={{ duration: 4 }}
+                        transition={{ duration: 3 }}
                         className={
-                          "absolute w-full h-full top-0 left-0 bg-black -z-10"
+                          "absolute w-full h-full top-0 left-0 bg-white/10 z-10"
                         }
                       ></motion.span>
 
                       <span
                         className={
-                          "absolute w-full h-full top-0 left-0 bg-primary/90 -z-20"
+                          "absolute w-full h-full top-0 left-0 bg-black -z-20"
                         }
                       ></span>
 
@@ -98,14 +111,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
               );
             },
             {
-              duration: 4000,
+              duration: 3000,
               style: {
                 borderRadius: "0.125rem",
               },
             },
           );
-
-          setCart(res.value);
         }
       })
       .finally(() => setIsLoading(false));
