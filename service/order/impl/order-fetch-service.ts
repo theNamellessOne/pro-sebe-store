@@ -78,7 +78,6 @@ async function _countPages(query: string, status: string) {
   const count = await prisma.order.count({
     where: _getWhere(query, status),
   });
-  console.log(count);
   return Math.ceil(count / ORDER_PAGE_SIZE);
 }
 
@@ -103,4 +102,19 @@ async function _findOrders(
       orderItems: true,
     },
   });
+}
+
+async function _countOrdersByEmail(email: string) {
+  return prisma.order.count({
+    where: {
+      email,
+      status: { notIn: ["CREATED", "CANCELED"] },
+    },
+  });
+}
+
+export async function _hasDiscount(email: string) {
+  const count = await _countOrdersByEmail(email);
+
+  return count % 2 === 1;
 }

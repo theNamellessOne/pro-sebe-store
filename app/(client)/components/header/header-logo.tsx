@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import HeaderLogoImage from "@/public/images/logo-light.png";
+import HeaderLogoImage from "@/public/images/logo.png";
 
 export function HeaderLogo() {
   return (

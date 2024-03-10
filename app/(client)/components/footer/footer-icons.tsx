@@ -9,7 +9,7 @@ export function FooterIcons() {
         href="https://t.me/pro_sebe_store"
         target="_blank"
         className={
-          "text-secondary transition-colors rounded-full hover:text-white"
+          "text-primary transition-colors rounded-full hover:text-primary/80"
         }
       >
         <SiTelegram className={"w-8 h-8"} />
@@ -19,7 +19,7 @@ export function FooterIcons() {
         href="https://www.instagram.com/pro.sebe.store/"
         target="_blank"
         className={
-          "scale-110  text-secondary transition-colors rounded-full hover:text-white"
+          "scale-110  text-primary transition-colors rounded-full hover:text-primary/80"
         }
       >
         <FaInstagram className={"w-8 h-8"} />
@@ -29,7 +29,7 @@ export function FooterIcons() {
         href="https://facebook.com"
         target="_blank"
         className={
-          "text-secondary transition-colors rounded-full hover:text-white"
+          "text-primary transition-colors rounded-full hover:text-primary/80"
         }
       >
         <FaFacebook className={"w-8 h-8"} />

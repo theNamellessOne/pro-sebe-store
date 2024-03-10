@@ -4,17 +4,15 @@ import { Button } from "@nextui-org/react";
 import { Search } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { BsBag } from "react-icons/bs";
 import { PiUser } from "react-icons/pi";
-import { useCart } from "../../cart/hooks/use-cart";
 import { UserMenu } from "../user-menu";
 import { headerEventChannel } from "./events/header-event-channel";
+import {useCart} from "@/app/(checkout)/cart/hooks/use-cart";
 
 export function HeaderIcons() {
   const { cart } = useCart()!;
   const session = useSession();
-  const router = useRouter();
 
   return (
     <div className="items-center gap-2 scale-95 sm:scale-100 flex-1 flex justify-end">

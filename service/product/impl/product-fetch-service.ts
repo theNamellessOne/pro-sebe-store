@@ -8,7 +8,7 @@ import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter"
 import { ProductStatus } from "@prisma/client";
 import { PriceFilter } from "@/app/(client)/catalogue/types/product-filter";
 
-const PRODUCT_PAGE_SIZE = 10;
+const PRODUCT_PAGE_SIZE = 12;
 
 export async function _fetchAllProducts() {
   return prisma.product.findMany();
@@ -31,11 +31,15 @@ async function _getWhereClause({
   price,
   sizes,
   colors,
+  categories,
+  isDiscounted,
 }: {
   query: string;
+  price: PriceFilter;
   sizes: number[];
   colors: number[];
-  price: PriceFilter;
+  categories: number[];
+  isDiscounted: boolean;
 }) {
   let priceFilter: { price: { lte: number; gte: number } } | {};
   priceFilter = {
@@ -54,17 +58,31 @@ async function _getWhereClause({
   let nameFilter: { name: { search: string } } | {} = {};
   if (query && query.length > 0) nameFilter = { name: { search: `${query}*` } };
 
-  let descriptionFilter: { name: { search: string } } | {} = {};
+  let articleFilter: { article: { search: string } } | {} = {};
+  if (query && query.length > 0)
+    articleFilter = { article: { search: `${query}*` } };
+
+  let descriptionFilter: { description: { search: string } } | {} = {};
   if (query && query.length > 0)
     descriptionFilter = { description: { search: `${query}*` } };
 
-  const OR = [{ ...nameFilter }, { ...descriptionFilter }].filter(
-    (x) => Object.keys(x).length > 0,
-  );
+  let categoryFilter: { categoryId: { in: number[] } } | {} = {};
+  if (categories.length > 0)
+    categoryFilter = { categoryId: { in: categories } };
+
+  const OR = [
+    { ...nameFilter },
+    { ...descriptionFilter },
+    { ...articleFilter },
+  ].filter((x) => Object.keys(x).length > 0);
 
   return {
     OR: OR.length > 0 ? OR : undefined,
     status: { equals: ProductStatus.ACTIVE },
+    isDiscounted: isDiscounted ? true : undefined,
+    productCategories: {
+      some: { ...categoryFilter },
+    },
     variants: {
       some: {
         quantity: { gt: 0 },
@@ -81,6 +99,8 @@ export async function _fetchAndFilter(
     sizes: number[];
     colors: number[];
     price: PriceFilter;
+    categories: number[];
+    isDiscounted: boolean;
   },
 ) {
   const whereClause = await _getWhereClause({ ...props });
@@ -110,7 +130,6 @@ export async function _fetchAndFilter(
       variants: {
         include: {
           color: true,
-          mediaUrls: true,
         },
       },
     },
@@ -196,12 +215,12 @@ export async function _fetchProductById(article: string) {
   const product = await prisma.product.findUnique({
     where: { article },
     include: {
+      sizeMeasures: true,
       productCategories: true,
       variants: {
         include: {
           color: true,
           size: true,
-          mediaUrls: true,
         },
       },
     },

@@ -24,7 +24,7 @@ export function TableActions({
           exit={{ opacity: 0 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className={`flex gap-3 bg-zinc-900 absolute ${
+          className={`flex gap-3 bg-white absolute ${
             hasPaginator ? "bottom-14" : "bottom-2"
           } right-1/2 translate-x-1/2 w-fit shadow-small rounded-xl p-2`}
         >

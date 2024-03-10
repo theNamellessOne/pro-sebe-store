@@ -24,7 +24,7 @@ export function Button({
   const secondaryStyle =
     "transition-colors bg-black/10 text-black hover:bg-black hover:text-white";
   const disabledStyle =
-    "disabled:border-secondary disabled:text-secondary-foreground disabled:bg-secondary";
+    "disabled:border-secondary disabled:text-secondary-foreground disabled:bg-primary/20";
 
   const isPrimary = props.type === "primary";
 

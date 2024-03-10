@@ -49,37 +49,8 @@ export function SizeForm({ value }: { value?: SizeSave }) {
           placeholder={"3XL"}
           errorMessage={errors.name?.message}
         />
-        <Input
-          {...form.register("chestSize")}
-          type={"number"}
-          label={"Обхват Грудей"}
-          disabled={isSubmitting}
-          isInvalid={!!errors.chestSize}
-          defaultValue={value?.chestSize.toString()}
-          placeholder={"159"}
-          errorMessage={errors.chestSize?.message}
-        />
-        <Input
-          {...form.register("waistSize")}
-          type={"number"}
-          label={"Обхват Талії"}
-          disabled={isSubmitting}
-          isInvalid={!!errors.waistSize}
-          defaultValue={value?.waistSize.toString()}
-          placeholder={"159"}
-          errorMessage={errors.waistSize?.message}
-        />
-        <Input
-          {...form.register("thighSize")}
-          type={"number"}
-          label={"Обхват Бедер"}
-          disabled={isSubmitting}
-          isInvalid={!!errors.thighSize}
-          defaultValue={value?.thighSize.toString()}
-          placeholder={"159"}
-          errorMessage={errors.thighSize?.message}
-        />
       </div>
+
       <Button
         className={"font-semibold"}
         color={"primary"}

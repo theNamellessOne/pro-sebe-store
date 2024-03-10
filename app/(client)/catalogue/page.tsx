@@ -1,4 +1,3 @@
-import { Filters } from "@/app/(client)/catalogue/components/filters/filters";
 import { ProductList } from "@/app/(client)/catalogue/components/products/product-list";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
@@ -11,8 +10,10 @@ export default async function Page({
     page?: string;
     sortDescriptor?: string;
     colorFilter?: string;
+    categoryFilter?: string;
     sizeFilter?: string;
     priceFilter?: string;
+    onlyDiscounts?: boolean;
   };
 }) {
   const query = searchParams?.query || "";
@@ -23,16 +24,19 @@ export default async function Page({
   const colorsFilter = searchParams?.colorFilter
     ? JSON.parse(searchParams?.colorFilter)
     : null;
+  const categoryFilter = searchParams?.categoryFilter
+    ? JSON.parse(searchParams?.categoryFilter)
+    : null;
   const sizeFilter = searchParams?.sizeFilter
     ? JSON.parse(searchParams?.sizeFilter)
     : null;
   const priceFilter = searchParams?.priceFilter
     ? JSON.parse(searchParams?.priceFilter)
     : null;
+  const discountFilter = searchParams?.onlyDiscounts?.valueOf();
 
   return (
     <>
-      <Filters />
       <Suspense
         key={
           query +
@@ -43,7 +47,9 @@ export default async function Page({
           sortDescriptor?.direction +
           sortDescriptor?.column +
           priceFilter?.min +
-          priceFilter?.max
+          priceFilter?.max +
+          categoryFilter +
+          discountFilter
         }
         fallback={<Loading />}
       >
@@ -54,6 +60,8 @@ export default async function Page({
           colors={colorsFilter}
           sizes={sizeFilter}
           price={priceFilter}
+          categories={categoryFilter}
+          onlyDiscounts={!!discountFilter}
         />
       </Suspense>
     </>

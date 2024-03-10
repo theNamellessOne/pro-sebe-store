@@ -20,6 +20,8 @@ export function ReviewForm() {
     resolver: zodResolver(reviewSchema),
   });
 
+  const rating = form.watch("rating");
+
   const { errors } = form.formState;
   const { isSubmitting, isValid } = form.formState;
 
@@ -28,6 +30,7 @@ export function ReviewForm() {
     onOpen: onUnauthOpen,
     onOpenChange: onUanuthOpenChange,
   } = useDisclosure();
+
   const {
     isOpen: isSetnameOpen,
     onOpen: onSetnameOpen,
@@ -79,10 +82,10 @@ export function ReviewForm() {
                       if (!isSubmitting) form.setValue("rating", item);
                     }}
                   >
-                    {form.watch("rating") >= item ? (
-                      <GoStarFill className={"w-5 h-5"} />
+                    {rating >= item ? (
+                      <GoStarFill key={item} className={"w-5 h-5"} />
                     ) : (
-                      <GoStar className={"w-5 h-5"} />
+                      <GoStar key={item} className={"w-5 h-5"} />
                     )}
                   </button>
                 );
@@ -128,9 +131,11 @@ export function ReviewForm() {
 
       <UnauthorizedModal
         isOpen={isUnauthOpen}
+        key={"no-auth-modal"}
         onOpenChange={onUanuthOpenChange}
       />
       <SetUsernameModal
+        key={"username-modal"}
         isOpen={isSetnameOpen}
         onOpenChange={onSetnameOpenChange}
       />

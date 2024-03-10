@@ -16,7 +16,7 @@ export function HeaderLinks({
         }
       >
         <HeaderLink text={"Каталог"} href={"/catalogue"} />
-        <HeaderLink text={"Вiдгуки"} href={"/catalogue"} />
+        <HeaderLink text={"Вiдгуки"} href={"/reviews"} />
         <HeaderLink text={"Про нас"} href={"/catalogue"} />
       </div>
 
@@ -35,15 +35,18 @@ export const HeaderLink = ({
   text,
   href,
   className = "",
+  onClick = () => {},
 }: {
   text: string;
   href: string;
   className?: string;
+  onClick?: () => void;
 }) => {
   return (
     <Link
       href={href}
       className={"hover:text-primary relative group " + className}
+      onClick={onClick}
     >
       {text}
       <span

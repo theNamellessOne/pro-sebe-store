@@ -27,7 +27,7 @@ export function ColorFilter() {
       </PopoverTrigger>
       <PopoverContent>
         <div
-          className={"w-full flex gap-4"}
+          className={"grid grid-cols-3 gap-4"}
           onClick={debounce(() => filterColors())}
         >
           {colors.map((item, idx) => {

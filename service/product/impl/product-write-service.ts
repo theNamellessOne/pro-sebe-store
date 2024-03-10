@@ -8,7 +8,6 @@ import {
 } from "@/schema/product/product-schema";
 import { v4 as uuidv4 } from "uuid";
 import prisma from "@/lib/prisma";
-import { RecommendationService } from "@/service/recommendation/recommendation-service";
 import { VariantSave } from "@/schema/product/variant-schema";
 
 export async function _updateProduct(product: ProductSave) {
@@ -19,10 +18,20 @@ export async function _updateProduct(product: ProductSave) {
 
   await prisma.$transaction(
     async (prisma) => {
-      await Promise.all([_clearProductCategories(article)]);
+      await Promise.all([
+        _clearProductSizeMeasurements(article),
+        _clearProductCategories(article),
+      ]);
+
       const categoriesPromise = prisma.productCategory.createMany({
         data: rest.productCategories.map((category) => {
           return { categoryId: category.id, productArticle: article };
+        }),
+      });
+
+      const sizeMeasuresPromise = prisma.sizeMeasure.createMany({
+        data: rest.sizeMeasures.map((sizeMeasure) => {
+          return { ...sizeMeasure, productArticle: article };
         }),
       });
 
@@ -30,16 +39,18 @@ export async function _updateProduct(product: ProductSave) {
         where: { article: article },
         data: {
           ...rest,
+          isDiscounted: rest.price < rest.compareAtPrice,
           variants: undefined,
           productCategories: undefined,
+          sizeMeasures: undefined,
         },
       });
 
       await Promise.all([
         productPromise,
         categoriesPromise,
+        sizeMeasuresPromise,
         _handleVariantsChange(product),
-        RecommendationService.instance.precomputeTfIdf(),
       ]);
     },
     { timeout: 10000 },
@@ -59,12 +70,16 @@ async function _handleVariantsChange({
   const dbVariantsMap = new Map();
   dbVariants.forEach((variant) => {
     const key = `${variant.colorId}-${variant.sizeId}`;
-    dbVariantsMap.set(key, variant);
+    const mediaUrlJson = JSON.stringify(variant.mediaUrls);
+    // @ts-ignore
+    dbVariantsMap.set(key, {mediaUrls: mediaUrlJson, ...variant});
   });
   const uiVariantsMap = new Map();
   uiVariants.forEach((variant) => {
     const key = `${variant.colorId}-${variant.sizeId}`;
-    uiVariantsMap.set(key, variant);
+    const mediaUrlJson = JSON.stringify(variant.mediaUrls);
+    // @ts-ignore
+    uiVariantsMap.set(key, {mediaUrls: mediaUrlJson, ...variant});
   });
 
   const variantsWithId: VariantSave[] = [];
@@ -94,12 +109,6 @@ async function _handleVariantsChange({
   });
 
   await Promise.all([
-    prisma.mediaUrl.deleteMany({
-      where: {
-        variantId: { in: variantsWithId.map((variant) => variant.id!) },
-      },
-    }),
-
     prisma.variant.deleteMany({
       where: {
         id: { in: variantsToRemove.map((variant) => variant.id!) },
@@ -116,6 +125,7 @@ async function _handleVariantsChange({
           reserved: 0,
           colorId: variant.colorId,
           sizeId: variant.sizeId,
+          mediaUrls: variant.mediaUrls,
         };
       }),
     }),
@@ -124,19 +134,17 @@ async function _handleVariantsChange({
   const variantsUpdatePromises = variantsToUpdate.map((variant) => {
     return prisma.variant.update({
       where: { id: variant.id },
-      data: { quantity: variant.quantity },
+      data: { quantity: variant.quantity, mediaUrls: variant.mediaUrls },
     });
   });
 
-  const createMediaUrlPromise = prisma.mediaUrl.createMany({
-    data: variantsWithId.flatMap((variant) => {
-      return variant.mediaUrls.map((media) => {
-        return { variantId: variant.id as string, url: media.url };
-      });
-    }),
-  });
+  await Promise.all(variantsUpdatePromises);
+}
 
-  await Promise.all([createMediaUrlPromise, ...variantsUpdatePromises]);
+async function _clearProductSizeMeasurements(productArticle: string) {
+  return prisma.sizeMeasure.deleteMany({
+    where: { product: { article: productArticle } },
+  });
 }
 
 async function _clearProductCategories(productArticle: string) {

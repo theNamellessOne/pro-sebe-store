@@ -27,7 +27,7 @@ export function SizeFilter() {
       <PopoverContent>
         <div
           onClick={debounce(() => filterSizes())}
-          className={"w-full flex gap-4"}
+          className={"grid grid-cols-3 gap-4"}
         >
           {sizes.map((item, idx) => {
             return (

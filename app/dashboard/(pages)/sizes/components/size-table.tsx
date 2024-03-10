@@ -27,9 +27,6 @@ export function SizeTable({ query, page, sortDescriptor }: TableProps) {
   const columns = [
     { name: "Id", uid: "id" },
     { name: "Назва", uid: "name" },
-    { name: "Обхват Грудей (cm)", uid: "chestSize" },
-    { name: "Обхват Талії (cm)", uid: "waistSize" },
-    { name: "Обхват Бедер (cm)", uid: "thighSize" },
   ];
 
   return (

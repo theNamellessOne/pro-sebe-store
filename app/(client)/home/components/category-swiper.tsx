@@ -7,14 +7,17 @@ export async function CategorySwiper() {
 
   return (
     <div
-      className={"flex flex-nowrap container mx-auto overflow-x-auto gap-4 p-4"}
+      className={
+        "flex flex-nowrap container mx-auto overflow-x-auto gap-4 p-4 lg:mt-16 xl:mt-0"
+      }
     >
       {categories.map((category) => (
         <Link
-          key={category.id}
-          href={"/catalogue"}
+          key={category.id + category.name}
+          href={`/catalogue?categoryFilter=[${category.id}]`}
           className={
-            "group shrink-0 w-fit flex flex-col items-center justify-center gap-1"
+            "group shrink-0 w-fit flex flex-col items-center " +
+            "justify-center gap-1"
           }
         >
           <div

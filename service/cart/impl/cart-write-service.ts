@@ -1,12 +1,11 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Cart, CartItem, ProductStatus } from "@prisma/client";
+import { ProductStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { CartIncludes } from "../cart-service";
 import { _calculateCart } from "./cart-util-service";
 import { _clearCart } from "./cart-delete-service";
-import { CartItems } from "@/app/(client)/cart/components/cart-items";
 
 export async function _createCart(userId?: string | undefined) {
   return prisma.cart.create({

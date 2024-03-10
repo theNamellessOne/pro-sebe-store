@@ -11,6 +11,17 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      animation: {
+        fade: "fadeIn .3s ease-in-out",
+      },
+
+      keyframes: {
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+      },
+
       colors: {
         "dark-gray": "#55585c",
         "light-gray": "#d9d9d9",

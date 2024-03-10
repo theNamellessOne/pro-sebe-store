@@ -32,12 +32,10 @@ export function OrderTable({
   const [selected, setSelected] = useState<Selection>(new Set([]));
 
   const columns = [
-    { name: "ContactInfo", uid: "contactInfo" },
-    { name: "DeliveryInfo", uid: "deliveryInfo" },
-    { name: "PaymentType", uid: "paymentType" },
-    { name: "Total", uid: "total" },
-    { name: "Status", uid: "status" },
     { name: "Actions", uid: "actions" },
+    { name: "Total", uid: "total" },
+    { name: "PaymentType", uid: "paymentType" },
+    { name: "Status", uid: "status" },
   ];
 
   return (
@@ -45,9 +43,6 @@ export function OrderTable({
       <Table
         sortDescriptor={sortDescriptor}
         onSortChange={sort}
-        selectionMode="multiple"
-        selectedKeys={selected}
-        onSelectionChange={setSelected}
         topContent={<DashboardSearch />}
         bottomContent={paginator}
         classNames={{
