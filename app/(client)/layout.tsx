@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import Footer from "./components/footer/footer";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Header } from "./components/header/header";
 import { CategoryTreeProvider } from "@/app/(client)/providers/category-tree-provider";
 import { CartProvider } from "@/app/(checkout)/cart/providers/cart-provider";
@@ -13,6 +14,7 @@ export default function ({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={getQueryClient()}>
       <UserFavoritesProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
         <CartProvider>
           <CategoryTreeProvider>
             <div className={"flex flex-col min-h-screen"}>

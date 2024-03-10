@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { exit } from "process";
 import { OrderService } from "../order-service";
 import { MiscService } from "@/service/misc/misc-service";
+import { auth } from "@/auth/auth";
 
 function calculatePercentage(part: number, whole: number) {
   if (whole === 0) {
@@ -54,6 +55,7 @@ export async function _confirmOrder(orderId: string) {
 }
 
 export async function _placeOrder(cartId: string, order: OrderInput) {
+  const session = await auth();
   let redirectUrl = "";
 
   try {
@@ -182,6 +184,8 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
             total: total.minus(new Decimal(discount)),
 
+            userId: session ? session.user.id : undefined,
+
             orderItems: {
               createMany: { data: orderItems },
             },
@@ -217,6 +221,8 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
     redirectUrl = (await res.json()).pageUrl;
   } catch (err: any) {
     console.log(err);
+    if (err.message.includes("prisma"))
+      return { errMsg: "щось пішло не так", value: null };
     return { errMsg: err.message, value: null };
   }
 

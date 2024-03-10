@@ -1,10 +1,7 @@
 import { createContext, ReactNode, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { CategoryWithChildren } from "@/app/(client)/components/header/header-categories";
-import { CategoryService } from "@/service/category/category-service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FavoriteService } from "@/service/favorite/favorite-service";
-import Loading from "@/app/loading";
 
 export const UserFavoritesContext = createContext<
   UserFavoritesContext | undefined

@@ -6,8 +6,20 @@ import { convertSortDescriptorToPrisma } from "@/util/sort-descriptor-converter"
 import { SortDirection } from "@react-types/shared";
 import { Key } from "react";
 import { OrderStatus } from "@prisma/client";
+import { auth } from "@/auth/auth";
 
 const ORDER_PAGE_SIZE = 10;
+
+export async function _fetchCurrentUserOrders() {
+  const session = await auth();
+  if (!session?.user.id) return { errMsg: "unauthorized" };
+
+  return {
+    value: await prisma.order.findMany({
+      where: { userId: session.user.id },
+    }),
+  };
+}
 
 export async function _fetchOrders({
   query,
