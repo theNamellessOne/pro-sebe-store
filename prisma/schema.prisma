@@ -38,6 +38,7 @@ model Product {
 
   sizeMeasures SizeMeasure[]
   createdAt    DateTime      @default(now())
+  favorites    Favorites[]
 
   @@index([price])
   @@index([status])
@@ -145,6 +146,22 @@ model ProductCategory {
   @@index([productArticle])
 }
 
+// FAVORITES
+
+model Favorites {
+  id Int @id @default(autoincrement())
+
+  user   User   @relation(references: [id], fields: [userId])
+  userId String
+
+  product        Product @relation(references: [article], fields: [productArticle])
+  productArticle String
+
+  @@index([userId])
+  @@index([productArticle])
+  @@unique([userId, productArticle])
+}
+
 // USER INFO
 
 enum Role {
@@ -217,7 +234,8 @@ model User {
   reviews   Review[]
   addresses AddressParts[]
 
-  cart Cart?
+  cart      Cart?
+  favorites Favorites[]
 }
 
 model PasswordResetToken {

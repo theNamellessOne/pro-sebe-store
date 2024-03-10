@@ -122,12 +122,12 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
             code: item.variant.productArticle,
             discounts: hasDiscount
               ? [
-                {
-                  type: "DISCOUNT",
-                  mode: "PERCENT",
-                  value: misc.secondOrderDiscount,
-                },
-              ]
+                  {
+                    type: "DISCOUNT",
+                    mode: "PERCENT",
+                    value: misc.secondOrderDiscount,
+                  },
+                ]
               : [],
           });
 
@@ -176,7 +176,9 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
             warehouseKey: order.deliveryInfo.warehouseKey,
 
-            paymentType: order.paymentType,
+            paymentType: cart.subtotal.gt(new Decimal(150))
+              ? order.paymentType
+              : OrderPaymentType.PREPAID,
 
             total: total.minus(new Decimal(discount)),
 

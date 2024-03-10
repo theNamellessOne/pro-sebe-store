@@ -1,5 +1,8 @@
+"use client";
+
 import { CategoryWithChildren } from "@/app/(client)/components/header/header-categories";
 import { useCategoryTree } from "@/app/(client)/hooks/use-category-tree";
+import { Skeleton } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -9,14 +12,14 @@ export async function CategorySwiper({
 }: {
   currentCategoryId: number;
 }) {
-  const { categories } = useCategoryTree()!;
+  const { categories, loading } = useCategoryTree()!;
   const [current, setCurrent] = useState<{
     children: CategoryWithChildren[];
   } | null>(null);
 
   const findInTree = (node: CategoryWithChildren) => {
     if (!node) return null;
-    if (node.id === currentCategoryId) return node;
+    if (node.id === currentCategoryId) return null;
 
     node.children.forEach((child) => {
       const value = findInTree(child);
@@ -25,7 +28,7 @@ export async function CategorySwiper({
   };
 
   useEffect(() => {
-    if (currentCategoryId === 0) {
+    if (currentCategoryId === 0 || !currentCategoryId) {
       return setCurrent({
         children: categories,
       });
@@ -36,9 +39,9 @@ export async function CategorySwiper({
 
       if (!value) return;
 
-      setCurrent(value);
+      return setCurrent(value);
     });
-  }, [currentCategoryId]);
+  }, [currentCategoryId, loading]);
 
   if (!current) return null;
 
@@ -46,37 +49,54 @@ export async function CategorySwiper({
     <div
       className={"flex flex-nowrap container mx-auto overflow-x-auto gap-4 p-4"}
     >
-      {current?.children.map((category) => (
-        <Link
-          key={category.id}
-          href={`/catalogue?categoryFilter=[${category.id}]`}
-          className={
-            "group shrink-0 w-fit flex flex-col items-center justify-center gap-1"
-          }
-        >
-          <div
+      {loading && (
+        <>
+          {[1, 2, 3, 4].map((i) => (
+            <>
+              <Skeleton
+                key={"category_loader_" + i}
+                className={"w-[80px] h-[80px] rounded-full"}
+              ></Skeleton>
+              <Skeleton>
+                <p>any</p>
+              </Skeleton>
+            </>
+          ))}
+        </>
+      )}
+
+      {!loading &&
+        current?.children.map((category) => (
+          <Link
+            key={category.id}
+            href={`/catalogue?categoryFilter=[${category.id}]`}
             className={
-              "rounded-full border-2 border-secondary p-1 overflow-hidden " +
-              "group-hover:border-primary/80 transition-colors"
+              "group shrink-0 w-fit flex flex-col items-center justify-center gap-1"
             }
           >
-            <Image
+            <div
               className={
-                "h-[80px] w-[80px] object-cover rounded-full group-hover:text-primary/80"
+                "rounded-full border-2 border-secondary p-1 overflow-hidden " +
+                "group-hover:border-primary/80 transition-colors"
               }
-              src={
-                category.imageUrl
-                  ? category.imageUrl
-                  : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
-              }
-              alt={""}
-              height={"100"}
-              width={"100"}
-            />
-          </div>
-          <p>{category.name}</p>
-        </Link>
-      ))}
+            >
+              <Image
+                className={
+                  "h-[80px] w-[80px] object-cover rounded-full group-hover:text-primary/80"
+                }
+                src={
+                  category.imageUrl
+                    ? category.imageUrl
+                    : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png"
+                }
+                alt={""}
+                height={"100"}
+                width={"100"}
+              />
+            </div>
+            <p>{category.name}</p>
+          </Link>
+        ))}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { Radio, RadioGroup } from "@nextui-org/react";
 import { OrderPaymentType } from "@prisma/client";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { useCart } from "../../cart/hooks/use-cart";
 
 export function PaymentMethodSelect() {
   const {
@@ -13,6 +14,8 @@ export function PaymentMethodSelect() {
     watch,
     formState: { isSubmitting },
   } = useFormContext<OrderInput>();
+
+  const { cart } = useCart()!;
 
   useEffect(() => {
     register("paymentType");
@@ -64,13 +67,15 @@ export function PaymentMethodSelect() {
           За ревізитами
         </Radio>
 
-        <Radio
-          classNames={{ base: radioButtonClassNames }}
-          description="По передплаті 150 UAH"
-          value={OrderPaymentType.POSTPAID}
-        >
-          Післяплата
-        </Radio>
+        {cart?.subtotal > 150 && (
+          <Radio
+            classNames={{ base: radioButtonClassNames }}
+            description="По передплаті 150 UAH"
+            value={OrderPaymentType.POSTPAID}
+          >
+            Післяплата
+          </Radio>
+        )}
       </RadioGroup>
     </div>
   );

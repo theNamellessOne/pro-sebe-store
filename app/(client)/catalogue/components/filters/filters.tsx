@@ -1,3 +1,5 @@
+"use client";
+
 import { PriceFilter } from "@/app/(client)/catalogue/components/filters/price-filter";
 import { ColorFilter } from "@/app/(client)/catalogue/components/filters/color-filter";
 import { SizeFilter } from "@/app/(client)/catalogue/components/filters/size-filter";

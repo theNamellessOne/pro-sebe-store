@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { BsBag, BsBagCheck } from "react-icons/bs";
 import { Button } from "@nextui-org/button";
 import { Color } from "@/app/(client)/catalogue/components/color";
@@ -9,6 +9,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/app/(checkout)/cart/hooks/use-cart";
+import { useUserFavorites } from "@/app/(client)/hooks/use-user-favorites";
+import { useSession } from "next-auth/react";
+import { UnauthorizedModal } from "@/app/(client)/home/components/modal/unauthorized-modal";
+import { useDisclosure } from "@nextui-org/react";
 
 type ProductCardProps = {
   product: any;
@@ -16,21 +20,21 @@ type ProductCardProps = {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { isInCart } = useCart()!;
+  const { isFavorite, add, remove } = useUserFavorites()!;
+
+  const {
+    isOpen: isUnauthOpen,
+    onOpen: onUnauthOpen,
+    onOpenChange: onUanuthOpenChange,
+  } = useDisclosure();
+
+  const session = useSession();
 
   const url = `/catalogue/${product.article}`;
   const router = useRouter();
 
   const variants = product.variants;
   const [selected, setSelected] = useState(variants[0]);
-
-  const redirectToProductPage = (queryParams?: string | undefined) => {
-    if (queryParams) {
-      router.push(url + `?${queryParams}`);
-      return;
-    }
-
-    router.push(url);
-  };
 
   const changeSelected = (colorId: number) => {
     const f = variants.find((variant: any) => variant.colorId === colorId);
@@ -55,9 +59,20 @@ export function ProductCard({ product }: ProductCardProps) {
         className={"absolute rounded-sm top-1 right-1 z-[2] text-3xl"}
         variant={"light"}
         color={"danger"}
+        onPress={() => {
+          if (!session.data?.user.id) {
+            onUnauthOpen();
+          }
+
+          if (isFavorite(product.article)) {
+            remove(product.article);
+          } else {
+            add(product.article);
+          }
+        }}
         isIconOnly
       >
-        <AiOutlineHeart />
+        {isFavorite(product.article) ? <AiFillHeart /> : <AiOutlineHeart />}
       </Button>
 
       <div className={"relative overflow-clip px-[20px] "}>
@@ -123,17 +138,24 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
 
-          <Button
-            onClick={() => redirectToProductPage()}
-            variant={"light"}
-            className={"rounded-sm text-3xl"}
-            color={"primary"}
-            isIconOnly
-          >
-            {isInCart(selected.id) ? <BsBag /> : <BsBagCheck />}
-          </Button>
+          <Link href={url}>
+            <Button
+              variant={"light"}
+              className={"rounded-sm text-3xl"}
+              color={"primary"}
+              isIconOnly
+            >
+              {isInCart(selected.id) ? <BsBag /> : <BsBagCheck />}
+            </Button>
+          </Link>
         </div>
       </div>
+
+      <UnauthorizedModal
+        isOpen={isUnauthOpen}
+        key={"no-auth-modal"}
+        onOpenChange={onUanuthOpenChange}
+      />
     </div>
   );
 }

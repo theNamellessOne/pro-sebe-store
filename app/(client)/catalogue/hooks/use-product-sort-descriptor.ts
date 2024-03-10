@@ -1,5 +1,6 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SortDescriptor } from "@nextui-org/react";
+import NProgress from "nprogress";
 import { useEffect, useState } from "react";
 import { filterEventChannel } from "../components/filters/events/filter-event-channgel";
 
@@ -44,6 +45,7 @@ export function useProductSortDescriptor() {
   const { replace } = useRouter();
 
   const setValue = (sortDescriptor: NamedSortDescriptor) => {
+    NProgress.start();
     const params = new URLSearchParams(searchParams);
     if (sortDescriptor) {
       params.set("sortDescriptor", JSON.stringify(sortDescriptor));
