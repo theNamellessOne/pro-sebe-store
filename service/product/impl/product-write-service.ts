@@ -12,7 +12,7 @@ import { VariantSave } from "@/schema/product/variant-schema";
 
 export async function _updateProduct(product: ProductSave) {
   if (!productSchema.safeParse(product)) {
-    return { errMsg: "invalid data" };
+    return { errMsg: "Некоректні дані!" };
   }
   const { article, ...rest } = product;
 
@@ -156,7 +156,7 @@ async function _clearProductCategories(productArticle: string) {
 export async function _createProduct(product: ProductCreate) {
   if (!createProductSchema.safeParse(product)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }

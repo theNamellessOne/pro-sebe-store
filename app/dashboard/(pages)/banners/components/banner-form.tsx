@@ -31,9 +31,9 @@ export function BannerForm({ value }: { value?: BannerSave }) {
     const { errMsg } = await BannerService.instance.save(formData);
 
     if (errMsg) {
-      toast.error("Щось пішло не так");
+      toast.error("Щось пішло не так!");
     } else {
-      toast.success("Банер Збережено");
+      toast.success("Банер збережено!");
     }
   };
 

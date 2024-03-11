@@ -26,9 +26,9 @@ export function SizeForm({ value }: { value?: SizeSave }) {
     const { errMsg } = await SizeService.instance.save(formData);
 
     if (errMsg) {
-      toast.error("Щось пішло не так");
+      toast.error("Щось пішло не так!");
     } else {
-      toast.success("Розмір Збережено");
+      toast.success("Розмір збережено!");
     }
   };
 

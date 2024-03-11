@@ -48,9 +48,9 @@ export function ProductForm({
     const { errMsg } = await ProductService.instance.save(formData);
 
     if (errMsg) {
-      toast.error("Щось пішло не так");
+      toast.error("Щось пішло не так!");
     } else {
-      toast.success("Товар Збережено");
+      toast.success("Товар збережено!");
     }
   };
 

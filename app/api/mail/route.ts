@@ -21,16 +21,16 @@ const sendEmail = async (input: SendEmailInput) => {
   });
 
   await new Promise((resolve, reject) => {
-      // verify connection configuration
-      transporter.verify(function (error, success) {
-          if (error) {
-              reject(error);
-          } else {
-              resolve(success);
-          }
-      });
+    // verify connection configuration
+    transporter.verify(function (error, success) {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(success);
+      }
+    });
   });
-  
+
   const mailOptions = {
     from: "asdfasdfadsf64@gmail.com",
     ...input,
@@ -38,13 +38,13 @@ const sendEmail = async (input: SendEmailInput) => {
 
   await new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-            reject(err);
-        } else {
-            resolve(info);
-        }
+      if (err) {
+        reject(err);
+      } else {
+        resolve(info);
+      }
     });
-});
+  });
 };
 
 async function handler(req: NextRequest) {
@@ -69,9 +69,9 @@ async function handler(req: NextRequest) {
 
   try {
     await sendEmail(input);
-    return Response.json({ msg: "confirmation email sent" });
+    return Response.json({ msg: "Лист із підтвердженням надіслано!" });
   } catch (Exception) {
-    return Response.json({ msg: "could not send email" });
+    return Response.json({ msg: "Не вдалося надіслати листa!" });
   }
 }
 

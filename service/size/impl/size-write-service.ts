@@ -10,7 +10,7 @@ export async function _saveSize(size: SizeSave) {
 async function _createSize(size: SizeSave) {
   if (!sizeSchema.safeParse(size)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }
@@ -24,7 +24,7 @@ async function _createSize(size: SizeSave) {
 async function _updateSize(size: SizeSave) {
   if (!sizeSchema.safeParse(size)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }

@@ -39,7 +39,7 @@ export function CategoryView({
         isSelected={showTree}
         onValueChange={setShowTree}
       >
-        Show Tree View
+        Показати вигляд дерева
       </Checkbox>
     </div>
   );

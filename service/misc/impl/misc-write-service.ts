@@ -6,7 +6,7 @@ import { MiscSave, miscSchema } from "@/schema/misc/misc-schema";
 export async function _saveMisc(misc: MiscSave) {
   if (!miscSchema.safeParse(misc)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }

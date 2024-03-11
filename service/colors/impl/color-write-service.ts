@@ -10,7 +10,7 @@ export async function _saveColor(color: ColorSave) {
 async function _createColor(color: ColorSave) {
   if (!colorSchema.safeParse(color)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }
@@ -24,7 +24,7 @@ async function _createColor(color: ColorSave) {
 async function _updateColor(color: ColorSave) {
   if (!colorSchema.safeParse(color)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }

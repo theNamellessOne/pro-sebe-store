@@ -40,9 +40,9 @@ export function CreateProductModal() {
     const { errMsg, value } = await ProductService.instance.create(formData);
 
     if (errMsg) {
-      toast.error("Щось пішло не так");
+      toast.error("Щось пішло не так!");
     } else {
-      toast.success("Товар Створено");
+      toast.success("Товар створено!");
 
       router.push(`/dashboard/products/edit/${value?.article}`);
     }

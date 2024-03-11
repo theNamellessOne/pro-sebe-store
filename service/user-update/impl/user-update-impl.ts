@@ -22,7 +22,7 @@ async function hashPassword(psw: string) {
 export async function _changePassword(input: UserChangePassword) {
   if (!userChangePassword.safeParse(input).success) {
     return {
-      errMsg: "Некоректні дані",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }
@@ -30,7 +30,7 @@ export async function _changePassword(input: UserChangePassword) {
   const session = await auth();
   if (!session) {
     return {
-      errMsg: "Користувач не авторизований",
+      errMsg: "Користувач не авторизований!",
       value: null,
     };
   }
@@ -54,14 +54,14 @@ export async function _changePassword(input: UserChangePassword) {
       }),
     };
   } catch (err: any) {
-    return { errMsg: "Щось пішло не так", value: null };
+    return { errMsg: "Щось пішло не так!", value: null };
   }
 }
 
 export async function _updateCurrentUser(userData: UserUpdate) {
   if (!userUpdateFormSchema.safeParse(userData).success) {
     return {
-      errMsg: "Некоректні дані",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }
@@ -70,7 +70,7 @@ export async function _updateCurrentUser(userData: UserUpdate) {
 
   if (!session) {
     return {
-      errMsg: "Користувач не авторизований",
+      errMsg: "Користувач не авторизований!",
       value: null,
     };
   }
@@ -84,13 +84,13 @@ export async function _updateCurrentUser(userData: UserUpdate) {
       }),
     };
   } catch (err: any) {
-    return { errMsg: "шось пішло не так", value: null };
+    return { errMsg: "Щось пішло не так!", value: null };
   }
 }
 
 export async function _updateUsername(username: string) {
   if (!usernameSchema.safeParse(username).success) {
-    return { errMsg: "не валідний юзернейм", value: null };
+    return { errMsg: "Не валідний юзернейм!", value: null };
   }
 
   const usernameExists = await prisma.user.findUnique({
@@ -98,13 +98,13 @@ export async function _updateUsername(username: string) {
   });
 
   if (usernameExists) {
-    return { errMsg: "користувач з таким юзернеймом вже існує", value: null };
+    return { errMsg: "Користувач з таким юзернеймом вже існує!", value: null };
   }
 
   const session = await auth();
 
   if (!session) {
-    return { errMsg: "не авторизовано", value: null };
+    return { errMsg: "Не авторизовано!", value: null };
   }
 
   try {
@@ -124,6 +124,6 @@ export async function _updateUsername(username: string) {
       }),
     };
   } catch {
-    return { errMsg: "шось пішло не так", value: null };
+    return { errMsg: "Щось пішло не так!", value: null };
   }
 }

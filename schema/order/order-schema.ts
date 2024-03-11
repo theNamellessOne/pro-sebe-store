@@ -8,7 +8,7 @@ export const contactInfoSchema = z.object({
   name: z.string().min(1).max(128),
   surname: z.string().min(1).max(128),
   middlename: z.string().min(1).max(128),
-  phone: z.string().regex(phoneRegEx, "Invalid!"),
+  phone: z.string().regex(phoneRegEx, "Цей номер телефону некоректний!"),
 });
 
 export type ContactInfoInput = z.infer<typeof contactInfoSchema>;

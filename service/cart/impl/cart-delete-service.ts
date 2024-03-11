@@ -14,7 +14,7 @@ export async function _removeFromCart(cartId: string, variantId: string) {
   });
 
   if (!cart) {
-    return { errMsg: "cart with specified id does not exist", value: null };
+    return { errMsg: "Кошик з таким ID не знайдено!", value: null };
   }
 
   const cartItems = cart.cartItems.filter(

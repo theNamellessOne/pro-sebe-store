@@ -52,19 +52,19 @@ export function ReviewTable({ query, page, sortDescriptor }: TableProps) {
 
   const tableActions = [
     {
-      name: "видалити",
+      name: "Видалити",
       action: async () => {
         await deleteAction();
       },
     },
     {
-      name: "відобразити",
+      name: "Відобразити",
       action: async () => {
         await approveAction();
       },
     },
     {
-      name: "сховати",
+      name: "Сховати",
       action: async () => {
         await onModerationAction();
       },
@@ -135,7 +135,7 @@ export function ReviewTable({ query, page, sortDescriptor }: TableProps) {
 
         <TableBody
           loadingContent={<Loading />}
-          emptyContent={"No rows to display."}
+          emptyContent={"Немає рядків для відображення."}
           isLoading={loading}
           items={list.items}
         >

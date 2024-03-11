@@ -47,7 +47,7 @@ export function LoginForm() {
     const res = await AuthService.instance.login(formData);
 
     if (!res) {
-      setServerError("something went very wrong");
+      setServerError("Щось пішло не так!");
       return;
     }
 

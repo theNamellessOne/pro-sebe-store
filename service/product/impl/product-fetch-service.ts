@@ -227,7 +227,7 @@ export async function _fetchProductById(article: string) {
   });
 
   return {
-    errMsg: product ? null : "Could not find product with specified Article",
+    errMsg: product ? null : "Товар з таким артиклем не знайдено!",
     value: product,
   };
 }

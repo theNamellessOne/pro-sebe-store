@@ -9,7 +9,7 @@ export async function _sendVerificationEmail(email: string, token: string) {
 
   return _sendEmail({
     to: email,
-    subject: "Confirm your email",
-    html: `<p>Click <a href="${confirmLink}">here</a> to confirm email.</p>`,
+    subject: "Підтвердження електронної адеси",
+    html: `<p>Натисніть <a href="${confirmLink}">тут</a> щоб підтвердити електронну адресу.</p>`,
   });
 }

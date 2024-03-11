@@ -18,7 +18,7 @@ export default function Page() {
     if (success || error) return;
 
     if (!token) {
-      setError("Missing token!");
+      setError("Відсутній токен!");
       return;
     }
 
@@ -29,7 +29,7 @@ export default function Page() {
         setError(data.error);
       })
       .catch(() => {
-        setError("Something went wrong!");
+        setError("Щось пішло не так!");
       });
   }, [token, success, error]);
 

@@ -40,7 +40,7 @@ export function SetUsernameModal(props: {
     if (!res.errMsg) {
       session.update(data);
       onClose();
-      toast.success("юзернейм обновлено");
+      toast.success("Юзернейм обновлено");
     }
   };
 

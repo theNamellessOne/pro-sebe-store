@@ -33,7 +33,7 @@ export async function _addToCart(
   });
 
   if (!cart) {
-    return { errMsg: "could not find cart with specified id", value: null };
+    return { errMsg: "Кошик з таким ID не знайдено!", value: null };
   }
 
   const variant = await prisma.variant.findUnique({
@@ -42,15 +42,15 @@ export async function _addToCart(
   });
 
   if (!variant) {
-    return { errMsg: "no such product", value: null };
+    return { errMsg: "Товару немає в наявності!", value: null };
   }
 
   if (variant.product.status !== ProductStatus.ACTIVE) {
-    return { errMsg: "no such product", value: null };
+    return { errMsg: "Товару немає в наявності!", value: null };
   }
 
   if (variant.quantity < quantity) {
-    return { errMsg: "requested product quantity exceeds stock", value: null };
+    return { errMsg: "Запитана кількість товару перевищує запас!", value: null };
   }
 
   return await _rehydrateCart(cartId, [
@@ -84,7 +84,7 @@ export async function _changeCartItemQuantity(
   });
 
   if (!cart) {
-    return { errMsg: "cart with specified id does not exist", value: null };
+    return { errMsg: "Кошику з таким ID немає!", value: null };
   }
 
   const variant = await prisma.variant.findUnique({
@@ -93,15 +93,15 @@ export async function _changeCartItemQuantity(
   });
 
   if (!variant) {
-    return { errMsg: "no such product", value: null };
+    return { errMsg: "Товару немає в наявності!", value: null };
   }
 
   if (variant.product.status !== ProductStatus.ACTIVE) {
-    return { errMsg: "no such product", value: null };
+    return { errMsg: "Товару немає в наявності!", value: null };
   }
 
   if (variant.quantity < newQuantity) {
-    return { errMsg: "requested product quantity exceeds stock", value: null };
+    return { errMsg: "Запитана кількість товару перевищує запас!", value: null };
   }
 
   return await _rehydrateCart(

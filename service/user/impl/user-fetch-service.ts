@@ -12,7 +12,7 @@ import {auth} from "@/auth/auth";
 const SIZE_PAGE_SIZE = 10;
 
 export async function _fetchUserById(id: string | undefined) {
-    if (!id) return {errMsg: "Id id undefined", value: null};
+    if (!id) return {errMsg: "Ідентефікатор ID не визначений!", value: null};
 
     const user = await prisma.user.findUnique({
         where: {id},
@@ -20,13 +20,13 @@ export async function _fetchUserById(id: string | undefined) {
     });
 
     return {
-        errMsg: user ? null : "Could not find user with specified Id",
+        errMsg: user ? null : "Користувача з таким ID не знайдено!",
         value: user,
     };
 }
 
 export async function _fetchUserByEmail(email: string) {
-    if (!email) return {errMsg: "email is undefined", value: null};
+    if (!email) return {errMsg: "Електронна адреса не визначена!", value: null};
 
     const user = await prisma.user.findUnique({
         where: {email},
@@ -34,7 +34,7 @@ export async function _fetchUserByEmail(email: string) {
     });
 
     return {
-        errMsg: user ? null : "Could not find user with specified email",
+        errMsg: user ? null : "Користувача з такою електронною адресою не знайдено!",
         value: user,
     };
 }

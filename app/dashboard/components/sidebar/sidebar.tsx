@@ -108,7 +108,7 @@ export function Sidebar() {
             AuthService.instance.logout();
           }}
         >
-          <LogOut /> Logout
+          <LogOut /> Вийти
         </Button>
       </div>
     </aside>
