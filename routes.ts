@@ -10,7 +10,7 @@ export const PUBLIC_ROUTES = [
   "/checkout",
 ];
 
-export const USER_ROUTES = [...PUBLIC_ROUTES];
+export const USER_ROUTES = [...PUBLIC_ROUTES, "/user-page"];
 
 export const PACKAGER_ROUTES = [...USER_ROUTES, "/dashboard/orders"];
 
