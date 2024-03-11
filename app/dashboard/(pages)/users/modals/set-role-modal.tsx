@@ -30,7 +30,7 @@ export function SetRoleModal({ id, email, role }: User) {
     UserService.instance.setRole(id, Array.from(selected)[0]).then((res) => {
       setLoading(false);
       userEventChannel.emit("onUserUpdate");
-      toast.success("role changed");
+      toast.success("Роль змінено!");
     });
   };
 
@@ -68,10 +68,10 @@ export function SetRoleModal({ id, email, role }: User) {
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                  Close
+                  Закрити
                 </Button>
                 <Button color="primary" onPress={handleConfirm}>
-                  Confirm
+                  Підтвердити
                 </Button>
               </ModalFooter>
             </>

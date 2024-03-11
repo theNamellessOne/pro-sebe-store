@@ -7,7 +7,7 @@ export const registerSchema = z.object({
   email: z.string().email(),
   name: z.string().min(2).max(100),
   username: usernameSchema,
-  phone: z.string().regex(phoneRegEx, "Invalid!"),
+  phone: z.string().regex(phoneRegEx, "Цей номер телефону некоректний!"),
   password: z.string().min(6),
 });
 

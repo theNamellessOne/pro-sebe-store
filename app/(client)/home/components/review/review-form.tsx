@@ -37,8 +37,8 @@ export function ReviewForm() {
   const handleSubmit = async (formData: ReviewSave) => {
     formData.id = undefined;
 
-    if (!session.data?.user) return toast.error("не авторизовано");
-    if (!session.data?.user.username) return toast.error("без юзернейма");
+    if (!session.data?.user) return toast.error("Не авторизовано!");
+    if (!session.data?.user.username) return toast.error("Без юзернейма!");
 
     const { errMsg } = await ReviewService.instance.save(formData);
 

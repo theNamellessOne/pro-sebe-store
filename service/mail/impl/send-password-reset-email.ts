@@ -9,7 +9,7 @@ export async function _sendPasswordResetEmail(email: string, token: string) {
 
   return _sendEmail({
     to: email,
-    subject: "Reset your password",
-    html: `<p>Click <a href="${resetLink}">here</a> to reset password.</p>`,
+    subject: "Скинути пароль",
+    html: `<p>Натисніть <a href="${resetLink}">тут</a> щоб скинути пароль.</p>`,
   });
 }

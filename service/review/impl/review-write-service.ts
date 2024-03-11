@@ -15,14 +15,14 @@ async function _createReview(review: ReviewSave) {
 
   if (!userId) {
     return {
-      errMsg: "user is not authorized",
+      errMsg: "Користувач не авторизований!",
       value: null,
     };
   }
 
   if (!reviewSchema.safeParse(review)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }
@@ -33,7 +33,7 @@ async function _createReview(review: ReviewSave) {
 
   if (exists) {
     return {
-      errMsg: "Ви поки що не можете залишати відгуки",
+      errMsg: "Ви поки що не можете залишати відгуки!",
       value: null,
     };
   }
@@ -47,7 +47,7 @@ async function _createReview(review: ReviewSave) {
 async function _updateReview(review: ReviewSave) {
   if (!reviewSchema.safeParse(review)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }

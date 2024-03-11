@@ -20,7 +20,7 @@ export async function _fetchCategoryById(id: number) {
   });
 
   return {
-    errMsg: category ? null : "Could not find category with specified Id",
+    errMsg: category ? null : "Категорії з таким ID не знайдено!",
     value: category,
   };
 }

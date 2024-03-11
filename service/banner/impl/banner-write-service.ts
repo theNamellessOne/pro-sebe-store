@@ -10,7 +10,7 @@ export async function _saveBanner(banner: BannerSave) {
 async function _createBanner(banner: BannerSave) {
   if (!bannerSchema.safeParse(banner)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }
@@ -24,7 +24,7 @@ async function _createBanner(banner: BannerSave) {
 async function _updateBanner(banner: BannerSave) {
   if (!bannerSchema.safeParse(banner)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }

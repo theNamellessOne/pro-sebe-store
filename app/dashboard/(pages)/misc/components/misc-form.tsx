@@ -31,9 +31,9 @@ export function MiscForm({ value }: { value?: MiscSave }) {
     const { errMsg } = await MiscService.instance.save(formData);
 
     if (errMsg) {
-      toast.error("Щось пішло не так");
+      toast.error("Щось пішло не так!");
     } else {
-      toast.success("Збережено");
+      toast.success("Збережено!");
     }
   };
 

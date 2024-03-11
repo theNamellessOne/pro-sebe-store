@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const usernameSchema = z
   .string()
-  .min(3, { message: "Username must be at least 3 characters long" })
-  .max(20, { message: "Username must be at most 20 characters long" })
+  .min(3, { message: "Мінімум 2 символи!" })
+  .max(20, { message: "Максимум 20 символів!" })
   .regex(/^[a-zA-Z0-9_]+$/, {
-    message: "Username must contain only letters, numbers, and underscores",
+    message: "Ім'я користувача має містити лише літери, цифри та підкреслення!",
   });
 
 export const usernameFormSchema = z.object({
@@ -20,7 +20,7 @@ export const userUpdateFormSchema = z.object({
   id: z.coerce.string().optional(),
   name: z.string().min(2).max(100),
   username: usernameSchema,
-  phone: z.string().regex(phoneRegEx, "Invalid!"),
+  phone: z.string().regex(phoneRegEx, "Цей номер телефону не коректний!"),
   email: z.string().email(),
 });
 
@@ -30,7 +30,7 @@ export const userChangePassword = z.object({
   password: z.string().min(6),
   confirmPassword: z.string(),
 }).refine((data)=> data.password === data.confirmPassword, {
-  message: "Паролі не збігаються",
+  message: "Паролі не збігаються!",
   path: ['confirmPassword'],
 });
 

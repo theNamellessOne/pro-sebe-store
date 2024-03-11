@@ -38,7 +38,7 @@ export function PricingInfo() {
         })}
         type={"number"}
         step={0.01}
-        label={"Цiна для порiвняннь"}
+        label={"Цiна без знижки"}
         isDisabled={isSubmitting}
         isInvalid={!!errors.compareAtPrice}
         defaultValue={form.getValues().compareAtPrice?.toString()}
@@ -47,7 +47,7 @@ export function PricingInfo() {
           <p className={"-mb-0.5 flex-shrink-0 text-default-400"}>$</p>
         }
         endContent={
-          <Tooltip content={"suka"}>
+          <Tooltip content={"Ціна при перегляді товару буде відображатись закресленою."}>
             <HelpCircle className={"text-default-400"} />
           </Tooltip>
         }

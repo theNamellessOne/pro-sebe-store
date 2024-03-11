@@ -26,7 +26,7 @@ export async function _fetchReviewById(id: number) {
   const review = await prisma.review.findUnique({ where: { id } });
 
   return {
-    errMsg: review ? null : "Could not find review with specified Id",
+    errMsg: review ? null : "Відгук з таким ID не знайдено!",
     value: review,
   };
 }

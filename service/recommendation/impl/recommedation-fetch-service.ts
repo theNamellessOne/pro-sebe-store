@@ -114,7 +114,7 @@ function _recommendProducts(
     (product) => product.article === productArticle,
   );
   if (productIndex === -1) {
-    throw new Error("Product not found");
+    throw new Error("Товар не знайдено!");
   }
 
   const recommendations: { product: any; similarity: number }[] = [];

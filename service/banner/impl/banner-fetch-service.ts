@@ -13,7 +13,7 @@ export async function _fetchBannerById(id: number) {
   const banner = await prisma.banner.findUnique({ where: { id } });
 
   return {
-    errMsg: banner ? null : "Could not find banner with specified Id",
+    errMsg: banner ? null : "Банер з таким ID не знайдено!",
     value: banner,
   };
 }

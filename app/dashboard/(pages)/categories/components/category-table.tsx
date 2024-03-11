@@ -40,13 +40,13 @@ export function CategoryTable({ query, page, sortDescriptor }: TableProps) {
 
   const tableActions = [
     {
-      name: "delete tree",
+      name: "Видалити дерево",
       action: async () => {
         await deleteAction(service.deleteTree);
       },
     },
     {
-      name: "delete",
+      name: "Видалити",
       action: async () => {
         await deleteAction(service.delete);
       },

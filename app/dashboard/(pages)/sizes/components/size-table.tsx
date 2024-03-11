@@ -53,7 +53,7 @@ export function SizeTable({ query, page, sortDescriptor }: TableProps) {
 
       <TableBody
         loadingContent={<Loading />}
-        emptyContent={"No rows to display."}
+        emptyContent={"Немає рядків для відображення."}
         isLoading={loading}
         items={list.items}
       >

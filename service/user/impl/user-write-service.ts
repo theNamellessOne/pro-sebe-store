@@ -12,7 +12,7 @@ export async function _saveUser(user: UserSave) {
 async function _createUser(user: UserSave) {
   if (!userSchema.safeParse(user)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }
@@ -26,7 +26,7 @@ async function _createUser(user: UserSave) {
 async function _updateUser(user: UserSave) {
   if (!userSchema.safeParse(user)) {
     return {
-      errMsg: "invalid data",
+      errMsg: "Некоректні дані!",
       value: null,
     };
   }

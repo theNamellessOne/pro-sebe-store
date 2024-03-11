@@ -26,9 +26,9 @@ export function ColorForm({ value }: { value?: ColorSave }) {
     const { errMsg } = await ColorService.instance.save(formData);
 
     if (errMsg) {
-      toast.error("Щось пішло не так");
+      toast.error("Щось пішло не так!");
     } else {
-      toast.success("Колір Збережено");
+      toast.success("Колір збережено!");
     }
   };
 

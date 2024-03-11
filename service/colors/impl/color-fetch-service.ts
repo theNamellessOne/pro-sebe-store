@@ -13,7 +13,7 @@ export async function _fetchColorById(id: number) {
   const color = await prisma.color.findUnique({ where: { id } });
 
   return {
-    errMsg: color ? null : "Could not find color with specified Id",
+    errMsg: color ? null : "Кольору з таким ID не знайдено!",
     value: color,
   };
 }

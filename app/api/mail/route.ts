@@ -53,9 +53,9 @@ async function handler(req: NextRequest) {
 
   try {
     sendEmail(input);
-    return Response.json({ msg: "confirmation email sent" });
+    return Response.json({ msg: "Лист із підтвердженням надіслано!" });
   } catch (Exception) {
-    return Response.json({ msg: "could not send email" });
+    return Response.json({ msg: "Не вдалося надіслати лист!" });
   }
 }
 

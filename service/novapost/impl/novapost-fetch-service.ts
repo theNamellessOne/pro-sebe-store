@@ -5,7 +5,7 @@ import { env, exit } from "process";
 const API_KEY = env.NOVA_POST_API_KEY;
 
 if (!API_KEY || API_KEY === "") {
-  console.log("nova post api key is not present");
+  console.log("Відсутній API ключ Нової Пошти!");
   exit();
 }
 

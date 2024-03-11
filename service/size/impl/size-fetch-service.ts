@@ -12,7 +12,7 @@ export async function _fetchSizeById(id: number) {
   const size = await prisma.size.findUnique({ where: { id } });
 
   return {
-    errMsg: size ? null : "Could not find size with specified Id",
+    errMsg: size ? null : "Розмір з таким ID не знайдено!",
     value: size,
   };
 }

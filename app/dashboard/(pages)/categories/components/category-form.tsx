@@ -31,7 +31,7 @@ export function CategoryForm({ value }: { value?: Category }) {
       const possibleParents: Category[] = [
         {
           id: 0,
-          name: "No Parent",
+          name: "Без батьківської",
           path: "",
           parentId: 0,
           imageUrl: "",
@@ -60,9 +60,9 @@ export function CategoryForm({ value }: { value?: Category }) {
     const { errMsg } = await service.save(formData);
 
     if (errMsg) {
-      toast.error("Щось пішло не так");
+      toast.error("Щось пішло не так!");
     } else {
-      toast.success("Категорію Збережено");
+      toast.success("Категорію збережено!");
     }
 
     fetchParents();

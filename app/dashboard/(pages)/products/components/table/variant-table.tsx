@@ -114,7 +114,7 @@ export function VariantTable() {
 
         <TableBody
           loadingContent={<Loading />}
-          emptyContent={"No rows to display."}
+          emptyContent={"Немає рядків для відображення."}
           items={variants}
         >
           {(item: VariantSave) => (

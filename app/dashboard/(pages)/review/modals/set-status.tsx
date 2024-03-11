@@ -18,7 +18,7 @@ export function SetStatusButton({id, status}: Review) {
         ReviewService.instance.setStatus(id, newStatus).then(() => {
             setLoading(false);
             reviewEventChannel.emit("onReviewUpdate");
-            toast.success("status changed");
+            toast.success("Статус змінено!");
         });
     };
 
