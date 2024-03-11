@@ -60,6 +60,7 @@ export function ContactInfo() {
           {...form.register("contactInfo.email")}
           variant={"underlined"}
           label={"Електронна пошта"}
+          type={"email"}
           disabled={isSubmitting}
           defaultValue={form.getValues("contactInfo.email")}
           isInvalid={!!errors.contactInfo?.email}

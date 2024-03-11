@@ -69,6 +69,11 @@ export function HeaderSearch() {
             variant="underlined"
             value={value}
             placeholder={readSearch()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
             onValueChange={setValue}
             endContent={
               <Button

@@ -50,6 +50,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       .then((res) => {
         if (res.errMsg) toast.error(res.errMsg);
         if (!res.errMsg) {
+          setCart(res.value);
           toast(
             (t) => {
               return (
@@ -82,7 +83,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                     <p>{data.priceText}</p>
                   </div>
 
-                  <Link href={"/cart"}>
+                  <Link href={"/cart"} onClick={() => toast.dismiss(t.id)}>
                     <button
                       className={
                         "relative overflow-hidden transition-colors border border-black text-lg py-2 px-10 rounded-sm " +
