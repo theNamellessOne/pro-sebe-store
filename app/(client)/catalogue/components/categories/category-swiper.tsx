@@ -19,7 +19,7 @@ export async function CategorySwiper({
 
   const findInTree = (node: CategoryWithChildren) => {
     if (!node) return null;
-    if (node.id === currentCategoryId) return null;
+    if (node.id === currentCategoryId) return node;
 
     node.children.forEach((child) => {
       const value = findInTree(child);

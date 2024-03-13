@@ -5,13 +5,13 @@ const path = require("path");
 
 const nextConfig = {
   webpack: (config, { dev, isServer, webpack, nextRuntime }) => {
-    console.log(__dirname);
     config.module.rules.push({
-      test: /recommender.node/,
+      test: /\.node$/,
       use: [
         {
-          loader: path.resolve(__dirname, 'node-loader/loader.js'),
+          loader: "nextjs-node-loader",
           options: {
+            flags: os.constants.dlopen.RTLD_NOW,
             outputPath: config.output.path,
           },
         },

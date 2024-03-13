@@ -36,7 +36,9 @@ const FavoritesSkeleton = () =>
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className={"max-w-[373px] shrink-0 flex flex-col gap-2 h-[500px]"}
+        className={
+          "w-[373px] max-w-full shrink-0 flex flex-col gap-2 h-[500px]"
+        }
         key={"product_loader" + item}
       >
         <Skeleton className="rounded-sm mb-4 h-[420px]"></Skeleton>

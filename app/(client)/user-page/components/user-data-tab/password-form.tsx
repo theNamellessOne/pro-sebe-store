@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import React from "react";
+import React, { useState } from "react";
 import {
   UserChangePassword,
   userChangePassword,
@@ -11,8 +11,10 @@ import { UserUpdateService } from "@/service/user-update/user-update-service";
 import toast, { Toaster } from "react-hot-toast";
 import { Input } from "@nextui-org/input";
 import { Button } from "@/app/(client)/components/ui/button";
+import { Button as NextButton } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import { Eye, EyeOff } from "lucide-react";
 
 export function PasswordForm() {
   const form = useForm<UserChangePassword>({
@@ -38,39 +40,87 @@ export function PasswordForm() {
     return null;
   }
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   return (
-    <form
-      id={"password-reset-form"}
-      className={"my-4 p-4 flex flex-col gap-4 "}
-      onSubmit={form.handleSubmit(handleSubmit)}
-    >
+    <form id={"password-reset-form"} className={"my-4 flex flex-col gap-4 "}>
       <div className={"flex flex-col"}>
         <Input
           {...form.register("password")}
-          label={"Новий пароль"}
           variant={"underlined"}
-          disabled={isSubmitting}
+          type={showPassword ? "text" : "password"}
+          label={"Новий пароль"}
+          disabled={form.formState.isSubmitting}
           isInvalid={!!errors.password}
           errorMessage={errors.password?.message}
+          endContent={
+            showPassword ? (
+              <NextButton
+                isIconOnly
+                variant={"light"}
+                radius={"full"}
+                onClick={() => setShowPassword(false)}
+              >
+                <EyeOff />
+              </NextButton>
+            ) : (
+              <NextButton
+                isIconOnly
+                variant={"light"}
+                radius={"full"}
+                onClick={() => setShowPassword(true)}
+              >
+                <Eye />
+              </NextButton>
+            )
+          }
         />
+
         <Input
           {...form.register("confirmPassword")}
           label={"Підтвердіть пароль"}
           variant={"underlined"}
-          disabled={isSubmitting}
+          type={showConfirmPassword ? "text" : "password"}
+          disabled={form.formState.isSubmitting}
           isInvalid={!!errors.confirmPassword}
           errorMessage={errors.confirmPassword?.message}
+          endContent={
+            showConfirmPassword ? (
+              <NextButton
+                isIconOnly
+                variant={"light"}
+                radius={"full"}
+                onClick={() => setShowConfirmPassword(false)}
+              >
+                <EyeOff />
+              </NextButton>
+            ) : (
+              <NextButton
+                isIconOnly
+                variant={"light"}
+                radius={"full"}
+                onClick={() => setShowConfirmPassword(true)}
+              >
+                <Eye />
+              </NextButton>
+            )
+          }
         />
       </div>
 
       <Button
-        className={"font-semibold"}
+        className="font-semibold flex items-center justify-center gap-4"
         type={"primary"}
+        onClick={form.handleSubmit((data) => {
+          return handleSubmit(data);
+        })}
         disabled={isSubmitting || !isValid}
       >
         {isSubmitting && <Spinner size={"sm"} color={"primary"} />}
         Змінити пароль
       </Button>
+
       <Toaster />
     </form>
   );

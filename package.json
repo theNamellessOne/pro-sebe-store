@@ -34,6 +34,7 @@
     "lucide-react": "^0.294.0",
     "next": "14.1.0",
     "next-auth": "^5.0.0-beta.9",
+    "nextjs-node-loader": "^1.1.5-alpha.0",
     "nextjs-toploader": "^1.6.6",
     "nodemailer": "^6.9.8",
     "nprogress": "^0.2.0",

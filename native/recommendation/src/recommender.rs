@@ -53,7 +53,7 @@ fn find_most_similar(
         .par_iter()
         .map(|product| {
             let similarity = match target.article == product.article {
-                true => 10.0,
+                true => 1000.0,
                 false => cosine_similarity(&target.tfidf, &product.tfidf),
             };
 
@@ -109,3 +109,4 @@ pub fn recommend(products: Vec<Product>, target_article: String) -> Vec<String> 
         .map(|product| product.article.clone())
         .collect::<Vec<_>>()
 }
+
