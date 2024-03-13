@@ -23,11 +23,11 @@ export function Checkout(props: { user: any | undefined | null }) {
     resolver: zodResolver(orderSchema),
     defaultValues: {
       contactInfo: {
-        name: props.user.name,
-        email: props.user.email,
-        phone: props.user.phone,
-        surname: props.user.surname,
-        middlename: props.user.patronymic,
+        name: props.user?.name,
+        email: props.user?.email,
+        phone: props.user?.phone,
+        surname: props.user?.surname,
+        middlename: props.user?.patronymic,
       },
       deliveryInfo: { deliveryType: OrderDeliveryType.COURIER },
       paymentType: OrderPaymentType.PREPAID,
