@@ -46,10 +46,10 @@ export function CartPosition({ item }: any) {
 
           <Button
             size="sm"
-            variant="light"
-            color="primary"
+            variant="solid"
+            color="secondary"
             onClick={() => removeFromCart(itemVariant.id)}
-            className={"rounded-sm text-xl z-40 absolute -top-2 right-0"}
+            className={"rounded-sm text-xl z-40 absolute top-0 right-0"}
             isIconOnly
           >
             <RxCross1 />

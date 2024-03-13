@@ -37,7 +37,6 @@ export function UserDataForm() {
     if (errMsg) {
       toast.error("Щось пішло не так!");
     } else {
-      console.log(value);
       session.update(value);
       toast.success("Зміни збережено!");
     }
@@ -131,7 +130,7 @@ export function UserDataForm() {
         )}
 
         <Button
-          className="font-semibold flex items-center justify-center gap-4"
+          className="font-semibold w-full flex items-center justify-center gap-4"
           type={"primary"}
           onClick={form.handleSubmit((data) => {
             return handleSubmit(data);

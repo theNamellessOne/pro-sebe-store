@@ -6,7 +6,6 @@ import {
   userChangePassword,
   UserChangePassword,
   usernameSchema,
-  UserSave,
   UserUpdate,
   userUpdateFormSchema,
 } from "@/schema/user/user-schema";
@@ -67,12 +66,19 @@ export async function _updateCurrentUser(userData: UserUpdate) {
   }
 
   const session = await auth();
-
   if (!session) {
     return {
       errMsg: "Користувач не авторизований",
       value: null,
     };
+  }
+
+  const account = await prisma.account.findFirst({
+    where: { userId: session.user.id },
+    include: { user: true },
+  });
+  if (account) {
+    userData.email = account.user.email!;
   }
 
   try {
