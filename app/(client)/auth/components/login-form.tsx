@@ -23,7 +23,7 @@ export function LoginForm() {
   const router = useRouter();
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider!"
+      ? "Ця електронна адреса вже використовується!"
       : "";
 
   const [showTwoFactor, setShowTwoFactor] = useState(false);
