@@ -1,4 +1,3 @@
-import { ReviewService } from "@/service/review/review-service";
 import { ReviewSwiper } from "./reviews-swiper";
 import { ReviewForm } from "./review-form";
 import Image from "next/image";
@@ -10,7 +9,6 @@ import { MiscService } from "@/service/misc/misc-service";
 
 export async function ReviewSection() {
   const misc = await MiscService.instance.fetch();
-  const reviews = await ReviewService.instance.fetchLatest();
 
   return (
     <div className={"container my-16 mx-auto flex flex-col lg:flex-row gap-4"}>
@@ -36,7 +34,7 @@ export async function ReviewSection() {
         <h2 className={"text-xl py-8 mx-auto w-fit lg:text-2xl"}>
           Останні відгуки
         </h2>
-        <ReviewSwiper reviews={reviews} />
+        <ReviewSwiper />
         <ReviewForm />
       </div>
     </div>

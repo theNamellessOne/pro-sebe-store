@@ -17,6 +17,7 @@ import { useState } from "react";
 import Loading from "@/app/loading";
 import { ProductService } from "@/service/product/product-service";
 import { ProductImageProvider } from "../../providers/product-image-provider";
+import { SizeMeasureInfo } from "./size-measure-info";
 
 export function ProductForm({
   value,
@@ -44,7 +45,6 @@ export function ProductForm({
   const { isSubmitting, isValid } = form.formState;
 
   const handleSubmit = async (formData: ProductSave) => {
-    // @ts-ignore
     const { errMsg } = await ProductService.instance.save(formData);
 
     if (errMsg) {
@@ -64,6 +64,7 @@ export function ProductForm({
             <div className={"flex flex-col gap-4 grow"}>
               <GeneralInfo />
               <PricingInfo />
+              <SizeMeasureInfo />
               <VariantInfo />
             </div>
             <div className={"flex flex-col gap-4 lg:w-[280px] xl:w-[340px]"}>

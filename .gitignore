@@ -2,3 +2,5 @@
 .next
 .env
 node_modules
+native/recommendation/target
+native/recommendation/node_modules

@@ -28,7 +28,7 @@ export function HeaderCategories({
           return (
             <div className={"uppercase relative"} key={category.id}>
               <Link
-                href={"/catalogue"}
+                href={`/catalogue?categoryFilter=[${category.id}]`}
                 onMouseOver={() => setSelected(category)}
               >
                 {category.name}
@@ -49,6 +49,20 @@ export function HeaderCategories({
             </div>
           );
         })}
+
+        <div className={"uppercase relative group"}>
+          <Link
+            href={`/catalogue?onlyDiscounts=true`}
+            onMouseOver={() => setSelected(undefined)}
+          >
+            Знижки
+          </Link>
+          <span
+            className={
+              "absolute bg-primary -bottom-1 left-0 h-px w-0 group-hover:w-full transition-size"
+            }
+          ></span>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -74,7 +88,7 @@ export function HeaderCategories({
                   key={child.id}
                 >
                   <Link
-                    href="catalogue"
+                    href={`/catalogue?categoryFilter=[${child.id}]`}
                     className="uppercase group relative w-fit"
                   >
                     {child.name}
@@ -87,7 +101,7 @@ export function HeaderCategories({
                   {child.children.map((child1) => {
                     return (
                       <Link
-                        href="catalogue"
+                        href={`/catalogue?categoryFilter=[${child1.id}]`}
                         className="uppercase group relative w-fit text-primary/80"
                         key={child1.id}
                       >

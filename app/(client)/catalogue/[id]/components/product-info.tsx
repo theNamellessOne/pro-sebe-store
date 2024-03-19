@@ -1,9 +1,8 @@
-import Link from "next/link";
 import { ColorList } from "./color-list";
 import { SizeList } from "./size-list";
 import { Button } from "@/app/(client)/components/ui/button";
-import { Ruler } from "lucide-react";
-import { useCart } from "@/app/(client)/cart/hooks/use-cart";
+import { SizeTableModal } from "../modals/size-table-modal";
+import { useCart } from "@/app/(checkout)/cart/hooks/use-cart";
 
 export function ProductInfo({
   product,
@@ -77,16 +76,21 @@ export function ProductInfo({
 
       <h3>{getQuantityMessage()}</h3>
 
-      <Link href={"/"} className={"flex gap-2 font-semibold"}>
-        <Ruler />
-        Перевір свій розмір.
-      </Link>
+      <SizeTableModal sizeMeasures={product.sizeMeasures} />
 
       <Button
         disabled={!isInCart(selectedVariant.id)}
         type="primary"
         className={"font-semibold w-fit"}
-        onClick={() => addToCart(selectedVariant.id)}
+        onClick={() =>
+          addToCart(selectedVariant.id, {
+            imgUrl: selectedVariant.mediaUrls[0]
+              ? selectedVariant.mediaUrls[0]?.url
+              : "https://utfs.io/f/9f49f263-2475-45a1-8770-479fd5cb0c80-9w6i5v.png",
+            name: product.name,
+            priceText: `${(Math.round(product.price * 100) / 100).toFixed(2)} UAH`,
+          })
+        }
       >
         {!isInCart(selectedVariant.id) ? "ВЖЕ У КОШИКУ" : "ДОДАТИ У КОШИК"}
       </Button>

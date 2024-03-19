@@ -98,6 +98,18 @@ export default {
         session.user.surname = token.surname as string;
       }
 
+      if (token.surname && session.user) {
+        session.user.phone = token.phone as string;
+      }
+
+      if (token.isOAuth && session.user) {
+        session.user.isOAuth = !!token.isOAuth;
+      }
+
+      if (token.patronymic && session.user) {
+        session.user.patronymic = token.patronymic as string;
+      }
+
       return session;
     },
 
@@ -105,20 +117,28 @@ export default {
       const token = props.token;
       if (!token.sub) return token;
 
+      const data: any = {};
       if (props.trigger === "update") {
-        token.username = props.session.username;
+        data.username = props.session.username;
+        data.name = props.session.name;
+        data.surname = props.session.surname;
+        data.phone = props.session.phone;
+        data.patronymic = props.session.patronymic;
+      } else if (props.user) {
+        //@ts-ignore
+        data.role = props.user.role;
+        //@ts-ignore
+        data.username = props.user.username;
+        //@ts-ignore
+        data.surname = props.user.surname;
+        //@ts-ignore
+        data.phone = props.user.phone;
+        //@ts-ignore
+        data.patronymic = props.user.patronymic;
+        data.isOAuth = props.account?.provider === "google";
       }
 
-      if (props.user) {
-        //@ts-ignore
-        token.role = props.user.role;
-        //@ts-ignore
-        token.username = props.user.username;
-        //@ts-ignore
-        token.surname = props.user.surname;
-      }
-
-      return token;
+      return { ...token, ...data };
     },
   },
   adapter: PrismaAdapter(prisma),

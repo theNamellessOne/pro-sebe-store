@@ -7,6 +7,8 @@ export type ExtendedTypes = {
   isOAuth: boolean;
   username: string;
   surname: string;
+  phone: string;
+  patronymic: string;
 };
 
 export type ExtendedUser = DefaultSession["user"] & ExtendedTypes;

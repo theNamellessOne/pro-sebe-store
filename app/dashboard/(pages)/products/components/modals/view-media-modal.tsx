@@ -105,7 +105,12 @@ export function ViewMediaModal({ variant }: ViewMediaModalProps) {
                     onUploadComplete={(res) => {
                       if (!res) return;
 
-                      addUrls(res.map((res) => res.url));
+                      addUrls(
+                        res.map((res) => {
+                          toggle(res.url);
+                          return res.url;
+                        }),
+                      );
 
                       setIsUploading(false);
                     }}

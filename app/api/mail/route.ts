@@ -10,8 +10,9 @@ type SendEmailInput = {
   html: string;
 };
 
-const sendEmail = (input: SendEmailInput) => {
+const sendEmail = async (input: SendEmailInput) => {
   const transporter = mailer.createTransport({
+    port: 465,
     service: "gmail",
     auth: {
       user: "asdfasdfadsf64@gmail.com",
@@ -19,15 +20,30 @@ const sendEmail = (input: SendEmailInput) => {
     },
   });
 
+  await new Promise((resolve, reject) => {
+    // verify connection configuration
+    transporter.verify(function (error, success) {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(success);
+      }
+    });
+  });
+
   const mailOptions = {
     from: "asdfasdfadsf64@gmail.com",
     ...input,
   };
 
-  transporter.sendMail(mailOptions, function (error: any, _: any) {
-    if (error) {
-      throw new Error(error);
-    }
+  await new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(info);
+      }
+    });
   });
 };
 
@@ -52,10 +68,10 @@ async function handler(req: NextRequest) {
   }
 
   try {
-    sendEmail(input);
+    await sendEmail(input);
     return Response.json({ msg: "Лист із підтвердженням надіслано!" });
   } catch (Exception) {
-    return Response.json({ msg: "Не вдалося надіслати лист!" });
+    return Response.json({ msg: "Не вдалося надіслати листa!" });
   }
 }
 

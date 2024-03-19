@@ -1,13 +1,25 @@
 "use client";
 
-import "./../masonry.css";
-
+import { useQuery } from "@tanstack/react-query";
 import { useProduct } from "../hooks/use-product";
 import { ProductImg } from "./product-img";
 import { ProductInfo } from "./product-info";
 import { SimilarProducts } from "./similar-products";
+import { ProductService } from "@/service/product/product-service";
+import { useRouter } from "next/router";
 
-export function Product({ product }: { product: any }) {
+export function Product(props: { article: string }) {
+  const query = useQuery({
+    queryKey: ["product", props.article],
+    queryFn: () => ProductService.instance.fetchById(props.article),
+  });
+
+  const product = query.data?.value;
+
+  if (!product) {
+    return useRouter().replace("/catalogue");
+  }
+
   const { selectedVariant, setSelectedColor, setSelectedSize } =
     useProduct(product);
 

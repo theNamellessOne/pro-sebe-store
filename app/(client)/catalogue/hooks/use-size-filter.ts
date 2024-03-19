@@ -1,11 +1,19 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import NProgress from "nprogress";
 import { useEffect, useState } from "react";
 import { Size } from "@prisma/client";
 import { SizeService } from "@/service/size/size-service";
+import { filterEventChannel } from "../components/filters/events/filter-event-channgel";
+import { useQuery } from "@tanstack/react-query";
 
 export type SelectedSize = Size & { isSelected: boolean };
 
 export function useSizeFilter() {
+  const queryClient = useQuery({
+    queryKey: ["sizes"],
+    queryFn: () => SizeService.instance.fetchAll(),
+  });
+
   const [sizes, setSizes] = useState<SelectedSize[]>([]);
 
   const searchParams = useSearchParams();
@@ -13,12 +21,14 @@ export function useSizeFilter() {
   const { replace } = useRouter();
 
   const setFilter = (sizeIds: number[]) => {
+    NProgress.start();
     const params = new URLSearchParams(searchParams);
     if (sizeIds) {
       params.set("sizeFilter", JSON.stringify(sizeIds));
     } else {
       params.delete("sizeFilter");
     }
+
     replace(`${pathname}?${params.toString()}`);
   };
 
@@ -31,27 +41,38 @@ export function useSizeFilter() {
     return JSON.parse(sizeFilterParam) as number[];
   };
 
-  useEffect(() => {
-    SizeService.instance.fetchAll().then((res) => {
-      const selectedIds = readFilter();
-      if (selectedIds === "all") {
-        setSizes(
-          res.map((item) => {
-            return { isSelected: true, ...item };
-          }),
-        );
-        return;
-      }
+  const load = () => {
+    const res = queryClient.data;
+    if (!res) return;
 
-      setSizes(
-        res.map((item) => {
-          return {
-            isSelected: selectedIds.includes(item.id),
-            ...item,
-          };
+    const selectedIds = readFilter();
+    if (selectedIds === "all") {
+      setSizes([
+        ...res.map((item) => {
+          return { isSelected: false, ...item };
         }),
-      );
-    });
+      ]);
+      return;
+    }
+
+    setSizes([
+      ...res.map((item) => {
+        return {
+          isSelected: selectedIds.includes(item.id),
+          ...item,
+        };
+      }),
+    ]);
+  };
+
+  useEffect(load, [queryClient.isFetched]);
+
+  useEffect(() => {
+    load();
+
+    const searchUnsub = filterEventChannel.on("onSearchChange", load);
+
+    return searchUnsub();
   }, []);
 
   const toggleSelection = (idx: number) => {
@@ -66,5 +87,10 @@ export function useSizeFilter() {
     setFilter(filteredSizes);
   };
 
-  return { sizes, toggleSelection, filterSizes };
+  return {
+    loading: queryClient.isLoading,
+    sizes,
+    toggleSelection,
+    filterSizes,
+  };
 }

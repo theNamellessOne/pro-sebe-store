@@ -1,5 +1,4 @@
 import prisma from "@/lib/prisma";
-import { NextApiRequest, NextApiResponse } from "next";
 
 export async function GET() {
   const users = await prisma.user.findMany({

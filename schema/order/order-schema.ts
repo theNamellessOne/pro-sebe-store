@@ -22,6 +22,7 @@ export const addressPartsSchema = z.object({
 export const deliveryInfoSchema = z
   .object({
     settlementRef: z.string().length(36),
+    settlementDescription: z.string(),
     deliveryType: z.enum([
       OrderDeliveryType.COURIER,
       OrderDeliveryType.WAREHOUSE,

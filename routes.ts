@@ -8,9 +8,10 @@ export const PUBLIC_ROUTES = [
   "/catalogue",
   "/cart",
   "/checkout",
+  "/reviews",
 ];
 
-export const USER_ROUTES = [...PUBLIC_ROUTES];
+export const USER_ROUTES = [...PUBLIC_ROUTES, "/user-page"];
 
 export const PACKAGER_ROUTES = [...USER_ROUTES, "/dashboard/orders"];
 

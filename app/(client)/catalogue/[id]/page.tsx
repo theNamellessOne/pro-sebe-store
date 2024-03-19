@@ -1,13 +1,28 @@
 import { ProductService } from "@/service/product/product-service";
 import { Product } from "./components/product";
-import { redirect } from "next/navigation";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const { value } = await ProductService.instance.fetchById(params.id);
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000, // 1 minute,
+      },
+    },
+  });
 
-  if (!value) {
-    redirect("/catalogue");
-  }
+  await queryClient.prefetchQuery({
+    queryKey: ["product", params.id],
+    queryFn: () => ProductService.instance.fetchById(params.id),
+  });
 
-  return <Product product={value} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Product article={params.id} />
+    </HydrationBoundary>
+  );
 }
