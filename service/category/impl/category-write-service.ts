@@ -31,13 +31,23 @@ async function _createCategory(category: CategorySave) {
 async function _updateCategory(category: CategorySave) {
     if (!categorySchema.safeParse(category)) {
         return {
-            errMsg: "invalid data",
+            errMsg: "Некоректні дані!",
             value: null,
         };
     }
 
     const id = category.id;
     const path = await _reconstructPath(category.parentId);
+    const numbers = path.map(Number)
+
+    for(let i = 0; i < numbers.length; i++){
+        if(numbers[i] === category.id){
+            return {
+                errMsg: "Некоректні дані!",
+                value: null,
+            };
+        }
+    }
 
     return {
         errMsg: null,
