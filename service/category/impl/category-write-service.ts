@@ -10,7 +10,7 @@ export async function _saveCategory(category: CategorySave) {
 async function _createCategory(category: CategorySave) {
     if (!categorySchema.safeParse(category)) {
         return {
-            errMsg: "invalid data",
+            errMsg: "Некоректні дані!",
             value: null,
         };
     }
@@ -31,7 +31,7 @@ async function _createCategory(category: CategorySave) {
 async function _updateCategory(category: CategorySave) {
     if (!categorySchema.safeParse(category)) {
         return {
-            errMsg: "Некоректні дані!",
+            errMsg: "Батьківська категорія не може бути дочірньою!",
             value: null,
         };
     }
