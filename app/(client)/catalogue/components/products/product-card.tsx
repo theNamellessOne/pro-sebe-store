@@ -88,7 +88,6 @@ export function ProductCard({ product }: ProductCardProps) {
           blurDataURL={
             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkeAoAAOsA57RxdOQAAAAASUVORK5CYII="
           }
-          quality={100}
           height={550}
           width={550}
           alt={product.name}

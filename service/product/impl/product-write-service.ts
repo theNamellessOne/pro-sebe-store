@@ -9,6 +9,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import prisma from "@/lib/prisma";
 import { VariantSave } from "@/schema/product/variant-schema";
+import { ProductStatus } from "@prisma/client";
 
 export async function _updateProduct(product: ProductSave) {
   if (!productSchema.safeParse(product)) {

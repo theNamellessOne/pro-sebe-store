@@ -28,10 +28,13 @@ export function FileUpload({
         const compress = async () => {
           let promises = files.map(async (file) => {
             return new Promise((resolve, reject) => {
+              let mWidth = 1600;
+              let mHeight = 1600;
+
               new Compressor(file, {
                 quality: 0.6,
-                maxWidth: 1600,
-                maxHeight: 1600,
+                maxWidth: mWidth,
+                maxHeight: mHeight,
                 success(result) {
                   resolve(new File([result], file.name));
                 },
