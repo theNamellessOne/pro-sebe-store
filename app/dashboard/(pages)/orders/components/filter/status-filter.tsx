@@ -3,6 +3,7 @@
 import { Select, SelectItem } from "@nextui-org/react";
 import { OrderStatus } from "@prisma/client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { TranslatedStatuses } from "../../const/transl";
 
 export function StatusFilter() {
   const statuses: string[] = [];
@@ -43,7 +44,7 @@ export function StatusFilter() {
     >
       {statuses.map((item) => (
         <SelectItem key={item} value={item}>
-          {item}
+          {item === "ALL" ? "Усі" : TranslatedStatuses[item as OrderStatus]}
         </SelectItem>
       ))}
     </Select>

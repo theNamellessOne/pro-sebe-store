@@ -17,6 +17,7 @@ export async function _fetchCurrentUserOrders() {
   return {
     value: await prisma.order.findMany({
       where: { userId: session.user.id },
+      include: { orderItems: true },
     }),
   };
 }
@@ -58,6 +59,7 @@ function _getWhere(query: string, status: string) {
     };
   }
 
+  let idFilter: { id: { search: string } } | {} = {};
   let nameFilter: { name: { search: string } } | {} = {};
   let emailFilter: { email: { search: string } } | {} = {};
   let phoneFilter: { phone: { search: string } } | {} = {};
@@ -65,6 +67,7 @@ function _getWhere(query: string, status: string) {
   let middleNameFilter: { middlename: { search: string } } | {} = {};
 
   if (query && query.length > 0) {
+    idFilter = { id: { search: `${query}*` } };
     nameFilter = { name: { search: `${query}*` } };
     emailFilter = { email: { search: `${query}*` } };
     phoneFilter = { phone: { search: `${query}*` } };
@@ -73,6 +76,7 @@ function _getWhere(query: string, status: string) {
   }
 
   const OR = [
+    { ...idFilter },
     { ...nameFilter },
     { ...emailFilter },
     { ...phoneFilter },

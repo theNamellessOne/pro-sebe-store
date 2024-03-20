@@ -8,6 +8,10 @@ export function useUserList(
   page: number,
   sortDescriptor: SortDescriptor,
 ) {
+  if (sortDescriptor.column === "actions") {
+    sortDescriptor = {};
+  }
+
   const props = {
     query,
     page,

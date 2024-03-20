@@ -229,8 +229,135 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
   if (redirectUrl !== "") redirect(redirectUrl);
 }
 
+async function _returnOrderItemsToStock(order: any) {
+  await prisma.$transaction(async (prisma) => {
+    const promises: Promise<any>[] = [];
+    for (const item of order.orderItems) {
+      promises.push(
+        prisma.variant.updateMany({
+          where: {
+            name: item.variantName,
+            productArticle: item.productArticle,
+          },
+          data: {
+            quantity: { increment: item.quantity },
+            reserved: { decrement: item.quantity },
+          },
+        }),
+      );
+    }
+
+    await Promise.all(promises);
+  });
+}
+
+function _decideProductVariantStockAction(
+  currentStatus: OrderStatus,
+  newStatus: OrderStatus,
+  item: { quantity: number },
+) : {
+  sold?: {
+    increment?: number,
+    decrement?: number
+  },
+  quantity?: {
+    increment?: number,
+    decrement?: number
+  },
+  reserved?: {
+    increment?: number,
+    decrement?: number
+  }
+} {
+  switch (newStatus) {
+    case OrderStatus.RETURNED:
+    case OrderStatus.CANCELED:
+      if (
+        currentStatus === OrderStatus.PAID ||
+        currentStatus === OrderStatus.CREATED
+      ) {
+        return {
+          reserved: { decrement: item.quantity },
+          quantity: { increment: item.quantity },
+        };
+      }
+
+      if (
+        currentStatus === OrderStatus.PACKED ||
+        currentStatus === OrderStatus.DELIVERED
+      ) {
+        return {
+          sold: { decrement: item.quantity },
+          quantity: { increment: item.quantity },
+        };
+      }
+
+      return {};
+
+    case OrderStatus.PACKED:
+    case OrderStatus.DELIVERED:
+      if (
+        currentStatus === OrderStatus.RETURNED ||
+        currentStatus === OrderStatus.CANCELED
+      ) {
+        return {
+          sold: { increment: item.quantity },
+          quantity: { decrement: item.quantity },
+        };
+      }
+
+      if (
+        currentStatus === OrderStatus.PAID ||
+        currentStatus === OrderStatus.CREATED
+      ) {
+        return {
+          reserved: { decrement: item.quantity },
+          sold: { increment: item.quantity },
+        };
+      }
+
+      return {};
+
+    default:
+      return {};
+  }
+}
+
+async function _updateProductStock(order: any, newStatus: OrderStatus) {
+  const currentStatus = order.status;
+
+  await prisma.$transaction(async (prisma) => {
+    const promises: Promise<any>[] = [];
+    for (const item of order.orderItems) {
+      promises.push(
+        prisma.variant.updateMany({
+          where: {
+            name: item.variantName,
+            productArticle: item.productArticle,
+          },
+          data: _decideProductVariantStockAction(
+            currentStatus,
+            newStatus,
+            item,
+          ),
+        }),
+      );
+    }
+
+    await Promise.all(promises);
+  });
+}
+
 export async function _setStatus(orderId: string, status: OrderStatus) {
   try {
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        orderItems: true,
+      },
+    });
+
+    await _updateProductStock(order, status);
     await prisma.order.update({
       where: { id: orderId },
       data: { status },

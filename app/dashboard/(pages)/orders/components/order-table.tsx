@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { TableProps } from "@/app/dashboard/types/table-props";
-import { Selection } from "@nextui-org/react";
 import {
   Table,
   TableBody,
@@ -29,13 +27,12 @@ export function OrderTable({
     sortDescriptor,
     status,
   );
-  const [selected, setSelected] = useState<Selection>(new Set([]));
 
   const columns = [
-    { name: "Actions", uid: "actions" },
-    { name: "Total", uid: "total" },
-    { name: "PaymentType", uid: "paymentType" },
-    { name: "Status", uid: "status" },
+    { name: "Дії", uid: "actions" },
+    { name: "Сума", uid: "total" },
+    { name: "Оплата", uid: "paymentType" },
+    { name: "Статус", uid: "status" },
   ];
 
   return (

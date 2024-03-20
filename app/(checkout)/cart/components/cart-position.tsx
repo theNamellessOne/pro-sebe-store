@@ -19,8 +19,8 @@ export function CartPosition({ item }: any) {
       >
         <Image
           className={"object-cover h-[200px] w-[200px]"}
-          width={300}
-          height={300}
+          width={200}
+          height={200}
           src={
             itemVariant.mediaUrls[0]
               ? itemVariant.mediaUrls[0]?.url
@@ -61,7 +61,7 @@ export function CartPosition({ item }: any) {
         </h3>
 
         <p className={"text-[#808080]"}>Колір: {colorName}</p>
-        <p className={"text-[#808080]"}>Розмір {sizeName}</p>
+        <p className={"text-[#808080]"}>Розмір: {sizeName}</p>
         <p className={"text-[#808080]"}>
           Ціна: {itemVariant.product.price.toString()} UAH
         </p>

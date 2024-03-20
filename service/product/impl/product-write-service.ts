@@ -72,14 +72,14 @@ async function _handleVariantsChange({
     const key = `${variant.colorId}-${variant.sizeId}`;
     const mediaUrlJson = JSON.stringify(variant.mediaUrls);
     // @ts-ignore
-    dbVariantsMap.set(key, {mediaUrls: mediaUrlJson, ...variant});
+    dbVariantsMap.set(key, { mediaUrls: mediaUrlJson, ...variant });
   });
   const uiVariantsMap = new Map();
   uiVariants.forEach((variant) => {
     const key = `${variant.colorId}-${variant.sizeId}`;
     const mediaUrlJson = JSON.stringify(variant.mediaUrls);
     // @ts-ignore
-    uiVariantsMap.set(key, {mediaUrls: mediaUrlJson, ...variant});
+    uiVariantsMap.set(key, { mediaUrls: mediaUrlJson, ...variant });
   });
 
   const variantsWithId: VariantSave[] = [];
@@ -123,6 +123,7 @@ async function _handleVariantsChange({
           name: variant.name,
           quantity: variant.quantity,
           reserved: 0,
+          sold: 0,
           colorId: variant.colorId,
           sizeId: variant.sizeId,
           mediaUrls: variant.mediaUrls,

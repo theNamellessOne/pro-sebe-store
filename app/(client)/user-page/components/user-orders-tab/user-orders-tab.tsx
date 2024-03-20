@@ -35,7 +35,7 @@ const OrdersSkeleton = () =>
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className={"min-w-[200px] shrink-0 flex flex-col gap-2 h-[300px]"}
+        className={"w-full shrink-0 flex flex-col gap-2 h-[350px]"}
         key={"product_loader" + item}
       >
         <Skeleton className="rounded-sm w-full h-full"></Skeleton>

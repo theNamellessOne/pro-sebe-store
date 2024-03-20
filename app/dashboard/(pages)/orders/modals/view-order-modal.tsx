@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   Modal,
   ModalBody,
   ModalContent,
@@ -9,9 +10,19 @@ import {
 } from "@nextui-org/react";
 import { useState } from "react";
 import Loading from "@/app/loading";
-import { OrderDeliveryType, OrderStatus } from "@prisma/client";
+import {
+  OrderDeliveryType,
+  OrderItem,
+  OrderPaymentType,
+  OrderStatus,
+} from "@prisma/client";
 import Image from "next/image";
 import { OrderService } from "@/service/order/order-service";
+import {
+  TranslatedDeliveryTypes,
+  TranslatedPaymentTypes,
+  TranslatedStatuses,
+} from "../const/transl";
 import toast, { Toaster } from "react-hot-toast";
 
 export function ViewOrderModal({ order }: { order: any }) {
@@ -35,7 +46,7 @@ export function ViewOrderModal({ order }: { order: any }) {
         Детальніше
       </Button>
       <Modal
-        size={"xl"}
+        size={"5xl"}
         scrollBehavior={"inside"}
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -48,102 +59,194 @@ export function ViewOrderModal({ order }: { order: any }) {
                 Order Info
               </ModalHeader>
               <ModalBody>
-                <div className={"grid grid-cols-2 gap-2"}>
-                  <p>Id</p>
-                  <p>{order.id}</p>
-                  <p>Статус</p>
-                  <p>{order.status}</p>
-                  <p>Оплата</p>
-                  <p>{order.paymentType}</p>
-                  <p>Доставка</p>
-                  <p>{order.orderDeliveryType}</p>
-                  <p>Всього</p>
-                  <p>{order.total}</p>
+                <div className={"grid lg:grid-cols-2 grid-cols-1"}>
+                  <div
+                    className={
+                      "grid grid-cols-2 gap-2 h-fit top-0 lg:sticky border-b-1 lg:border-b-0 lg:border-r-1 p-3"
+                    }
+                  >
+                    <p
+                      className={
+                        "col-span-2 font-bold my-2 relative " +
+                        "after:ml-2 after:top-1/2 after:absolute after:w-full after:h-px after:bg-secondary overflow-hidden"
+                      }
+                    >
+                      Загальне
+                    </p>
+                    <p className={"col-span-2 text-center my-2"}></p>
 
-                  <p className={"col-span-2 text-center my-2"}></p>
+                    <p>Id</p>
+                    <p>{order.id}</p>
+                    <p>Статус</p>
+                    <p>{TranslatedStatuses[order.status as OrderStatus]}</p>
+                    <p>Оплата</p>
+                    <p>
+                      {
+                        TranslatedPaymentTypes[
+                          order.paymentType as OrderPaymentType
+                        ]
+                      }
+                    </p>
+                    <p>Доставка</p>
+                    <p>
+                      {
+                        TranslatedDeliveryTypes[
+                          order.orderDeliveryType as OrderDeliveryType
+                        ]
+                      }
+                    </p>
+                    <p>Всього</p>
+                    <p>{order.total}</p>
 
-                  <p>Ім'я</p>
-                  <p>{order.name}</p>
-                  <p>Прізвище</p>
-                  <p>{order.surname}</p>
-                  <p>По батькові</p>
-                  <p>{order.middlename}</p>
-                  <p>Електронна пошта</p>
-                  <p>{order.email}</p>
-                  <p>Номер телефону</p>
-                  <p>{order.phone}</p>
+                    <p className={"col-span-2 my-2"}></p>
+                    <p
+                      className={
+                        "col-span-2 font-bold my-2 relative " +
+                        "after:ml-2 after:top-1/2 after:absolute after:w-full after:h-px after:bg-secondary overflow-hidden"
+                      }
+                    >
+                      Контактні Дані
+                    </p>
+                    <p className={"col-span-2 my-2"}></p>
 
-                  <p className={"col-span-2 text-center my-2"}></p>
+                    <p>Ім'я</p>
+                    <p>{order.name}</p>
+                    <p>Прізвище</p>
+                    <p>{order.surname}</p>
+                    <p>По батькові</p>
+                    <p>{order.middlename}</p>
+                    <p>Електронна пошта</p>
+                    <p>{order.email}</p>
+                    <p>Номер телефону</p>
+                    <p>{order.phone}</p>
 
-                  {order.orderDeliveryType === OrderDeliveryType.WAREHOUSE && (
-                    <>
-                      <p>Номер відділення</p>
-                      <p>{order.warehouseKey}</p>
-                    </>
-                  )}
+                    <p className={"col-span-2 my-2"}></p>
+                    <p
+                      className={
+                        "col-span-2 font-bold my-2 relative " +
+                        "after:ml-2 after:top-1/2 after:absolute after:w-full after:h-px after:bg-secondary overflow-hidden"
+                      }
+                    >
+                      Доставка
+                    </p>
+                    <p className={"col-span-2 my-2"}></p>
 
-                  {order.orderDeliveryType === OrderDeliveryType.COURIER && (
-                    <>
-                      <p>Вулиця</p>
-                      <p>{order.street}</p>
-                      <p>Номер будинку/квартира</p>
-                      <p>{order.houseNo}</p>
-                      <p>Поштовий індекс</p>
-                      <p>{order.postalIdx}</p>
-                    </>
-                  )}
+                    {order.orderDeliveryType ===
+                      OrderDeliveryType.WAREHOUSE && (
+                      <>
+                        <p>Номер відділення</p>
+                        <p>{order.warehouseKey}</p>
+                      </>
+                    )}
 
-                  <p>Реф поселення</p>
-                  <p>{order.settlementRef}</p>
-                  <p>Опис поселення</p>
-                  <p>{order.settlementDescription}</p>
+                    {order.orderDeliveryType === OrderDeliveryType.COURIER && (
+                      <>
+                        <p>Вулиця</p>
+                        <p>{order.street}</p>
+                        <p>Номер будинку/квартира</p>
+                        <p>{order.houseNo}</p>
+                        <p>Поштовий індекс</p>
+                        <p>{order.postalIdx}</p>
+                      </>
+                    )}
 
-                  {order.orderItems.map((item: any) => (
-                    <>
-                      <p className={"col-span-2 text-center my-2"}></p>
-                      <p>Артикль товару</p>
-                      {item.productArticle}
-                      <p>Назва товару</p>
-                      {item.productName}
-                      <p>Назва варіанту</p>
-                      {item.variantName}
-                      <p>Ціна на момент продажу</p>
-                      {item.variantSellingPrice}
-                      <p>К-сть</p>
-                      {item.quantity}
-                      <div
+                    <p>Реф поселення</p>
+                    <p>{order.settlementRef}</p>
+                    <p>Опис поселення</p>
+                    <p>{order.settlementDescription}</p>
+
+                    <div className={"flex flex-col col-span-2 my-2 gap-2"}>
+                      <p className={"col-span-2 my-2"}></p>
+                      <p
                         className={
-                          "col-span-2 my-2 overflow-hidden rounded-small"
+                          "col-span-2 font-bold my-2 relative " +
+                          "after:ml-2 after:top-1/2 after:absolute after:w-full after:h-px after:bg-secondary overflow-hidden"
                         }
                       >
+                        Встановити статус
+                      </p>
+                      <p className={"col-span-2 my-2"}></p>
+
+                      <Button
+                        color="danger"
+                        variant="solid"
+                        className={"w-full"}
+                        onPress={() => handleStatusUpdate(OrderStatus.CANCELED)}
+                      >
+                        Відмінено
+                      </Button>
+
+                      <Button
+                        color="danger"
+                        variant="flat"
+                        className={"w-full"}
+                        onPress={() => handleStatusUpdate(OrderStatus.RETURNED)}
+                      >
+                        Повернено
+                      </Button>
+
+                      <Button
+                        color="success"
+                        variant="flat"
+                        className={"w-full"}
+                        onPress={() => handleStatusUpdate(OrderStatus.PACKED)}
+                      >
+                        Запаковано
+                      </Button>
+
+                      <Button
+                        color="success"
+                        variant="solid"
+                        className={"w-full"}
+                        onPress={() =>
+                          handleStatusUpdate(OrderStatus.DELIVERED)
+                        }
+                      >
+                        Доставлено
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div
+                    className={
+                      "inline-grid grid-cols-2 auto-rows-max gap-2 p-3"
+                    }
+                  >
+                    <p
+                      className={
+                        "col-span-2 font-bold my-2 relative " +
+                        "after:ml-2 after:top-1/2 after:absolute after:w-full after:h-px after:bg-secondary overflow-hidden"
+                      }
+                    >
+                      Продаж
+                    </p>
+                    {order.orderItems.map((item: OrderItem) => (
+                      <>
+                        <p className={"col-span-2 text-center my-2"}></p>
+                        <p className={"my-1"}>Артикль товару</p>
+                        <p className={"my-1"}>{item.productArticle}</p>
+                        <p className={"my-1"}>Назва товару</p>
+                        <p className={"my-1"}>{item.productName}</p>
+                        <p className={"my-1"}>Назва варіанту</p>
+                        <p className={"my-1"}>{item.variantName}</p>
+                        <p className={"my-1"}>Ціна на момент продажу</p>
+                        <p className={"my-1"}>
+                          {item.variantSellingPrice.toString()} UAH
+                        </p>
+                        <p className={"my-1"}>К-сть</p>
+                        <p className={"my-1"}>{item.quantity}</p>
+                        <p className={"my-1"}>Зображення</p>
                         <Image
                           src={item.variantImgUrl}
-                          alt={"картинка"}
-                          height={600}
-                          width={600}
+                          alt={""}
+                          width={300}
+                          height={300}
+                          className={"my-1"}
                         />
-                      </div>
-                    </>
-                  ))}
-
-                  <p className={"col-span-2 text-center my-2"}></p>
-                  <p>Встановити статус</p>
-                  <Button
-                    color="default"
-                    variant="flat"
-                    onPress={() => handleStatusUpdate(OrderStatus.PACKED)}
-                  >
-                    Запаковано
-                  </Button>
-
-                  <p></p>
-                  <Button
-                    color="primary"
-                    variant="flat"
-                    onPress={() => handleStatusUpdate(OrderStatus.DELIVERED)}
-                  >
-                    Доставлено
-                  </Button>
+                        <Divider className={"col-span-2"} />
+                      </>
+                    ))}
+                  </div>
                 </div>
               </ModalBody>
 
