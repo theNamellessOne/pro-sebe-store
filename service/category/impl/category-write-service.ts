@@ -45,7 +45,7 @@ async function _updateCategory(category: CategorySave) {
   return {
     errMsg: null,
     value: await prisma.category.update({
-      where: { id },
+      where: {id},
       data: {
         ...category,
         path: path.join(";"),
@@ -68,6 +68,6 @@ async function _reconstructPath(parentId: number | null | undefined) {
 
   path.push(category.id.toString());
   path = path.concat(await _reconstructPath(category.parentId));
-
+  console.log(parentId)
   return path;
 }
