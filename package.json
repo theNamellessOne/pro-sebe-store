@@ -29,6 +29,7 @@
     "bcryptjs": "^2.4.3",
     "browser-image-compression": "^2.0.2",
     "clsx": "^2.0.0",
+    "compressorjs": "^1.2.1",
     "framer-motion": "^10.16.16",
     "loader-utils": "^2.0.3",
     "lucide-react": "^0.294.0",
