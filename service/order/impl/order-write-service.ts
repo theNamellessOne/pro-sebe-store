@@ -15,7 +15,7 @@ function calculatePercentage(part: number, whole: number) {
     return 0;
   }
 
-  return (part / whole) * 100;
+  return (part / 100) * whole;
 }
 
 const MONOBANK_API_KEY = process.env.MONOBANK_API_KEY;
