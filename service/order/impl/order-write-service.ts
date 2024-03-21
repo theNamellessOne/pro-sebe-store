@@ -168,6 +168,9 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
           ? calculatePercentage(misc?.secondOrderDiscount, total.toNumber())
           : 0;
 
+        console.log("----> order total", total.toNumber())
+        console.log("----> order discount", discount)
+
         value = await prisma.order.create({
           data: {
             ...order.contactInfo,

@@ -10,11 +10,11 @@ export async function POST(req: NextRequest) {
 
   if (!sign) return new Response();
 
-  console.log("---> pubkey", await fetch("https://api.monobank.ua/api/merchant/pubkey", {
+  console.log("---> pubkey", await (await fetch("https://api.monobank.ua/api/merchant/pubkey", {
     headers: {
       'X-Token': process.env.MONOBANK_API_KEY!
     }
-  }))
+  })).json())
   if (body.status === "success") await OrderService.instance.confirmOrder(body.reference);
 
   return new Response();
