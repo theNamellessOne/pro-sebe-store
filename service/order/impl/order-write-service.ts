@@ -28,6 +28,7 @@ type MonobankRequest = {
     reference: string;
     destination: string;
     comment: string;
+    customerEmails: string[];
     basketOrder: {
       name: string;
       qty: number;
@@ -72,6 +73,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
       amount: 0,
       merchantPaymInfo: {
         reference: "",
+        customerEmails: [order.contactInfo.email],
         destination: "куда нада",
         comment: "куда нада",
         basketOrder: [],
@@ -204,7 +206,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
         mono.merchantPaymInfo.reference = value.id;
         mono.redirectUrl = `http://localhost:3000/api/payment-confirm/${value.id}`;
       },
-      { timeout: 10000 },
+      { timeout: 15000 },
     );
 
     const res = await fetch(
@@ -229,45 +231,23 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
   if (redirectUrl !== "") redirect(redirectUrl);
 }
 
-async function _returnOrderItemsToStock(order: any) {
-  await prisma.$transaction(async (prisma) => {
-    const promises: Promise<any>[] = [];
-    for (const item of order.orderItems) {
-      promises.push(
-        prisma.variant.updateMany({
-          where: {
-            name: item.variantName,
-            productArticle: item.productArticle,
-          },
-          data: {
-            quantity: { increment: item.quantity },
-            reserved: { decrement: item.quantity },
-          },
-        }),
-      );
-    }
-
-    await Promise.all(promises);
-  });
-}
-
 function _decideProductVariantStockAction(
   currentStatus: OrderStatus,
   newStatus: OrderStatus,
   item: { quantity: number },
-) : {
+): {
   sold?: {
-    increment?: number,
-    decrement?: number
-  },
+    increment?: number;
+    decrement?: number;
+  };
   quantity?: {
-    increment?: number,
-    decrement?: number
-  },
+    increment?: number;
+    decrement?: number;
+  };
   reserved?: {
-    increment?: number,
-    decrement?: number
-  }
+    increment?: number;
+    decrement?: number;
+  };
 } {
   switch (newStatus) {
     case OrderStatus.RETURNED:

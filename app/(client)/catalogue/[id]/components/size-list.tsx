@@ -25,7 +25,7 @@ export function SizeList({
               className={
                 "flex border-foreground border-1 flex-col items-center " +
                 `${size.id === sizeId ? "bg-secondary" : ""}` +
-                ` justify-center h-[44px] w-[44px] rounded-sm relative`
+                ` justify-center h-[44px] min-w-[44px] px-2 rounded-sm relative`
               }
             >
               <p className={"text-xl"}>{size.name}</p>
