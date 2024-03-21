@@ -31,13 +31,10 @@ export function RegisterForm() {
   );
 
   const handleSubmit = async (formData: RegisterInput) => {
-    const { msg, value } = await AuthService.instance.register(formData);
+    const res = await AuthService.instance.register(formData);
 
-    if (!value) {
-      setServerError(msg);
-    } else {
-      setServerSuccess(msg);
-    }
+      setServerError(res.error);
+      setServerSuccess(res.success);
   };
 
   return (

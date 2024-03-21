@@ -25,6 +25,8 @@
     "@types/natural": "^5.1.5",
     "@types/react-slick": "^0.23.13",
     "@uploadthing/react": "^6.2.2",
+    "@upstash/ratelimit": "^1.0.1",
+    "@upstash/redis": "^1.28.4",
     "axios": "^1.6.3",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.0.0",

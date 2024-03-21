@@ -18,5 +18,5 @@ export async function _sendEmail(input: SendEmailInput) {
     body: JSON.stringify({ ...input, token: token.token }),
   });
 
-  return (await res.json()).msg;
+  return (await res.json());
 }

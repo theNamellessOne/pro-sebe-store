@@ -27,7 +27,7 @@ async function hashPassword(psw: string) {
 export async function _register(input: RegisterInput) {
   if (!loginSchema.safeParse(input).success) {
     return {
-      msg: "Некоректні дані!",
+      error: "Некоректні дані!",
       value: null,
     };
   }
@@ -42,13 +42,13 @@ export async function _register(input: RegisterInput) {
     },
   });
   if (usr?.email === input.email) {
-    return { msg: "Ця електронна адреса вже використовується!", value: null };
+    return { error: "Ця електронна адреса вже використовується!", value: null };
   }
   if (usr?.username === input.username) {
-    return { msg: "Цей юзернейм вже використовується!", value: null };
+    return { error: "Цей юзернейм вже використовується!", value: null };
   }
   if (usr?.phone === input.phone) {
-    return { msg: "Цей номер телефону вже використовується!", value: null };
+    return { error: "Цей номер телефону вже використовується!", value: null };
   }
 
   let createdUser = await prisma.user.create({
@@ -60,14 +60,14 @@ export async function _register(input: RegisterInput) {
 
   const verificationToken =
     await TokenService.instance.generateVerificationToken(createdUser.email!);
-  const status = await MailService.instance.sendVerificationMail(
+  const res = await MailService.instance.sendVerificationMail(
     verificationToken.email,
     verificationToken.token,
   );
 
   return {
     value: await UserService.instance.fetchById(createdUser.id),
-    msg: status,
+    ...res,
   };
 }
 
@@ -132,12 +132,13 @@ export async function _resetPassword(input: ResetPasswordInput) {
 
   const passwordResetToken =
     await TokenService.instance.generatePasswordResetToken(email);
-  await MailService.instance.sendPasswordResetEmail(
+  const res = await MailService.instance.sendPasswordResetEmail(
     passwordResetToken.email,
     passwordResetToken.token,
   );
 
-  return { success: "Повідомлення про відновлення надіслано!" };
+  return {       success: res.success,
+    error: res.error, };
 }
 
 export const _newPassword = async (
@@ -205,8 +206,10 @@ export async function _login(values: LoginInput): Promise<{
   }
 
   if (!existingUser.emailVerified) {
-    await _sendConfirmationCode(existingUser.email);
-    return { success: "Лист для підтвердження електроннох адреси надісано!" };
+    const res = await _sendConfirmationCode(existingUser.email);
+    console.log(res)
+    return {       success: res.success,
+      error: res.error, };
   }
 
   if (existingUser.role !== Role.USER && existingUser.email) {
@@ -236,7 +239,7 @@ async function _sendConfirmationCode(email: string) {
   const verificationToken =
     await TokenService.instance.generateVerificationToken(email);
 
-  await MailService.instance.sendVerificationMail(
+  return await MailService.instance.sendVerificationMail(
     verificationToken.email,
     verificationToken.token,
   );
@@ -245,7 +248,7 @@ async function _sendConfirmationCode(email: string) {
 async function _sendTwoFactorCode(email: string) {
   const twoFactorToken =
     await TokenService.instance.generateTwoFactorToken(email);
-  await MailService.instance.sendTwoFactorMail(
+  return await MailService.instance.sendTwoFactorMail(
     twoFactorToken.email,
     twoFactorToken.token,
   );
@@ -263,11 +266,12 @@ async function _handleTwoFactorLogin(
   twoFactor?: boolean;
 }> {
   if (!code) {
-    await _sendTwoFactorCode(email);
+    const res = await _sendTwoFactorCode(email);
 
     return {
       twoFactor: true,
-      success: "Код підтвердження надіслано. Будь ласка, перевірте вашу електронну скриньку.",
+      success: res.success,
+      error: res.error,
     };
   }
 

@@ -2,19 +2,38 @@ import { Role } from "@prisma/client";
 import { DEFAULT_LOGIN_REDIRECT, PUBLIC_ROUTES, USER_ROUTES } from "@/routes";
 import NextAuth from "next-auth";
 import authConfig from "@/auth/auth.config";
+import {Ratelimit} from "@upstash/ratelimit";
+import {Redis} from "@upstash/redis";
+
+export const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+})
+
+const globalRateLimiter = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(200, "1 s"),
+});
 
 const { auth } = NextAuth(authConfig);
 
 export default auth(async (req) => {
   const pathname = req.nextUrl.pathname;
+  const ip = req.ip ?? '127.0.0.1';
 
+  if (pathname.startsWith("/api/mail")) return;
   if (pathname.startsWith("/api/payment-confirm")) return;
   if (pathname.startsWith("/api/recommender")) return;
-  if (pathname.startsWith("/api/mail")) return;
   if (pathname.startsWith("/api/uploadthing")) return;
 
   const { nextUrl } = req;
   const user = req.auth?.user;
+
+  if (user?.role !== Role.OWNER) {
+    const { success, pending, limit, reset, remaining } = await globalRateLimiter.limit(ip);
+    console.log(success, limit, remaining)
+    if (!success) return Response.redirect(new URL("/blocked", nextUrl))
+  }
 
   if (pathname === "/api/users/export" && user?.role === Role.OWNER) return;
 

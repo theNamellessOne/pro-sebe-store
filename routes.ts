@@ -9,6 +9,7 @@ export const PUBLIC_ROUTES = [
   "/cart",
   "/checkout",
   "/reviews",
+  "/blocked"
 ];
 
 export const USER_ROUTES = [...PUBLIC_ROUTES, "/user-page"];
