@@ -1,6 +1,7 @@
 import { Key, useCallback } from "react";
-import { Order, OrderDeliveryType } from "@prisma/client";
-import { ViewOrderModal } from "@/app/dashboard/(pages)/orders/modals/view-order-modal";
+import { Order, OrderPaymentType, OrderStatus } from "@prisma/client";
+import { ViewOrderModal } from "../modals/view-order-modal";
+import { TranslatedPaymentTypes, TranslatedStatuses } from "../const/transl";
 import { ColorMessage } from "@/app/dashboard/components/colored-message";
 
 export function useOrderTableCell() {
@@ -20,7 +21,7 @@ export function useOrderTableCell() {
 
         return (
           <ColorMessage
-            text={order.paymentType}
+            text={TranslatedPaymentTypes[order.paymentType as OrderPaymentType]}
             //@ts-ignore
             color={c}
             classNames={{
@@ -48,7 +49,7 @@ export function useOrderTableCell() {
 
         return (
           <ColorMessage
-            text={order.status}
+            text={TranslatedStatuses[order.status as OrderStatus]}
             //@ts-ignore
             color={color}
             classNames={{

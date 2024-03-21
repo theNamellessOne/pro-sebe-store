@@ -71,8 +71,9 @@ model Variant {
 
   name String
 
-  reserved Int
-  quantity Int
+  sold     Int @default(0)
+  reserved Int @default(0)
+  quantity Int @default(0)
 
   product        Product @relation(fields: [productArticle], references: [article])
   productArticle String
@@ -349,6 +350,7 @@ model AddressParts {
 enum OrderStatus {
   CREATED
   PAID
+  RETURNED
   PACKED
   DELIVERED
   CANCELED
@@ -399,7 +401,7 @@ model Order {
   @@index([status])
   @@index([status, createdAt])
   @@index([userId])
-  @@fulltext([name, surname, middlename, email, phone])
+  @@fulltext([id, name, surname, middlename, email, phone])
 }
 
 model OrderItem {

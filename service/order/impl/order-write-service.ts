@@ -28,6 +28,7 @@ type MonobankRequest = {
     reference: string;
     destination: string;
     comment: string;
+    customerEmails: string[];
     basketOrder: {
       name: string;
       qty: number;
@@ -43,6 +44,7 @@ type MonobankRequest = {
     }[];
   };
   redirectUrl: string;
+  webHookUrl: string;
   validity: number;
   paymentType: "debit" | "hold";
 };
@@ -72,13 +74,16 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
       amount: 0,
       merchantPaymInfo: {
         reference: "",
+        customerEmails: [order.contactInfo.email],
         destination: "куда нада",
         comment: "куда нада",
         basketOrder: [],
       },
       redirectUrl: "",
+      webHookUrl: "",
       validity: 10 * 60 * 100, // 10 min
       paymentType: "debit",
+
     };
 
     await prisma.$transaction(
@@ -202,9 +207,10 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
         mono.amount = 1;
         mono.merchantPaymInfo.reference = value.id;
-        mono.redirectUrl = `http://localhost:3000/api/payment-confirm/${value.id}`;
+        mono.redirectUrl = `${process.env.BASE_URL!}/api/payment-confirm/${value.id}`;
+        mono.webHookUrl = `${process.env.BASE_URL!}/api/payment-confirm/webhook`
       },
-      { timeout: 10000 },
+      { timeout: 15000 },
     );
 
     const res = await fetch(
@@ -223,14 +229,120 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
     console.log(err);
     if (err.message.includes("prisma"))
       return { errMsg: "щось пішло не так", value: null };
+
     return { errMsg: err.message, value: null };
   }
 
   if (redirectUrl !== "") redirect(redirectUrl);
 }
 
+function _decideProductVariantStockAction(
+  currentStatus: OrderStatus,
+  newStatus: OrderStatus,
+  item: { quantity: number },
+): {
+  sold?: {
+    increment?: number;
+    decrement?: number;
+  };
+  quantity?: {
+    increment?: number;
+    decrement?: number;
+  };
+  reserved?: {
+    increment?: number;
+    decrement?: number;
+  };
+} {
+  switch (newStatus) {
+    case OrderStatus.RETURNED:
+    case OrderStatus.CANCELED:
+      if (
+        currentStatus === OrderStatus.PAID ||
+        currentStatus === OrderStatus.CREATED
+      ) {
+        return {
+          reserved: { decrement: item.quantity },
+          quantity: { increment: item.quantity },
+        };
+      }
+
+      if (
+        currentStatus === OrderStatus.PACKED ||
+        currentStatus === OrderStatus.DELIVERED
+      ) {
+        return {
+          sold: { decrement: item.quantity },
+          quantity: { increment: item.quantity },
+        };
+      }
+
+      return {};
+
+    case OrderStatus.PACKED:
+    case OrderStatus.DELIVERED:
+      if (
+        currentStatus === OrderStatus.RETURNED ||
+        currentStatus === OrderStatus.CANCELED
+      ) {
+        return {
+          sold: { increment: item.quantity },
+          quantity: { decrement: item.quantity },
+        };
+      }
+
+      if (
+        currentStatus === OrderStatus.PAID ||
+        currentStatus === OrderStatus.CREATED
+      ) {
+        return {
+          reserved: { decrement: item.quantity },
+          sold: { increment: item.quantity },
+        };
+      }
+
+      return {};
+
+    default:
+      return {};
+  }
+}
+
+async function _updateProductStock(order: any, newStatus: OrderStatus) {
+  const currentStatus = order.status;
+
+  await prisma.$transaction(async (prisma) => {
+    const promises: Promise<any>[] = [];
+    for (const item of order.orderItems) {
+      promises.push(
+        prisma.variant.updateMany({
+          where: {
+            name: item.variantName,
+            productArticle: item.productArticle,
+          },
+          data: _decideProductVariantStockAction(
+            currentStatus,
+            newStatus,
+            item,
+          ),
+        }),
+      );
+    }
+
+    await Promise.all(promises);
+  });
+}
+
 export async function _setStatus(orderId: string, status: OrderStatus) {
   try {
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        orderItems: true,
+      },
+    });
+
+    await _updateProductStock(order, status);
     await prisma.order.update({
       where: { id: orderId },
       data: { status },

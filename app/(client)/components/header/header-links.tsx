@@ -17,7 +17,7 @@ export function HeaderLinks({
       >
         <HeaderLink text={"Каталог"} href={"/catalogue"} />
         <HeaderLink text={"Вiдгуки"} href={"/reviews"} />
-        <HeaderLink text={"Про нас"} href={"/catalogue"} />
+        <HeaderLink text={"Про нас"} href={"/about"} />
       </div>
 
       <div

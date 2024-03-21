@@ -1,6 +1,6 @@
 import { fileRouter } from "@/app/api/uploadthing/core";
 import { UploadDropzone } from "@/lib/uploadthing";
-import imageCompression from "browser-image-compression";
+import Compressor from "compressorjs";
 import { UploadFileResponse } from "uploadthing/client";
 
 type FileUploadProps = {
@@ -25,13 +25,23 @@ export function FileUpload({
       endpoint={endpoint}
       onBeforeUploadBegin={async (files) => {
         const compress = async () => {
-          const options = {
-            maxWidthOrHeight: 1024,
-            useWebWorker: true,
-          };
-
           let promises = files.map(async (file) => {
-            return await imageCompression(file, options);
+            return new Promise((resolve, reject) => {
+              let mWidth = 1600;
+              let mHeight = 1600;
+
+              new Compressor(file, {
+                quality: 0.6,
+                maxWidth: mWidth,
+                maxHeight: mHeight,
+                success(result) {
+                  resolve(new File([result], file.name));
+                },
+                error(error) {
+                  reject(error);
+                },
+              });
+            }) as Promise<File>;
           });
 
           return await Promise.all(promises);

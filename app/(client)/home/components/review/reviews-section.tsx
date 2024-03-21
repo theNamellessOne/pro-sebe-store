@@ -23,7 +23,12 @@ export async function ReviewSection() {
           fill
           className={"object-cover "}
         />
-        <Link href={"/catalogue"} className={"absolute top-3/4 left-0 z-40"}>
+        <Link
+          href={
+            '/catalogue?sortDescriptor={"name"%3A"Спочатку+нові"%2C"value"%3A{"column"%3A"createdAt"%2C"direction"%3A"descending"}}'
+          }
+          className={"absolute top-3/4 left-0 z-40"}
+        >
           <Button type={"primary"} className={"hover:bg-white"}>
             Переглянути новинки
           </Button>

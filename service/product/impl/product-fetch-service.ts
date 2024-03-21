@@ -189,6 +189,7 @@ function _getDashboardWhere(query: string) {
     { ...articleFilter },
   ].filter((x) => Object.keys(x).length > 0);
 
+  console.log(OR);
   return { OR: OR.length > 0 ? OR : undefined };
 }
 

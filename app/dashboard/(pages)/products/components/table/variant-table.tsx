@@ -26,6 +26,7 @@ export function VariantTable() {
   const renderCell = useVariantTableCell();
   const columns = [
     { name: "Назва", uid: "name" },
+    { name: "Продано", uid: "sold" },
     { name: "Зарезервовано", uid: "reserved" },
     { name: "К-сть", uid: "quantity" },
     { name: "Медiа", uid: "media" },

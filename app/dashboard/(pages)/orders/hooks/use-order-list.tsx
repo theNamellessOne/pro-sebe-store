@@ -9,6 +9,10 @@ export function useOrderList(
   sortDescriptor: SortDescriptor,
   status: string,
 ) {
+  if (sortDescriptor.column === "actions") {
+    sortDescriptor = {};
+  }
+
   const props = {
     query,
     page,
