@@ -32,7 +32,7 @@ export function UserOrder(order: Order & { orderItems: OrderItem[] }) {
       <div className={"flex flex-wrap gap-2 my-3"}>
         {order.orderItems.map((item) => {
           return (
-            <Image
+            <Image key={item.id}
               src={item.variantImgUrl}
               alt={"img"}
               height={100}

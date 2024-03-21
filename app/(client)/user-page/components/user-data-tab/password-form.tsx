@@ -36,10 +36,6 @@ export function PasswordForm() {
     }
   };
 
-  if (useSession().data?.user.isOAuth) {
-    return null;
-  }
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
