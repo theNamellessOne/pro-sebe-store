@@ -1,7 +1,6 @@
 import { fileRouter } from "@/app/api/uploadthing/core";
 import { UploadDropzone } from "@/lib/uploadthing";
 import Compressor from "compressorjs";
-import imageCompression from "browser-image-compression";
 import { UploadFileResponse } from "uploadthing/client";
 
 type FileUploadProps = {
