@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
       'X-Token': process.env.MONOBANK_API_KEY!
     }
   })).json())
+
+  //todo: verify
   if (body.status === "success") await OrderService.instance.confirmOrder(body.reference);
 
   return new Response();
