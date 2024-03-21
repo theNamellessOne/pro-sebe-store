@@ -44,6 +44,7 @@ type MonobankRequest = {
     }[];
   };
   redirectUrl: string;
+  webHookUrl: string;
   validity: number;
   paymentType: "debit" | "hold";
 };
@@ -79,8 +80,10 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
         basketOrder: [],
       },
       redirectUrl: "",
+      webHookUrl: "",
       validity: 10 * 60 * 100, // 10 min
       paymentType: "debit",
+
     };
 
     await prisma.$transaction(
@@ -204,7 +207,8 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
         mono.amount = 1;
         mono.merchantPaymInfo.reference = value.id;
-        mono.redirectUrl = `http://localhost:3000/api/payment-confirm/${value.id}`;
+        mono.redirectUrl = `${process.env.BASE_URL!}/api/payment-confirm/${value.id}`;
+        mono.webHookUrl = `${process.env.BASE_URL!}/api/payment-confirm/webhook`
       },
       { timeout: 15000 },
     );
@@ -225,6 +229,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
     console.log(err);
     if (err.message.includes("prisma"))
       return { errMsg: "щось пішло не так", value: null };
+
     return { errMsg: err.message, value: null };
   }
 
