@@ -207,7 +207,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
         mono.amount = 1;
         mono.merchantPaymInfo.reference = value.id;
-        mono.redirectUrl = `${process.env.BASE_URL!}/api/payment-confirm/${value.id}`;
+        mono.redirectUrl = `${process.env.BASE_URL!}/home`;
         mono.webHookUrl = `${process.env.BASE_URL!}/api/payment-confirm/webhook`
       },
       { timeout: 15000 },

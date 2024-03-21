@@ -49,7 +49,7 @@ export function ContactInfo() {
         <Input
           {...form.register("contactInfo.middlename")}
           variant={"underlined"}
-          label={"отчество"}
+          label={"По батькові"}
           disabled={isSubmitting}
           defaultValue={form.getValues("contactInfo.middlename")}
           isInvalid={!!errors.contactInfo?.middlename}
