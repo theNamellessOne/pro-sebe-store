@@ -5,30 +5,30 @@ const phoneRegEx = new RegExp(/[0-9]{8,15}$/);
 
 export const contactInfoSchema = z.object({
   email: z.string().email(),
-  name: z.string().min(1).max(128),
-  surname: z.string().min(1).max(128),
-  middlename: z.string().min(1).max(128),
+  name: z.string().min(1, "Мінімум 1 символ").max(128, "Максимум 128 символів"),
+  surname: z.string().min(1, "Мінімум 1 символ").max(128, "Максимум 128 символів"),
+  middlename: z.string().min(1, "Мінімум 1 символ").max(128, "Максимум 128 символів"),
   phone: z.string().regex(phoneRegEx, "Цей номер телефону некоректний!"),
 });
 
 export type ContactInfoInput = z.infer<typeof contactInfoSchema>;
 
 export const addressPartsSchema = z.object({
-  street: z.string().min(1).max(256),
-  houseNo: z.string().min(1).max(64),
-  postalIdx: z.string().length(5),
+  street: z.string().min(1, "Мінімум 1 символ").max(256, "Максимум 256 символів"),
+  houseNo: z.string().min(1, "Мінімум 1 символ").max(64, "Максимум 64 символа"),
+  postalIdx: z.string().length(5, "Потрібно 5 символів"),
 });
 
 export const deliveryInfoSchema = z
   .object({
-    settlementRef: z.string().length(36),
+    settlementRef: z.string().length(36, "Потрібно 36 символів"),
     settlementDescription: z.string(),
     deliveryType: z.enum([
       OrderDeliveryType.COURIER,
       OrderDeliveryType.WAREHOUSE,
     ]),
     addressParts: addressPartsSchema.optional(),
-    warehouseKey: z.string().min(1).optional(),
+    warehouseKey: z.string().min(1, "Мінімум 1 символ").optional(),
   })
   .refine((data) => {
     if (data.deliveryType === OrderDeliveryType.WAREHOUSE) {
@@ -40,7 +40,7 @@ export const deliveryInfoSchema = z
     }
 
     return false;
-  }, "Either first or second should be filled in.");
+  }, "Шось одне повинно бути заповнено.");
 
 export type DeliveryInfoInput = z.infer<typeof deliveryInfoSchema>;
 
