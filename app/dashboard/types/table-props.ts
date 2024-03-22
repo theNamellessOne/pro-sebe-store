@@ -5,3 +5,9 @@ export type TableProps = {
   page: number;
   sortDescriptor: SortDescriptor;
 };
+
+export type Column = {
+  shown: boolean;
+  name: string;
+  uid: any;
+};

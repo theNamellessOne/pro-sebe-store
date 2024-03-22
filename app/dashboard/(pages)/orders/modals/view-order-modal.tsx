@@ -96,7 +96,11 @@ export function ViewOrderModal({ order }: { order: any }) {
                       }
                     </p>
                     <p>Всього</p>
-                    <p>{order.total}</p>
+                    <p>{order.total} UAH</p>
+                    <p>Зi знижкою</p>
+                    <p>{order.totalWithDiscount} UAH</p>
+                    <p>Знижка</p>
+                    <p>{order.discount} UAH</p>
 
                     <p className={"col-span-2 my-2"}></p>
                     <p

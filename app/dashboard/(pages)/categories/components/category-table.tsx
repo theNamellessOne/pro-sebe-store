@@ -18,6 +18,7 @@ import { TableProps } from "@/app/dashboard/types/table-props";
 import { Selection } from "@nextui-org/react";
 import { TableActions } from "@/app/dashboard/components/table-actions";
 import { CategoryService } from "@/service/category/category-service";
+import { useTableColumns } from "@/app/dashboard/hooks/use-table-columns";
 
 const service = CategoryService.instance;
 
@@ -31,12 +32,7 @@ export function CategoryTable({ query, page, sortDescriptor }: TableProps) {
   );
   const [selected, setSelected] = useState<Selection>(new Set([]));
 
-  const columns = [
-    { name: "Id", uid: "id" },
-    { name: "Назва", uid: "name" },
-    { name: "Батьківська Категорія", uid: "parentId" },
-    { name: "Картинка", uid: "imageUrl" },
-  ];
+  const { shownColumns } = useTableColumns()!;
 
   const tableActions = [
     {
@@ -70,42 +66,44 @@ export function CategoryTable({ query, page, sortDescriptor }: TableProps) {
 
   return (
     <div className={"my-2 flex flex-col gap-3 relative"}>
-      <Table
-        onRowAction={(key) => router.push(`categories/edit/${key}`)}
-        sortDescriptor={sortDescriptor}
-        onSortChange={sort}
-        selectionMode="multiple"
-        selectedKeys={selected}
-        onSelectionChange={setSelected}
-        topContent={<DashboardSearch />}
-        bottomContent={paginator}
-        classNames={{
-          th: "bg-transparent text-primary",
-        }}
-      >
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn allowsSorting key={column.uid}>
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-
-        <TableBody
-          loadingContent={<Loading />}
-          emptyContent={"No rows to display."}
-          isLoading={loading}
-          items={list.items}
+      {shownColumns.length > 0 && (
+        <Table
+          onRowAction={(key) => router.push(`categories/edit/${key}`)}
+          sortDescriptor={sortDescriptor}
+          onSortChange={sort}
+          selectionMode="multiple"
+          selectedKeys={selected}
+          onSelectionChange={setSelected}
+          topContent={<DashboardSearch />}
+          bottomContent={paginator}
+          classNames={{
+            th: "bg-transparent text-primary",
+          }}
         >
-          {(item: any) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          <TableHeader columns={shownColumns}>
+            {(column) => (
+              <TableColumn allowsSorting key={column.uid}>
+                {column.name}
+              </TableColumn>
+            )}
+          </TableHeader>
+
+          <TableBody
+            loadingContent={<Loading />}
+            emptyContent={"No rows to display."}
+            isLoading={loading}
+            items={list.items}
+          >
+            {(item: any) => (
+              <TableRow key={item.id}>
+                {(columnKey) => (
+                  <TableCell>{renderCell(item, columnKey)}</TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      )}
       <TableActions
         hasSelected={
           (selected as Set<Key>).size > 0 || (selected as string) === "all"

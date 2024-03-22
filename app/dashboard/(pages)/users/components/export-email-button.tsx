@@ -7,13 +7,12 @@ export function ExportEmailButton() {
   return (
     <a target={"_blank"} href={"/api/users/export"} className="block">
       <Button
-        className={"font-semibold"}
+        className={"font-semibold mt-2"}
         variant={"shadow"}
         color={"primary"}
+        isIconOnly={true}
         startContent={<Download />}
-      >
-        Експортувати Пошти
-      </Button>
+      ></Button>
     </a>
   );
 }

@@ -19,6 +19,7 @@ import Loading from "@/app/loading";
 import { TableActions } from "@/app/dashboard/components/table-actions";
 import { reviewEventChannel } from "@/app/dashboard/(pages)/review/event/review-event-channel";
 import { ReviewStatus } from "@prisma/client";
+import { useTableColumns } from "@/app/dashboard/hooks/use-table-columns";
 
 const service = ReviewService.instance;
 
@@ -31,13 +32,7 @@ export function ReviewTable({ query, page, sortDescriptor }: TableProps) {
   );
   const [selected, setSelected] = useState<Selection>(new Set([]));
 
-  const columns = [
-    { name: "Id", uid: "id" },
-    { name: "Content", uid: "content" },
-    { name: "Status", uid: "status" },
-    { name: "Rating", uid: "rating" },
-    { name: "Actions", uid: "actions" },
-  ];
+  const { shownColumns } = useTableColumns()!;
 
   useEffect(() => {
     const onReviewUpdateUnsub = reviewEventChannel.on(
@@ -112,49 +107,53 @@ export function ReviewTable({ query, page, sortDescriptor }: TableProps) {
   };
 
   return (
-    <div className={"my-2 flex flex-col gap-3 relative"}>
-      <Table
-        sortDescriptor={sortDescriptor}
-        onSortChange={sort}
-        selectionMode="multiple"
-        selectedKeys={selected}
-        onSelectionChange={setSelected}
-        topContent={<DashboardSearch />}
-        bottomContent={paginator}
-        classNames={{
-          th: "bg-transparent text-primary",
-        }}
-      >
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn allowsSorting key={column.uid}>
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-
-        <TableBody
-          loadingContent={<Loading />}
-          emptyContent={"Немає рядків для відображення."}
-          isLoading={loading}
-          items={list.items}
-        >
-          {(item: any) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
+    <>
+      <div className={"my-2 flex flex-col gap-3 relative"}>
+        {shownColumns.length > 0 && (
+          <Table
+            sortDescriptor={sortDescriptor}
+            onSortChange={sort}
+            selectionMode="multiple"
+            selectedKeys={selected}
+            onSelectionChange={setSelected}
+            topContent={<DashboardSearch />}
+            bottomContent={paginator}
+            classNames={{
+              th: "bg-transparent text-primary",
+            }}
+          >
+            <TableHeader columns={shownColumns}>
+              {(column) => (
+                <TableColumn allowsSorting key={column.uid}>
+                  {column.name}
+                </TableColumn>
               )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <TableActions
-        hasSelected={
-          (selected as Set<Key>).size > 0 || (selected as string) === "all"
-        }
-        hasPaginator={!!paginator}
-        actions={tableActions}
-      />
-    </div>
+            </TableHeader>
+
+            <TableBody
+              loadingContent={<Loading />}
+              emptyContent={"Немає рядків для відображення."}
+              isLoading={loading}
+              items={list.items}
+            >
+              {(item: any) => (
+                <TableRow key={item.id}>
+                  {(columnKey) => (
+                    <TableCell>{renderCell(item, columnKey)}</TableCell>
+                  )}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
+        <TableActions
+          hasSelected={
+            (selected as Set<Key>).size > 0 || (selected as string) === "all"
+          }
+          hasPaginator={!!paginator}
+          actions={tableActions}
+        />
+      </div>
+    </>
   );
 }

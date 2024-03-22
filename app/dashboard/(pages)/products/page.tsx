@@ -1,8 +1,11 @@
-import { DashboardHeader } from "@/app/dashboard/components/dashboard-header";
+"use client";
 import { Suspense } from "react";
 import { Loader } from "lucide-react";
 import { ProductTable } from "@/app/dashboard/(pages)/products/components/table/product-table";
-import { ProductHeader } from "./components/product-header";
+import { TableColumnsProvider } from "../../providers/table-columns-provider";
+import { DashboardHeader } from "@/app/dashboard/components/dashboard-header";
+import { TableColumns } from "@/app/dashboard/components/table-columns";
+import { CreateProductModal } from "@/app/dashboard/(pages)/products/components/modals/create-product-modal";
 
 export default async function Page({
   searchParams,
@@ -23,11 +26,25 @@ export default async function Page({
       };
 
   return (
-    <>
+    <TableColumnsProvider
+      storageName={"productColumns"}
+      initialData={[
+        { name: "Артикул", uid: "article", shown: true },
+        { name: "Назва", uid: "name", shown: true },
+        { name: "Статус", uid: "status", shown: true },
+        { name: "Цiна", uid: "price", shown: true },
+        { name: "Скидка", uid: "isDiscounted", shown: true },
+      ]}
+    >
       <div
         className={"relative flex flex-col gap-4 h-full w-full p-4 px-[20px]"}
       >
-        <ProductHeader />
+        <DashboardHeader title={"Товари"} showCreateButton={false}>
+          <div className={"w-full flex gap-2 items-center justify-end mr-2"}>
+            <TableColumns />
+            <CreateProductModal />
+          </div>
+        </DashboardHeader>
 
         <Suspense
           key={
@@ -45,6 +62,6 @@ export default async function Page({
           />
         </Suspense>
       </div>
-    </>
+    </TableColumnsProvider>
   );
 }

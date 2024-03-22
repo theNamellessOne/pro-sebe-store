@@ -16,6 +16,7 @@ import { TableProps } from "@/app/dashboard/types/table-props";
 import { useEffect } from "react";
 import { userEventChannel } from "@/app/dashboard/(pages)/users/event/user-event-channel";
 import { Toaster } from "react-hot-toast";
+import { useTableColumns } from "@/app/dashboard/hooks/use-table-columns";
 
 export function UserTable({ query, page, sortDescriptor }: TableProps) {
   const renderCell = useUserTableCell();
@@ -25,15 +26,7 @@ export function UserTable({ query, page, sortDescriptor }: TableProps) {
     sortDescriptor,
   );
 
-  const columns = [
-    { name: "Id", uid: "id" },
-    { name: "Роль", uid: "role" },
-    { name: "Iм'я", uid: "name" },
-    { name: "Email", uid: "email" },
-    { name: "@", uid: "username" },
-    { name: "Номер Телефону", uid: "phone" },
-    { name: "Дiї", uid: "actions" },
-  ];
+  const { shownColumns } = useTableColumns()!;
 
   useEffect(() => {
     const onUserUpdateUnsub = userEventChannel.on("onUserUpdate", list.reload);
@@ -45,38 +38,40 @@ export function UserTable({ query, page, sortDescriptor }: TableProps) {
 
   return (
     <>
-      <Table
-        sortDescriptor={sortDescriptor}
-        onSortChange={sort}
-        topContent={<DashboardSearch />}
-        bottomContent={paginator}
-        classNames={{
-          th: "bg-transparent text-primary",
-        }}
-      >
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn allowsSorting key={column.uid}>
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-
-        <TableBody
-          loadingContent={<Loading />}
-          emptyContent={"Немає рядків для відображення."}
-          isLoading={loading}
-          items={list.items}
+      {shownColumns.length > 0 && (
+        <Table
+          sortDescriptor={sortDescriptor}
+          onSortChange={sort}
+          topContent={<DashboardSearch />}
+          bottomContent={paginator}
+          classNames={{
+            th: "bg-transparent text-primary",
+          }}
         >
-          {(item: any) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          <TableHeader columns={shownColumns}>
+            {(column) => (
+              <TableColumn allowsSorting key={column.uid}>
+                {column.name}
+              </TableColumn>
+            )}
+          </TableHeader>
+
+          <TableBody
+            loadingContent={<Loading />}
+            emptyContent={"Немає рядків для відображення."}
+            isLoading={loading}
+            items={list.items}
+          >
+            {(item: any) => (
+              <TableRow key={item.id}>
+                {(columnKey) => (
+                  <TableCell>{renderCell(item, columnKey)}</TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      )}
       <Toaster />
     </>
   );
