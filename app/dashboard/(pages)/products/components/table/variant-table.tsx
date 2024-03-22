@@ -43,7 +43,13 @@ export function VariantTable() {
   const changeVariantsQuantity = (fn: (current: number) => number) => {
     const newVariants = variants.map((variant) => {
       if (selected === "all" || Array.from(selected).includes(variant.name)) {
-        return { ...variant, quantity: fn(variant.quantity) };
+        const quantity = fn(variant.quantity);
+        if (!variant.quantityDiff) variant.quantityDiff = 0;
+
+        const quantityDiff =
+          variant.quantityDiff + (variant.quantity - quantity) * -1;
+
+        return { ...variant, quantity, quantityDiff };
       }
 
       return variant;
@@ -74,19 +80,6 @@ export function VariantTable() {
 
         setModalFn(() => (value: number) => {
           changeVariantsQuantity((current) => current - value);
-        });
-
-        modalProps.onOpen();
-      },
-    },
-    {
-      name: "задати к-сть",
-      action: async () => {
-        setModalHeader("Задати кількість");
-        setModalLabel("Нова кількість");
-
-        setModalFn(() => (value: number) => {
-          changeVariantsQuantity(() => value);
         });
 
         modalProps.onOpen();

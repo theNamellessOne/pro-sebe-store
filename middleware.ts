@@ -35,6 +35,7 @@ export default auth(async (req) => {
   }
 
   if (pathname === "/api/users/export" && user?.role === Role.OWNER) return;
+  if (pathname === "/api/orders/export" && user?.role === Role.OWNER) return;
 
   if (pathname.startsWith("/api/users")) {
     return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));

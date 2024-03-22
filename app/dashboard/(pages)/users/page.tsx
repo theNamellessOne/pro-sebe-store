@@ -35,7 +35,7 @@ export default async function Page({
         <DashboardHeader title={"Користувачi"} showCreateButton={false}>
           <div className={"w-full flex gap-2 items-center justify-end mr-2"}>
             <TableColumns />
-            <ExportEmailButton />
+            <ExportEmailButton href={"/api/users/export"} />
           </div>
         </DashboardHeader>
 

@@ -10,6 +10,7 @@ export const variantSchema = z.object({
   sizeId: z.coerce.number(),
   colorId: z.coerce.number(),
   quantity: z.coerce.number().min(0),
+  quantityDiff: z.coerce.number().default(0),
   reserved: z.coerce.number().optional(),
   sold: z.coerce.number().optional(),
   mediaUrls: z.array(mediaUrlSchema),

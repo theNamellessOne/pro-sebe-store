@@ -14,6 +14,8 @@ import Loading from "@/app/loading";
 import { useOrderTableCell } from "../hooks/use-order-table-cell";
 import { useOrderList } from "../hooks/use-order-list";
 import { useTableColumns } from "@/app/dashboard/hooks/use-table-columns";
+import { useEffect } from "react";
+import { orderEventChannel } from "@/app/dashboard/(pages)/orders/event/order-event-channel";
 
 export function OrderTable({
   query,
@@ -28,6 +30,17 @@ export function OrderTable({
     sortDescriptor,
     status,
   );
+
+  useEffect(() => {
+    const onOrderUpdateUnsub = orderEventChannel.on(
+      "onOrderUpdate",
+      list.reload,
+    );
+
+    return () => {
+      onOrderUpdateUnsub();
+    };
+  }, []);
 
   const { shownColumns } = useTableColumns()!;
 

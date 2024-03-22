@@ -8,6 +8,7 @@ import { OrderTable } from "./components/order-table";
 import { StatusFilter } from "@/app/dashboard/(pages)/orders/components/filter/status-filter";
 import { TableColumnsProvider } from "@/app/dashboard/providers/table-columns-provider";
 import { TableColumns } from "@/app/dashboard/components/table-columns";
+import { ExportEmailButton } from "@/app/dashboard/(pages)/users/components/export-email-button";
 
 export default async function Page({
   searchParams,
@@ -40,6 +41,7 @@ export default async function Page({
           <div className={"w-full flex gap-2 items-center justify-end"}>
             <StatusFilter />
             <TableColumns />
+            <ExportEmailButton href={"/api/orders/export"} />
           </div>
         </DashboardHeader>
 

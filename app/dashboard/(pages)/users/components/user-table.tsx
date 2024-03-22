@@ -14,9 +14,9 @@ import { useUserTableCell } from "@/app/dashboard/(pages)/users/hooks/use-user-t
 import { useUserList } from "@/app/dashboard/(pages)/users/hooks/use-user-list";
 import { TableProps } from "@/app/dashboard/types/table-props";
 import { useEffect } from "react";
-import { userEventChannel } from "@/app/dashboard/(pages)/users/event/user-event-channel";
 import { Toaster } from "react-hot-toast";
 import { useTableColumns } from "@/app/dashboard/hooks/use-table-columns";
+import { userEventChannel } from "@/app/dashboard/(pages)/users/event/user-event-channel";
 
 export function UserTable({ query, page, sortDescriptor }: TableProps) {
   const renderCell = useUserTableCell();

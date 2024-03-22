@@ -8,7 +8,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalProps,
 } from "@nextui-org/react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -58,6 +57,7 @@ export function ChangeAllVariantsQuantityModal(props: {
                   color="primary"
                   onPress={() => {
                     fn(value);
+                    onClose();
                   }}
                 >
                   Зберегти
