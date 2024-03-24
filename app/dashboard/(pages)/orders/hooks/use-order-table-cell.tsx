@@ -15,8 +15,10 @@ export function useOrderTableCell() {
         switch (order.paymentType) {
           case "PREPAID":
             c = "green";
+            break;
           case "POSTPAID":
             c = "blue";
+            break;
         }
 
         return (
@@ -57,6 +59,38 @@ export function useOrderTableCell() {
               inner: "font-semibold",
             }}
           />
+        );
+      case "fullName":
+        return (
+          <p>
+            {order.name} {order.surname} {order.middlename}
+          </p>
+        );
+      case "address":
+        return (
+          <p>
+            <span>{order.postalIdx}</span>
+            {order.orderDeliveryType === "COURIER" ? (
+              <span>
+                {order.street}, {order.houseNo}
+              </span>
+            ) : (
+              <span>вiддiлення {order.warehouseKey}</span>
+            )}
+            {", "}
+            <span>{order.settlementDescription}</span>
+          </p>
+        );
+      case "createdAt":
+        return (
+          <p>
+            {Intl.DateTimeFormat("ua", {
+              dateStyle: "short",
+              timeStyle: "long",
+              hour12: false,
+              timeZone: "Europe/Kyiv",
+            }).format(order.createdAt)}
+          </p>
         );
       case "total":
         return <p>{order.total.toString()} UAH</p>;

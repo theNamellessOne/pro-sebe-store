@@ -13,6 +13,9 @@ import { DashboardSearch } from "@/app/dashboard/components/dashboard-search";
 import Loading from "@/app/loading";
 import { useOrderTableCell } from "../hooks/use-order-table-cell";
 import { useOrderList } from "../hooks/use-order-list";
+import { useTableColumns } from "@/app/dashboard/hooks/use-table-columns";
+import { useEffect } from "react";
+import { orderEventChannel } from "@/app/dashboard/(pages)/orders/event/order-event-channel";
 
 export function OrderTable({
   query,
@@ -21,54 +24,64 @@ export function OrderTable({
   status,
 }: TableProps & { status: string }) {
   const renderCell = useOrderTableCell();
-  const { loading, setLoading, list, sort, paginator } = useOrderList(
+  const { loading, list, sort, paginator } = useOrderList(
     query,
     page,
     sortDescriptor,
     status,
   );
 
-  const columns = [
-    { name: "Дії", uid: "actions" },
-    { name: "Сума", uid: "total" },
-    { name: "Оплата", uid: "paymentType" },
-    { name: "Статус", uid: "status" },
-  ];
+  useEffect(() => {
+    const onOrderUpdateUnsub = orderEventChannel.on(
+      "onOrderUpdate",
+      list.reload,
+    );
+
+    return () => {
+      onOrderUpdateUnsub();
+    };
+  }, []);
+
+  const { shownColumns } = useTableColumns()!;
 
   return (
-    <div className={"my-2 flex flex-col gap-3 relative"}>
-      <Table
-        sortDescriptor={sortDescriptor}
-        onSortChange={sort}
-        topContent={<DashboardSearch />}
-        bottomContent={paginator}
-        classNames={{
-          th: "bg-transparent text-primary",
-        }}
-      >
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn allowsSorting key={column.uid}>
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-
-        <TableBody
-          loadingContent={<Loading />}
-          emptyContent={"No rows to display."}
-          isLoading={loading}
-          items={list.items}
-        >
-          {(item: any) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
+    <>
+      {shownColumns.length > 0 && (
+        <div className={"my-2 flex flex-col gap-3 relative"}>
+          <Table
+            sortDescriptor={sortDescriptor}
+            onSortChange={sort}
+            topContent={<DashboardSearch />}
+            bottomContent={paginator}
+            classNames={{
+              th: "bg-transparent text-primary",
+            }}
+          >
+            <TableHeader columns={shownColumns}>
+              {(column) => (
+                <TableColumn allowsSorting key={column.uid}>
+                  {column.name}
+                </TableColumn>
               )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+            </TableHeader>
+
+            <TableBody
+              loadingContent={<Loading />}
+              emptyContent={"No rows to display."}
+              isLoading={loading}
+              items={list.items}
+            >
+              {(item: any) => (
+                <TableRow key={item.id}>
+                  {(columnKey) => (
+                    <TableCell>{renderCell(item, columnKey)}</TableCell>
+                  )}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+    </>
   );
 }

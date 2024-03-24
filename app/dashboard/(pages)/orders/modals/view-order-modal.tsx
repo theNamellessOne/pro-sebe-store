@@ -24,6 +24,7 @@ import {
   TranslatedStatuses,
 } from "../const/transl";
 import toast, { Toaster } from "react-hot-toast";
+import { orderEventChannel } from "@/app/dashboard/(pages)/orders/event/order-event-channel";
 
 export function ViewOrderModal({ order }: { order: any }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -34,6 +35,7 @@ export function ViewOrderModal({ order }: { order: any }) {
     OrderService.instance
       .updateStatus(order.id, status)
       .then((res) => {
+        orderEventChannel.emit("onOrderUpdate");
         if (res.error) toast.error(res.error);
         if (res.success) toast.success(res.success);
       })
@@ -96,7 +98,11 @@ export function ViewOrderModal({ order }: { order: any }) {
                       }
                     </p>
                     <p>Всього</p>
-                    <p>{order.total}</p>
+                    <p>{order.total} UAH</p>
+                    <p>Зi знижкою</p>
+                    <p>{order.totalWithDiscount} UAH</p>
+                    <p>Знижка</p>
+                    <p>{order.discount} UAH</p>
 
                     <p className={"col-span-2 my-2"}></p>
                     <p

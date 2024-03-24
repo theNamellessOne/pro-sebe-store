@@ -3,17 +3,16 @@
 import { Button } from "@nextui-org/react";
 import { Download } from "lucide-react";
 
-export function ExportEmailButton() {
+export function ExportEmailButton(props: { href: string }) {
   return (
-    <a target={"_blank"} href={"/api/users/export"} className="block">
+    <a target={"_blank"} {...props} className="block">
       <Button
-        className={"font-semibold"}
+        className={"font-semibold mt-2"}
         variant={"shadow"}
         color={"primary"}
+        isIconOnly={true}
         startContent={<Download />}
-      >
-        Експортувати Пошти
-      </Button>
+      ></Button>
     </a>
   );
 }

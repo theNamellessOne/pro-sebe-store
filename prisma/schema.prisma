@@ -394,7 +394,9 @@ model Order {
 
   orderItems OrderItem[]
 
-  total Decimal
+  total             Decimal
+  totalWithDiscount Decimal @default(0)
+  discount          Decimal @default(0)
 
   status OrderStatus @default(CREATED)
 

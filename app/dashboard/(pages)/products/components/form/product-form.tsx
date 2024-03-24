@@ -44,8 +44,6 @@ export function ProductForm({
   });
   const { isSubmitting, isValid } = form.formState;
 
-  console.log();
-
   const handleSubmit = async (formData: ProductSave) => {
     const { errMsg } = await ProductService.instance.save(formData);
 

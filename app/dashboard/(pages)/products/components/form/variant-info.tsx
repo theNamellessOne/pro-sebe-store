@@ -26,6 +26,7 @@ export function VariantInfo() {
           sizeId: size.id,
           colorId: color.id,
           quantity: 0,
+          quantityDiff: 0,
           mediaUrls: [],
         });
       }

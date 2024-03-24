@@ -15,6 +15,7 @@ import Loading from "@/app/loading";
 import { useProductTableCell } from "@/app/dashboard/(pages)/products/hooks/use-product-table-cell";
 import { useProductList } from "@/app/dashboard/(pages)/products/hooks/use-product-list";
 import { Product } from "@prisma/client";
+import { useTableColumns } from "@/app/dashboard/hooks/use-table-columns";
 
 export function ProductTable({ query, page, sortDescriptor }: TableProps) {
   const router = useRouter();
@@ -25,47 +26,45 @@ export function ProductTable({ query, page, sortDescriptor }: TableProps) {
     sortDescriptor,
   );
 
-  const columns = [
-    { name: "Артикул", uid: "article" },
-    { name: "Назва", uid: "name" },
-    { name: "Статус", uid: "status" },
-    { name: "Цiна", uid: "price" },
-    { name: "Скидка", uid: "isDiscounted" },
-  ];
+  const { shownColumns } = useTableColumns()!;
 
   return (
-    <Table
-      onRowAction={(key) => router.push(`products/edit/${key}`)}
-      sortDescriptor={sortDescriptor}
-      onSortChange={sort}
-      topContent={<DashboardSearch />}
-      bottomContent={paginator}
-      classNames={{
-        th: "bg-transparent text-primary",
-      }}
-    >
-      <TableHeader columns={columns}>
-        {(column) => (
-          <TableColumn allowsSorting key={column.uid}>
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-
-      <TableBody
-        loadingContent={<Loading />}
-        emptyContent={"Немає рядків для відображення."}
-        isLoading={loading}
-        items={list.items}
-      >
-        {(item: Product) => (
-          <TableRow key={item.article}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
+    <>
+      {shownColumns.length > 0 && (
+        <Table
+          onRowAction={(key) => router.push(`products/edit/${key}`)}
+          sortDescriptor={sortDescriptor}
+          onSortChange={sort}
+          topContent={<DashboardSearch />}
+          bottomContent={paginator}
+          classNames={{
+            th: "bg-transparent text-primary",
+          }}
+        >
+          <TableHeader columns={shownColumns}>
+            {(column) => (
+              <TableColumn allowsSorting key={column.uid}>
+                {column.name}
+              </TableColumn>
             )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+          </TableHeader>
+
+          <TableBody
+            loadingContent={<Loading />}
+            emptyContent={"Немає рядків для відображення."}
+            isLoading={loading}
+            items={list.items}
+          >
+            {(item: Product) => (
+              <TableRow key={item.article}>
+                {(columnKey) => (
+                  <TableCell>{renderCell(item, columnKey)}</TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      )}
+    </>
   );
 }

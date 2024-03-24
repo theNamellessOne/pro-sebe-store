@@ -9,7 +9,6 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import prisma from "@/lib/prisma";
 import { VariantSave } from "@/schema/product/variant-schema";
-import { ProductStatus } from "@prisma/client";
 
 export async function _updateProduct(product: ProductSave) {
   if (!productSchema.safeParse(product)) {
@@ -72,15 +71,14 @@ async function _handleVariantsChange({
   dbVariants.forEach((variant) => {
     const key = `${variant.colorId}-${variant.sizeId}`;
     const mediaUrlJson = JSON.stringify(variant.mediaUrls);
-    // @ts-ignore
-    dbVariantsMap.set(key, { mediaUrls: mediaUrlJson, ...variant });
+    dbVariantsMap.set(key, variant);
   });
+
   const uiVariantsMap = new Map();
   uiVariants.forEach((variant) => {
     const key = `${variant.colorId}-${variant.sizeId}`;
     const mediaUrlJson = JSON.stringify(variant.mediaUrls);
-    // @ts-ignore
-    uiVariantsMap.set(key, { mediaUrls: mediaUrlJson, ...variant });
+    uiVariantsMap.set(key, variant);
   });
 
   const variantsWithId: VariantSave[] = [];
@@ -91,12 +89,22 @@ async function _handleVariantsChange({
   uiVariantsMap.forEach((uiVariant, key) => {
     const dbVariant = dbVariantsMap.get(key);
     if (dbVariant) {
-      const variant = { ...uiVariant, id: dbVariant.id };
+      const variant = {
+        ...uiVariant,
+        id: dbVariant.id,
+        quantity: dbVariant.quantity + uiVariant.quantityDiff,
+        quantityDiff: undefined,
+      };
 
       variantsWithId.push(variant);
       variantsToUpdate.push(variant);
     } else {
-      const variant = { ...uiVariant, id: uuidv4() };
+      const variant = {
+        ...uiVariant,
+        id: uuidv4(),
+        quantity: dbVariant.quantity + uiVariant.quantityDiff,
+        quantityDiff: undefined,
+      };
 
       variantsWithId.push(variant);
       variantsToCreate.push(variant);

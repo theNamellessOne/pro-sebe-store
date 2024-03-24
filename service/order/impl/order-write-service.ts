@@ -83,7 +83,6 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
       webHookUrl: "",
       validity: 10 * 60 * 100, // 10 min
       paymentType: "debit",
-
     };
 
     await prisma.$transaction(
@@ -168,9 +167,6 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
           ? calculatePercentage(misc?.secondOrderDiscount, total.toNumber())
           : 0;
 
-        console.log("----> order total", total.toNumber())
-        console.log("----> order discount", discount)
-
         value = await prisma.order.create({
           data: {
             ...order.contactInfo,
@@ -190,7 +186,9 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
               ? order.paymentType
               : OrderPaymentType.PREPAID,
 
-            total: total.minus(new Decimal(discount)),
+            total: total,
+            totalWithDiscount: total.minus(new Decimal(discount)),
+            discount: discount,
 
             userId: session ? session.user.id : undefined,
 
@@ -211,7 +209,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
         mono.amount = 1;
         mono.merchantPaymInfo.reference = value.id;
         mono.redirectUrl = `${process.env.BASE_URL!}/home`;
-        mono.webHookUrl = `${process.env.BASE_URL!}/api/payment-confirm/webhook`
+        mono.webHookUrl = `${process.env.BASE_URL!}/api/payment-confirm/webhook`;
       },
       { timeout: 15000 },
     );

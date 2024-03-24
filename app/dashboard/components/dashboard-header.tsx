@@ -2,25 +2,30 @@
 
 import { Button } from "@nextui-org/button";
 import { Plus } from "lucide-react";
-import React from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 type DashboardHeaderProps = {
   title: string;
-  showButton?: boolean;
+  children?: ReactNode;
+  showCreateButton?: boolean;
 };
 
 export function DashboardHeader({
   title,
-  showButton = true,
+  children,
+  showCreateButton = true,
 }: DashboardHeaderProps) {
   const pathname = usePathname();
 
   return (
     <header className={"flex justify-between items-center"}>
       <h3 className={"text-2xl font-semibold"}>{title}</h3>
-      {showButton && (
+
+      {children}
+
+      {showCreateButton && (
         <Link href={pathname + "/new"}>
           <Button
             color={"primary"}
