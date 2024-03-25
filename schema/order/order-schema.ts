@@ -40,7 +40,7 @@ export const deliveryInfoSchema = z
     }
 
     return false;
-  }, "Шось одне повинно бути заповнено.");
+  }, "Щось одне повинно бути заповнено.");
 
 export type DeliveryInfoInput = z.infer<typeof deliveryInfoSchema>;
 

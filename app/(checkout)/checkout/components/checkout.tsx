@@ -29,7 +29,7 @@ export function Checkout(props: { user: any | undefined | null }) {
         surname: props.user?.surname,
         middlename: props.user?.patronymic,
       },
-      deliveryInfo: { deliveryType: OrderDeliveryType.COURIER },
+      deliveryInfo: { deliveryType: OrderDeliveryType.WAREHOUSE },
       paymentType: OrderPaymentType.PREPAID,
     },
   });

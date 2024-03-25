@@ -18,7 +18,7 @@ export function EmptyCart() {
 
         <Link href="/catalogue">
           <Button type="primary" className="uppercase">
-            Продовжити купування
+            Продовжити покупки
           </Button>
         </Link>
       </div>

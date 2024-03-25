@@ -105,7 +105,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                         }
                       ></span>
 
-                      <p className={"relative z-10"}>До Корзини</p>
+                      <p className={"relative z-10"}>До кошика</p>
                     </button>
                   </Link>
                 </div>
