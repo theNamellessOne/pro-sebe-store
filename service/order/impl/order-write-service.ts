@@ -64,7 +64,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
     let value: any = undefined;
 
     const misc = await MiscService.instance.fetch();
-    if (!misc) throw "misc is undefined";
+    if (!misc) throw "Інформацію не знайдено!";
 
     const hasDiscount = await OrderService.instance.hasDiscount(
       order.contactInfo.email,
@@ -75,12 +75,12 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
       merchantPaymInfo: {
         reference: "",
         customerEmails: [order.contactInfo.email],
-        destination: "куда нада",
-        comment: "куда нада",
+        destination: "",
+        comment: "",
         basketOrder: [],
       },
-      redirectUrl: "",
-      webHookUrl: "",
+      redirectUrl: `${process.env.BASE_URL!}/home`,
+      webHookUrl: `${process.env.BASE_URL!}/api/payment-confirm/webhook`,
       validity: 10 * 60 * 100, // 10 min
       paymentType: "debit",
     };
@@ -89,7 +89,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
       async (prisma) => {
         const cart = await _fetchCartById(cartId);
 
-        if (!cart) throw new Error("no cart");
+        if (!cart) throw new Error("Не знайдено!");
 
         const orderItems: {
           productName: string;
@@ -109,12 +109,12 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
         for (const item of cart.cartItems) {
           if (item.variant.quantity < item.quantity) {
             throw new Error(
-              `insufficient stock for ${item.variant.product.name}`,
+              `Недостатній запас ${item.variant.product.name}`,
             );
           }
 
           if (item.variant.product.status !== ProductStatus.ACTIVE) {
-            throw new Error(`product not found - ${item.variant.product.name}`);
+            throw new Error(`Товар не знайдено - ${item.variant.product.name}`);
           }
 
           const mediaUrls = item.variant.mediaUrls as { url: string }[];
@@ -124,7 +124,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
             qty: item.quantity,
             sum: item.variant.product.price.mul(100).toNumber(),
             icon: mediaUrls.length > 0 ? mediaUrls[0].url : "no",
-            unit: "банан",
+            unit: "шт.",
             code: item.variant.productArticle,
             discounts: hasDiscount
               ? [
@@ -208,8 +208,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
         mono.amount = 1;
         mono.merchantPaymInfo.reference = value.id;
-        mono.redirectUrl = `${process.env.BASE_URL!}/home`;
-        mono.webHookUrl = `${process.env.BASE_URL!}/api/payment-confirm/webhook`;
+        mono.merchantPaymInfo.destination = `Оплата товару в інтернет-магазині Pro Sebe Store. Ідентифікатор замовлення: ${value.id}.`
       },
       { timeout: 15000 },
     );
@@ -229,7 +228,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
   } catch (err: any) {
     console.log(err);
     if (err.message.includes("prisma"))
-      return { errMsg: "щось пішло не так", value: null };
+      return { errMsg: "Щось пішло не так!", value: null };
 
     return { errMsg: err.message, value: null };
   }
@@ -349,9 +348,9 @@ export async function _setStatus(orderId: string, status: OrderStatus) {
       data: { status },
     });
 
-    return { success: "статус оновлено" };
+    return { success: "Статус оновлено!" };
   } catch {
-    return { error: "шось пішло не так" };
+    return { error: "Щось пішло не так!" };
   }
 }
 

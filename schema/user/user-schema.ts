@@ -23,7 +23,7 @@ export const userUpdateFormSchema = z.object({
   username: usernameSchema,
   patronymic: z.string().min(2, "Мінімум 2 символи").max(100, "Максимум 100 символів"),
   phone: z.string().regex(phoneRegEx, "Цей номер телефону не коректний!"),
-  email: z.string().email("Некорекна електронна пошта"),
+  email: z.string().email("Некорекна електронна пошта!"),
 });
 
 export type UserUpdate = z.infer<typeof userUpdateFormSchema>;
