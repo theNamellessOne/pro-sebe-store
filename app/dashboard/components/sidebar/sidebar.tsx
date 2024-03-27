@@ -19,6 +19,7 @@ import { ClientProtectedComponent } from "@/app/components/protected-component";
 import { Role } from "@prisma/client";
 import { Button } from "@nextui-org/button";
 import { AuthService } from "@/service/auth/auth-service";
+import {HeaderLogo} from "@/app/(client)/components/header/header-logo";
 
 export const dashboardMenuItems = [
   {
@@ -90,7 +91,7 @@ export function Sidebar() {
         "flex flex-col h-full top-0 overflow-y-auto fixed py-6 w-[250px] border-r border-r-secondary border-r-0.5"
       }
     >
-      <h2 className={"text-4xl pl-6 mb-6"}>/logan</h2>
+      <HeaderLogo/>
 
       {dashboardMenuItems.map((item, idx) => {
         return (
