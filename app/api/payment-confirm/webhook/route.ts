@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import {NextRequest} from "next/server";
 import { OrderService } from "@/service/order/order-service";
 
 export async function POST(req: NextRequest) {
@@ -10,29 +10,35 @@ export async function POST(req: NextRequest) {
 
   if (!sign) return new Response();
 
-  const resp = await (await fetch("https://api.monobank.ua/api/merchant/pubkey", {
-    headers: {
-      'X-Token': process.env.MONOBANK_API_KEY!
-    }
-  })).json();
+  const resp = await (
+    await fetch("https://api.monobank.ua/api/merchant/pubkey", {
+      headers: {
+        "X-Token": process.env.MONOBANK_API_KEY!,
+      },
+    })
+  ).json();
 
-  const crypto = require('crypto');
+  const crypto = require("crypto");
 
   const message = JSON.stringify(body);
+  const signatureBuf = Buffer.from(sign, "base64");
+  const publicKeyBuf = Buffer.from(resp, "base64");
 
-  const signatureBuf = Buffer.from(sign, 'base64');
-  const publicKeyBuf = Buffer.from(process.env.MONO_KEY!, 'base64');
+  const verify = crypto.createVerify("sha256");
 
-  const verify = crypto.createVerify('sha256');
-
-  verify.update(message);
+  verify.write(message);
+  verify.end();
 
   const result = verify.verify(publicKeyBuf, signatureBuf);
 
+  console.log(resp);
+  console.log(result);
+
   if (result) {
-    if (body.status === "success") await OrderService.instance.confirmOrder(body.reference);
+    if (body.status === "success")
+      await OrderService.instance.confirmOrder(body.reference);
   } else {
-    console.log(result);
+    return new Response("", {status: 403});
   }
 
   return new Response();
