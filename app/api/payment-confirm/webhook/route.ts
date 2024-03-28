@@ -21,8 +21,15 @@ export async function POST(req: NextRequest) {
   const crypto = require("crypto");
 
   const message = JSON.stringify(body);
+
+  console.log(sign);  
+  console.log(resp);
+  
   const signatureBuf = Buffer.from(sign, "base64");
   const publicKeyBuf = Buffer.from(resp, "base64");
+
+  console.log(signatureBuf);  
+  console.log(publicKeyBuf);
 
   const verify = crypto.createVerify("sha256");
 
