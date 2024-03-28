@@ -9,6 +9,7 @@ import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { ClientProtectedComponent } from "@/app/components/protected-component";
 import { SidebarItem } from "./sidebar-item";
 import { AuthService } from "@/service/auth/auth-service";
+import {HeaderLogo} from "@/app/(client)/components/header/header-logo";
 
 export const SidebarMobile = () => {
   const [open, setOpen] = useState(false);
@@ -62,7 +63,7 @@ export const SidebarMobile = () => {
                   "flex flex-col h-full top-0 overflow-y-auto fixed py-6 w-[250px] border-r border-r-secondary border-r-0.5"
                 }
               >
-                <h2 className={"text-4xl pl-6 mb-6"}>/logan</h2>
+                <HeaderLogo/>
 
                 {dashboardMenuItems.map((item, idx) => {
                   return (
