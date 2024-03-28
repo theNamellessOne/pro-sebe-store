@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   console.log(resp);
   
   const signatureBuf = Buffer.from(sign, "base64");
-  const publicKeyBuf = Buffer.from(resp, "base64");
+  const publicKeyBuf = Buffer.from(resp.key, "base64");
 
   console.log(signatureBuf);  
   console.log(publicKeyBuf);
