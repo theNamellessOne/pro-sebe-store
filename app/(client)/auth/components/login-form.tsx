@@ -70,7 +70,7 @@ export function LoginForm() {
         }
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        <h2 className={"font-semibold text-2xl mx-auto"}>Login</h2>
+        <h2 className={"font-semibold text-2xl mx-auto"}>Увiйти</h2>
 
         {showTwoFactor && (
           <Input
@@ -107,9 +107,13 @@ export function LoginForm() {
           </>
         )}
 
-        {urlError && <ErrorBox message={urlError} />}
-        {serverError && <ErrorBox message={serverError} />}
-        {serverSuccess && <SuccessBox message={serverSuccess} />}
+        {urlError && <ErrorBox message={urlError} className={"px-5 py-3"} />}
+        {serverError && (
+          <ErrorBox message={serverError} className={"px-5 py-3"} />
+        )}
+        {serverSuccess && (
+          <SuccessBox message={serverSuccess} className={"px-5 py-3"} />
+        )}
 
         <Button
           htmlType={"submit"}

@@ -10,17 +10,19 @@ type DashboardHeaderProps = {
   title: string;
   children?: ReactNode;
   showCreateButton?: boolean;
+  className?: string;
 };
 
 export function DashboardHeader({
   title,
   children,
   showCreateButton = true,
+  className = "",
 }: DashboardHeaderProps) {
   const pathname = usePathname();
 
   return (
-    <header className={"flex justify-between items-center"}>
+    <header className={`flex justify-between items-center ${className}`}>
       <h3 className={"text-2xl font-semibold"}>{title}</h3>
 
       {children}

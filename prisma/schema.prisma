@@ -443,6 +443,7 @@ model Misc {
   id Int @id @default(autoincrement())
 
   freeDeliveryMinPrice Int    @default(1500)
+  prepayPrice          Int    @default(150)
   secondOrderDiscount  Int    @default(5)
   shipmentsPerDay      String @default("двічі")
   imageUrl             String @default("")

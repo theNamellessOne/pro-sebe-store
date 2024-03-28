@@ -25,6 +25,7 @@ import {
 } from "../const/transl";
 import toast, { Toaster } from "react-hot-toast";
 import { orderEventChannel } from "@/app/dashboard/(pages)/orders/event/order-event-channel";
+import { SendInvoiceModal } from "@/app/dashboard/(pages)/orders/modals/send-invoice-modal";
 
 export function ViewOrderModal({ order }: { order: any }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -260,6 +261,7 @@ export function ViewOrderModal({ order }: { order: any }) {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Close
                 </Button>
+                <SendInvoiceModal email={order.email} orderId={order.id} />
               </ModalFooter>
             </>
           )}

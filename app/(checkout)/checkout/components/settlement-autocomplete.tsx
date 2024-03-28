@@ -4,7 +4,7 @@ import { OrderInput } from "@/schema/order/order-schema";
 import { NovaPostService } from "@/service/novapost/novapost-service";
 import { debounce } from "@/util/debounce";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 export function SettlementAutocomplete() {
@@ -13,10 +13,14 @@ export function SettlementAutocomplete() {
     { Present: string; DeliveryCity: String }[]
   >([]);
 
-  const { setValue, register, watch, unregister } =
-    useFormContext<OrderInput>();
+  const {
+    setValue,
+    register,
+    watch,
+    unregister,
+    formState: { isSubmitting },
+  } = useFormContext<OrderInput>();
   const settlementRef = watch("deliveryInfo.settlementRef");
-  const settlementDescription = watch("deliveryInfo.settlementDescription");
 
   useEffect(() => {
     register("deliveryInfo.settlementRef");
@@ -44,8 +48,13 @@ export function SettlementAutocomplete() {
       isLoading={isLoading}
       items={items}
       label="Населений пункт"
+      isDisabled={isSubmitting}
+      listboxProps={{
+        emptyContent: "Нічого не знайдено 😞",
+      }}
       variant="underlined"
       selectedKey={settlementRef}
+      isRequired={true}
       classNames={{
         popoverContent: "rounded-sm",
       }}

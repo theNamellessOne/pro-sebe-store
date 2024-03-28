@@ -37,8 +37,12 @@ export default async function Page({
       <div
         className={"relative flex flex-col gap-4 h-full w-full p-4 px-[20px]"}
       >
-        <DashboardHeader title={"Замовлення"} showCreateButton={false}>
-          <div className={"w-full flex gap-2 items-center justify-end"}>
+        <DashboardHeader
+          title={"Замовлення"}
+          showCreateButton={false}
+          className={"flex-wrap"}
+        >
+          <div className={"w-fit flex gap-2 items-center justify-end"}>
             <StatusFilter />
             <TableColumns />
             <ExportEmailButton href={"/api/orders/export"} />

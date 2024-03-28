@@ -6,8 +6,14 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 export function WarehouseAutocomplete() {
-  const { register, unregister, watch, setValue } =
-    useFormContext<OrderInput>();
+  const {
+    register,
+    unregister,
+    watch,
+    setValue,
+
+    formState: { isSubmitting },
+  } = useFormContext<OrderInput>();
 
   const settlementRef = watch("deliveryInfo.settlementRef");
   const warehouseKey = watch("deliveryInfo.warehouseKey");
@@ -37,10 +43,15 @@ export function WarehouseAutocomplete() {
 
   return (
     <Autocomplete
+      isRequired={true}
       onKeyUp={debounce((e: any) => {
         e.continuePropagation();
         load(e.target.value);
       })}
+      isDisabled={isSubmitting}
+      listboxProps={{
+        emptyContent: "Нічого не знайдено 😞",
+      }}
       onKeyDown={(e: any) => e.continuePropagation()}
       isLoading={isLoading}
       defaultItems={items}

@@ -1,5 +1,6 @@
 import { Size } from "./error-box";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
+import { ReactNode } from "react";
 
 const textSize: Size = {
   sm: "text-small",
@@ -15,12 +16,19 @@ const iconSize: Size = {
 
 type ErrorBoxProps = {
   size?: keyof Size;
-  message: string;
+  message: ReactNode;
+  className?: string;
 };
 
-export function SuccessBox({ message, size = "md" }: ErrorBoxProps) {
+export function SuccessBox({
+  message,
+  size = "md",
+  className = "",
+}: ErrorBoxProps) {
   return (
-    <div className={`text-success ${textSize[size]} gap-2 flex items-center`}>
+    <div
+      className={`text-success ${textSize[size]} gap-2 flex items-center bg-green-100 ${className}`}
+    >
       <IoIosCheckmarkCircleOutline className={iconSize[size]} />
       <p className={`font-semibold`}>{message}</p>
     </div>

@@ -49,12 +49,16 @@ export function NewPasswordForm() {
         }
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        <h2 className={"font-semibold text-2xl mx-auto"}>New Password</h2>
+        <h2 className={"font-semibold text-2xl mx-auto"}>Новий пароль</h2>
 
         <PasswordInput form={form} />
 
-        {serverError && <ErrorBox message={serverError} />}
-        {serverSuccess && <SuccessBox message={serverSuccess} />}
+        {serverError && (
+          <ErrorBox message={serverError} className={"px-5 py-3"} />
+        )}
+        {serverSuccess && (
+          <SuccessBox message={serverSuccess} className={"px-5 py-3"} />
+        )}
 
         <Button
           htmlType={"submit"}
