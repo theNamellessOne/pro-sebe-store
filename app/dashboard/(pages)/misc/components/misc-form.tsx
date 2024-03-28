@@ -64,6 +64,15 @@ export function MiscForm({ value }: { value?: MiscSave }) {
         />
 
         <Input
+          {...form.register("prepayPrice")}
+          label={"Сума передоплати"}
+          disabled={isSubmitting}
+          isInvalid={!!errors.prepayPrice}
+          defaultValue={value?.prepayPrice?.toString()}
+          errorMessage={errors.prepayPrice?.message}
+        />
+
+        <Input
           {...form.register("secondOrderDiscount")}
           label={"Скидка на друге замовлення"}
           disabled={isSubmitting}

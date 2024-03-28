@@ -1,6 +1,8 @@
 export type UserReadDto = {
   id: string;
   name: string | null;
+  surname: string | null;
+  patronymic: string | null;
   phone: string | null;
   email: string | null;
   image: string | null;
@@ -16,5 +18,7 @@ export const UserSelectDto = {
   image: true,
   role: true,
   username: true,
+  surname: true,
+  patronymic: true,
   emailVerified: true,
 };

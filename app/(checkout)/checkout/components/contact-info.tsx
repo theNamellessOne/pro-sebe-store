@@ -30,9 +30,10 @@ export function ContactInfo() {
             variant={"underlined"}
             label={"Iм'я"}
             defaultValue={form.getValues("contactInfo.name")}
-            disabled={isSubmitting}
+            isDisabled={isSubmitting}
             isInvalid={!!errors.contactInfo?.name}
             errorMessage={errors.contactInfo?.name?.message}
+            isRequired={true}
           />
 
           <Input
@@ -40,9 +41,10 @@ export function ContactInfo() {
             variant={"underlined"}
             label={"Прізвище"}
             defaultValue={form.getValues("contactInfo.surname")}
-            disabled={isSubmitting}
+            isDisabled={isSubmitting}
             isInvalid={!!errors.contactInfo?.surname}
             errorMessage={errors.contactInfo?.surname?.message}
+            isRequired={true}
           />
         </div>
 
@@ -50,7 +52,7 @@ export function ContactInfo() {
           {...form.register("contactInfo.middlename")}
           variant={"underlined"}
           label={"По батькові"}
-          disabled={isSubmitting}
+          isDisabled={isSubmitting}
           defaultValue={form.getValues("contactInfo.middlename")}
           isInvalid={!!errors.contactInfo?.middlename}
           errorMessage={errors.contactInfo?.middlename?.message}
@@ -61,20 +63,22 @@ export function ContactInfo() {
           variant={"underlined"}
           label={"Електронна пошта"}
           type={"email"}
-          disabled={isSubmitting}
+          isDisabled={isSubmitting}
           defaultValue={form.getValues("contactInfo.email")}
           isInvalid={!!errors.contactInfo?.email}
           errorMessage={errors.contactInfo?.email?.message}
+          isRequired={true}
         />
 
         <Input
           {...form.register("contactInfo.phone")}
           variant={"underlined"}
           label={"Номер телефону"}
-          disabled={isSubmitting}
+          isDisabled={isSubmitting}
           defaultValue={form.getValues("contactInfo.phone")}
           isInvalid={!!errors.contactInfo?.phone}
           errorMessage={errors.contactInfo?.phone?.message}
+          isRequired={true}
         />
       </div>
     </div>

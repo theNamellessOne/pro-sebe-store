@@ -21,11 +21,18 @@ const iconSize: Size = {
 type ErrorBoxProps = {
   size?: keyof Size;
   message: string;
+  className?: string;
 };
 
-export function ErrorBox({ message, size = "md" }: ErrorBoxProps) {
+export function ErrorBox({
+  message,
+  size = "md",
+  className = "",
+}: ErrorBoxProps) {
   return (
-    <div className={`${textSize[size]} gap-2 text-danger flex items-center`}>
+    <div
+      className={`${textSize[size]} gap-2 text-danger flex items-center bg-red-100 ${className}`}
+    >
       <VscError className={`${iconSize[size]}`} />
       <p className={`font-semibold`}>{message}</p>
     </div>

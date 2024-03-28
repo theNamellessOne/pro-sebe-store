@@ -46,7 +46,7 @@ export function ResetPasswordForm() {
         }
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        <h2 className={"font-semibold text-2xl mx-auto"}>Reset</h2>
+        <h2 className={"font-semibold text-2xl mx-auto"}>Вiдновлення паролю</h2>
 
         <Input
           {...form.register("email")}
@@ -58,8 +58,12 @@ export function ResetPasswordForm() {
           errorMessage={errors.email?.message}
         />
 
-        {serverError && <ErrorBox message={serverError} />}
-        {serverSuccess && <SuccessBox message={serverSuccess} />}
+        {serverError && (
+          <ErrorBox message={serverError} className={"px-5 py-3"} />
+        )}
+        {serverSuccess && (
+          <SuccessBox message={serverSuccess} className={"px-5 py-3"} />
+        )}
 
         <Button
           htmlType={"submit"}

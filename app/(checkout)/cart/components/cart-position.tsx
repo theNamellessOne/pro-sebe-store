@@ -13,9 +13,7 @@ export function CartPosition({ item }: any) {
   return (
     <div className={"flex gap-4 relative"}>
       <div
-        className={
-          "hidden sm:block relative shrink-0 overflow-hidden rounded-sm"
-        }
+        className={"hidden sm:block relative shrink-0 overflow-clip rounded-sm"}
       >
         <Image
           className={"object-cover h-[200px] w-[200px]"}

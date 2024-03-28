@@ -33,23 +33,23 @@ export function DeliveryInfo() {
         size={"lg"}
         selectedKey={value}
         onSelectionChange={(selection) => {
-            setValue("deliveryInfo.deliveryType", OrderDeliveryType.COURIER);
+          if (selection === OrderDeliveryType.WAREHOUSE) {
+            setValue("deliveryInfo.deliveryType", OrderDeliveryType.WAREHOUSE);
+            return;
+          }
 
-            if (selection === OrderDeliveryType.WAREHOUSE) {
-                setValue("deliveryInfo.deliveryType", OrderDeliveryType.WAREHOUSE);
-                return;
-            }
+          setValue("deliveryInfo.deliveryType", OrderDeliveryType.COURIER);
         }}
         variant={"underlined"}
         aria-label="delivery options"
         classNames={{ panel: "pl-3 -mt-3" }}
       >
-          <Tab key={OrderDeliveryType.WAREHOUSE} title={'Самовивіз "Нова Пошта"'}>
-              <WarehouseDeliveryForm />
-          </Tab>
-          <Tab key={OrderDeliveryType.COURIER} title={'Кур\'єром "Нова Пошта"'}>
-              <CourierDeliveryForm />
-          </Tab>
+        <Tab key={OrderDeliveryType.WAREHOUSE} title={'Самовивіз "Нова Пошта"'}>
+          <WarehouseDeliveryForm />
+        </Tab>
+        <Tab key={OrderDeliveryType.COURIER} title={'Кур\'єром "Нова Пошта"'}>
+          <CourierDeliveryForm />
+        </Tab>
       </Tabs>
     </div>
   );

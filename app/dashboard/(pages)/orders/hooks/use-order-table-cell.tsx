@@ -3,12 +3,18 @@ import { Order, OrderPaymentType, OrderStatus } from "@prisma/client";
 import { ViewOrderModal } from "../modals/view-order-modal";
 import { TranslatedPaymentTypes, TranslatedStatuses } from "../const/transl";
 import { ColorMessage } from "@/app/dashboard/components/colored-message";
+import { SendInvoiceModal } from "@/app/dashboard/(pages)/orders/modals/send-invoice-modal";
 
 export function useOrderTableCell() {
   return useCallback((order: Order, columnKey: Key) => {
     switch (columnKey) {
       case "actions":
-        return <ViewOrderModal order={order} />;
+        return (
+          <>
+            <ViewOrderModal order={order} />
+            <SendInvoiceModal email={order.email} orderId={order.id} />
+          </>
+        );
 
       case "paymentType":
         let c = "yellow";

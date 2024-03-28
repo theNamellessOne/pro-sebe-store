@@ -25,9 +25,10 @@ export function CourierDeliveryForm() {
         {...register("deliveryInfo.addressParts.street")}
         variant={"underlined"}
         label={"Вулиця"}
-        disabled={isSubmitting}
+        isDisabled={isSubmitting}
         isInvalid={!!errors.deliveryInfo?.addressParts?.street}
         errorMessage={errors.deliveryInfo?.addressParts?.street?.message}
+        isRequired={true}
       />
 
       <div className="flex flex-col sm:flex-row gap-4">
@@ -35,18 +36,20 @@ export function CourierDeliveryForm() {
           {...register("deliveryInfo.addressParts.houseNo")}
           variant={"underlined"}
           label={"Номер будинку/квартира"}
-          disabled={isSubmitting}
+          isDisabled={isSubmitting}
           isInvalid={!!errors.deliveryInfo?.addressParts?.houseNo}
           errorMessage={errors.deliveryInfo?.addressParts?.houseNo?.message}
+          isRequired={true}
         />
 
         <Input
           {...register("deliveryInfo.addressParts.postalIdx")}
           variant={"underlined"}
           label={"Поштовий Індекс"}
-          disabled={isSubmitting}
+          isDisabled={isSubmitting}
           isInvalid={!!errors.deliveryInfo?.addressParts?.postalIdx}
           errorMessage={errors.deliveryInfo?.addressParts?.postalIdx?.message}
+          isRequired={true}
           description={
             <p>
               Увага! Неправильно зазначений поштовий індекс зробить доставку

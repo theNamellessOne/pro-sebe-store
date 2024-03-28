@@ -98,7 +98,7 @@ export default {
         session.user.surname = token.surname as string;
       }
 
-      if (token.surname && session.user) {
+      if (token.phone && session.user) {
         session.user.phone = token.phone as string;
       }
 
@@ -130,11 +130,14 @@ export default {
         //@ts-ignore
         data.username = props.user.username;
         //@ts-ignore
+        data.name = props.user.name;
+        //@ts-ignore
+        data.patronymic = props.user.patronymic;
+        //@ts-ignore
         data.surname = props.user.surname;
         //@ts-ignore
         data.phone = props.user.phone;
-        //@ts-ignore
-        data.patronymic = props.user.patronymic;
+
         data.isOAuth = props.account?.provider === "google";
       }
 

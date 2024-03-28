@@ -3,8 +3,9 @@ import mailer from "nodemailer";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { TokenService } from "@/service/token/token-service";
 import prisma from "@/lib/prisma";
-import {Ratelimit} from "@upstash/ratelimit";
-import {redis} from "@/middleware";
+import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "@/middleware";
+import { auth } from "@/auth/auth";
 
 type SendEmailInput = {
   to: string;
@@ -20,10 +21,10 @@ const mailRateLimiter = new Ratelimit({
 const sendEmail = async (input: SendEmailInput) => {
   const transporter = mailer.createTransport({
     port: 465,
-    service: "gmail",
+    service: process.env.EMAIL_SERVICE,
     auth: {
-      user: "asdfasdfadsf64@gmail.com",
-      pass: "wxgr hguu itzr erfi",
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
@@ -57,12 +58,19 @@ const sendEmail = async (input: SendEmailInput) => {
 async function handler(req: NextRequest) {
   const input = await req.json();
   const token = input.token;
-  const ip = req.ip ?? '127.0.0.1';
+  const ip = req.ip ?? "127.0.0.1";
 
-  const { success, pending, limit, reset, remaining } = await mailRateLimiter.limit(
-      ip
-  );
-  if (!success) return Response.json({error: "Перевищено кількість запитів на відправку емейлів (раз в 300сек). Спробуйте пізніше"})
+  const session = await auth();
+
+  if (!session || session.user.role === "USER") {
+    const { success, pending, limit, reset, remaining } =
+      await mailRateLimiter.limit(ip);
+    if (!success)
+      return Response.json({
+        error:
+          "Перевищено кількість запитів на відправку емейлів (раз в 300сек). Спробуйте пізніше",
+      });
+  }
 
   if (!token) {
     return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.nextUrl));
@@ -82,9 +90,9 @@ async function handler(req: NextRequest) {
 
   try {
     await sendEmail(input);
-    return Response.json({ success: "Лист із підтвердженням надіслано!" });
+    return Response.json({ success: "Лист надіслано!" });
   } catch (Exception) {
-    return Response.json({ error: "Не вдалося надіслати листa!" });
+    return Response.json({ error: "Не вдалося надіслати лист!" });
   }
 }
 

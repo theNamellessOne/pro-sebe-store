@@ -37,8 +37,7 @@ export function UserDataForm() {
     if (errMsg) {
       toast.error("Щось пішло не так!");
     } else {
-      session.update(value);
-      toast.success("Зміни збережено!");
+      session.update(value).then(() => toast.success("Зміни збережено!"));
     }
   };
 
@@ -69,6 +68,7 @@ export function UserDataForm() {
                   defaultValue={userData.email}
                   isInvalid={!!errors.email}
                   errorMessage={errors.email?.message}
+                  isRequired={true}
                 />
               )}
             </div>
@@ -83,6 +83,7 @@ export function UserDataForm() {
                 defaultValue={userData.name}
                 isInvalid={!!errors.name}
                 errorMessage={errors.name?.message}
+                isRequired={true}
               />
               <Input
                 {...form.register("surname")}
@@ -92,6 +93,7 @@ export function UserDataForm() {
                 defaultValue={userData.surname}
                 isInvalid={!!errors.surname}
                 errorMessage={errors.surname?.message}
+                isRequired={true}
               />
             </div>
 
@@ -114,6 +116,7 @@ export function UserDataForm() {
                 defaultValue={userData.username}
                 isInvalid={!!errors.username}
                 errorMessage={errors.username?.message}
+                isRequired={true}
               />
               <Input
                 {...form.register("phone")}
@@ -124,6 +127,7 @@ export function UserDataForm() {
                 defaultValue={userData.phone}
                 isInvalid={!!errors.phone}
                 errorMessage={errors.phone?.message}
+                isRequired={true}
               />
             </div>
           </div>

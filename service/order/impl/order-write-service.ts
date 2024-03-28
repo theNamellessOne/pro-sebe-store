@@ -108,9 +108,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
         for (const item of cart.cartItems) {
           if (item.variant.quantity < item.quantity) {
-            throw new Error(
-              `Недостатній запас ${item.variant.product.name}`,
-            );
+            throw new Error(`Недостатній запас ${item.variant.product.name}`);
           }
 
           if (item.variant.product.status !== ProductStatus.ACTIVE) {
@@ -170,6 +168,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
         value = await prisma.order.create({
           data: {
             ...order.contactInfo,
+            middlename: order.contactInfo.middlename ?? "",
 
             orderDeliveryType: order.deliveryInfo.deliveryType,
 
@@ -182,7 +181,7 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
 
             warehouseKey: order.deliveryInfo.warehouseKey,
 
-            paymentType: cart.subtotal.gt(new Decimal(150))
+            paymentType: cart.subtotal.gt(new Decimal(misc.prepayPrice ?? 150))
               ? order.paymentType
               : OrderPaymentType.PREPAID,
 
@@ -203,12 +202,11 @@ export async function _placeOrder(cartId: string, order: OrderInput) {
         }
 
         if (order.paymentType === OrderPaymentType.POSTPAID) {
-          mono.amount = 15000;
+          mono.amount = misc.prepayPrice * 100;
         }
 
-        mono.amount = 1;
         mono.merchantPaymInfo.reference = value.id;
-        mono.merchantPaymInfo.destination = `Оплата товару в інтернет-магазині Pro Sebe Store. Ідентифікатор замовлення: ${value.id}.`
+        mono.merchantPaymInfo.destination = `Оплата товару в інтернет-магазині Pro Sebe Store. Ідентифікатор замовлення: ${value.id}.`;
       },
       { timeout: 15000 },
     );

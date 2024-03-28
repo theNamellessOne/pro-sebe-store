@@ -38,7 +38,7 @@ export function StatusFilter() {
       defaultSelectedKeys={[readFilter()]}
       label="Показувати"
       size={"sm"}
-      className="max-w-[150px]"
+      className="w-[150px] pt-2"
       onSelectionChange={(selection) =>
         setFilter(Array.from(selection)[0].toString())
       }

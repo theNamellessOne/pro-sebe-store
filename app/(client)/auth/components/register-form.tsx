@@ -33,8 +33,8 @@ export function RegisterForm() {
   const handleSubmit = async (formData: RegisterInput) => {
     const res = await AuthService.instance.register(formData);
 
-      setServerError(res.error);
-      setServerSuccess(res.success);
+    setServerError(res.error);
+    setServerSuccess(res.success);
   };
 
   return (
@@ -45,7 +45,7 @@ export function RegisterForm() {
         }
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        <h2 className={"font-semibold text-2xl mx-auto"}>Register</h2>
+        <h2 className={"font-semibold text-2xl mx-auto"}>Зареєструватись</h2>
 
         <Input
           {...form.register("name")}
@@ -85,8 +85,12 @@ export function RegisterForm() {
 
         <PasswordInput form={form} />
 
-        {serverError && <ErrorBox message={serverError} />}
-        {serverSuccess && <SuccessBox message={serverSuccess} />}
+        {serverError && (
+          <ErrorBox message={serverError} className={"px-5 py-3"} />
+        )}
+        {serverSuccess && (
+          <SuccessBox message={serverSuccess} className={"px-5 py-3"} />
+        )}
 
         <Button
           htmlType={"submit"}
